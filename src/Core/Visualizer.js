@@ -1,5 +1,5 @@
 /**
- * @2021 Mugamba Bruno 
+ * @2021 @Mugamba669 Bruno 
  * This library introduces audio visualization by converting audio signals into 
  * animated-2d graphics with the help of WebAudioApi and Canvas Api
  */

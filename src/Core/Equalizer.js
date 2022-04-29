@@ -1,3 +1,7 @@
+/**
+ * Equalizer class created by @Mugamba669 for muniplating audio using webaudio api. 
+ * An audio-processing graph built from audio modules linked together, each represented by an AudioNode.
+ */
 class Equalizer{
     /**
      * 
@@ -9,7 +13,7 @@ class Equalizer{
 
         this.audio = audio;
         this.audioCtx = new AudioContext();
-        this.analyser = new AnalyserNode(this.audioCtx,{maxDecibels:-15,minDecibels:-75,smoothingTimeConstant:0.8});
+        this.analyser = new AnalyserNode(this.audioCtx,{maxDecibels:-15,minDecibels:-75,smoothingTimeConstant:0.88});
         // super(this.analyser,canvas,context)
        
         this.source = new MediaElementAudioSourceNode(this.audioCtx,{mediaElement:this.audio});
@@ -41,7 +45,7 @@ class Equalizer{
 | Peaking | 16000 Hz | 1.41 | -11.1 dB |
          */
         this.bands = [
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:25,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:35,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:55,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:80,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:150,gain:0}),

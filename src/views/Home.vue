@@ -150,7 +150,8 @@ import Lyrics from "@/components/Lyrics/Lyrics.vue";
 import GridView from "@/components/Queue/Grid.vue";
 import Hot100 from "@/components/Music/Hot100.vue";
 import BottomSheet from "@/components/model/BottomSheet.vue";
-const { ipcRenderer } = window.require('electron');
+// import { mapGetters } from 'vuex';
+// const { ipcRenderer } = window.require('electron');
 const { Visualizer } = require("../Core/Visualizer");
 const { image } = require("../Core/default");
 export default {
@@ -375,7 +376,7 @@ export default {
   // ipcRenderer.sendSync('iconUp',link.href);
       const notify = new Notification(this.title,{body:this.artist,icon:this.image});
       notify.onclose = ()=>{
-          
+          // ipcRenderer.send('focus');
       }
      const currentTrack = {
        title:this.title,
@@ -435,7 +436,7 @@ export default {
           this.countPlay = queue[1];
           this.closeQueue();
           this.toggleList(queue[1]);
-         this.executeNext(this.playlist[this.countPlay+1]);// console.log(this.getTitle(queue[0].data));
+         this.executeNext(this.playlist[(queue[1]+1)]);// console.log(this.getTitle(queue[0].data));
       },
         playL(queue){
           this.commonComand(queue[0].data);
@@ -453,9 +454,7 @@ export default {
         this.showHot100 = !this.showHot100;
         this.$store.commit('streamMusic',`https://www.nowviba.com/music/pages/top100.php`);
          //**load online streams */
-    //  ipcRenderer.on('stream',(e,streams)=>{
-         
-        // })
+  
       
       },
     showQueue(){
@@ -507,7 +506,7 @@ export default {
   },
   
   mounted(){
-    ipcRenderer.sendSync('dataList');
+    // ipcRenderer.sendSync('dataList');
     
     // ipcRenderer.on('lib',(e,a)=>{
     //   this.current = a;
@@ -588,16 +587,17 @@ this.showLyrics = false;
   },
   
   created() {
+     
     this.audio = this.$store.getters.getPlayer;
     this.audio.volume = this.$store.getters.getVolume;
     this.eq = this.$store.getters.getEqualiser;
    this.stopAnime = this.displayVisual == true?1:0;
    /**listen for incomming lyrics */
-   ipcRenderer.on('lyrics',(e,lyrics)=>{
-     this.lyrics = lyrics;
-    //  console.log(lyrics);
-   });
-  console.log(this.$store.getters.getPlaylist)
+  //  ipcRenderer.on('lyrics',(e,lyrics)=>{
+  //    this.lyrics = lyrics;
+  //   //  console.log(lyrics);
+  //  });
+  // console.log(this.$store.getters.getPlaylist)
   },
 }
 </script>

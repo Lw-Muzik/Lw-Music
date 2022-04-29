@@ -2,7 +2,7 @@
 
     <div  class="container">
        
-        <h2>Welcome to Lw-Amp Web</h2>
+        <!-- <h2>Welcome to Lw-Amp Web</h2>
                 <img :src="[image]" alt="" srcset="">
               <p v-show="!btn">Loading....</p>
          <progress ref="progress" v-show="!btn" value="0" max="100" min="0"></progress>
@@ -10,120 +10,120 @@
          <button v-show="btn" @click="loadPlayer">
              <span class="mi mi-play-arrow"></span>
              Play Now</button>
-        <br>
-        <div id="demo"></div>
+        <br> -->
+        <!-- <div id="demo"></div> -->
 
     </div>
 
-         <VueParticle domId="demo" :config="particleConfig"/>
+         <!-- <VueParticle domId="demo" :config="particleConfig"/> -->
         
 </template>
 
 
 <script>
-import { image } from '@/Core/default';
-import VueParticle from "vue-particlejs";
-
-export default {
-    name:'Intro',
-    components:{
-        VueParticle,
-    },
-    data() {
-        return {
-          image:image,
-            btn:false,
-        particleConfig: {
-        particles: {
-          number: { value: 100, density: { enable: true, value_area: 290 } },
-          color: { value: "#63cdff" },
-          shape: {
-            type: "cicle",
-            stroke: { width: 13, color: "#000000" },
-            polygon: { nb_sides: 6 },
-            image: { src: "img/github.svg", width: 300, height: 100 }
-          },
-          opacity: {
-            value: 0.9,
-            random: false,
-            anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
-          },
-          size: {
-            value: 3,
-            random: true,
-            anim: { enable: true, speed: 10, size_min: 0.1, sync: true }
-          },
-          line_linked: {
-            enable: true,
-            distance: 150,
-            color: "#ffffff",
-            opacity: 0.4,
-            width: 1
-          },
-          move: {
-            enable: true,
-            speed: 6,
-            direction: "none",
-            random: false,
-            straight: false,
-            out_mode: "out",
-            bounce: false,
-            attract: { enable: false, rotateX: 600, rotateY: 1200 }
-          }
-        },
-        interactivity: {
-          detect_on: "canvas",
-          events: {
-            onhover: { enable: true, mode: "repulse" },
-            onclick: { enable: true, mode: "push" },
-            resize: true
-          },
-          modes: {
-            grab: { distance: 400, line_linked: { opacity: 1 } },
-            bubble: {
-              distance: 400,
-              size: 90,
-              duration: 2,
-              opacity: 8,
-              speed: 3
-            },
+// import { image } from '@/Core/default';
+// import VueParticle from "vue-particlejs";
+// 
+// export default {
+//     name:'Intro',
+//     components:{
+//         VueParticle,
+//     },
+//     data() {
+//         return {
+//           image:image,
+//             btn:false,
+//         particleConfig: {
+//         particles: {
+//           number: { value: 100, density: { enable: true, value_area: 290 } },
+//           color: { value: "#63cdff" },
+//           shape: {
+//             type: "cicle",
+//             stroke: { width: 13, color: "#000000" },
+//             polygon: { nb_sides: 6 },
+//             image: { src: "img/github.svg", width: 300, height: 100 }
+//           },
+//           opacity: {
+//             value: 0.9,
+//             random: false,
+//             anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
+//           },
+//           size: {
+//             value: 3,
+//             random: true,
+//             anim: { enable: true, speed: 10, size_min: 0.1, sync: true }
+//           },
+//           line_linked: {
+//             enable: true,
+//             distance: 150,
+//             color: "#ffffff",
+//             opacity: 0.4,
+//             width: 1
+//           },
+//           move: {
+//             enable: true,
+//             speed: 6,
+//             direction: "none",
+//             random: false,
+//             straight: false,
+//             out_mode: "out",
+//             bounce: false,
+//             attract: { enable: false, rotateX: 600, rotateY: 1200 }
+//           }
+//         },
+//         interactivity: {
+//           detect_on: "canvas",
+//           events: {
+//             onhover: { enable: true, mode: "repulse" },
+//             onclick: { enable: true, mode: "push" },
+//             resize: true
+//           },
+//           modes: {
+//             grab: { distance: 400, line_linked: { opacity: 1 } },
+//             bubble: {
+//               distance: 400,
+//               size: 90,
+//               duration: 2,
+//               opacity: 8,
+//               speed: 3
+//             },
             
-             // nice wobble movement
-      wobble:{
-         enable:true,
-         distance:10,
-         speed:10
-      },
-            repulse: { distance: 200, duration: 0.4 },
-            push: { particles_nb: 4 },
-            remove: { particles_nb: 2 }
-          }
-        },
-        retina_detect: true
-      }
+//              // nice wobble movement
+//       wobble:{
+//          enable:true,
+//          distance:10,
+//          speed:10
+//       },
+//             repulse: { distance: 200, duration: 0.4 },
+//             push: { particles_nb: 4 },
+//             remove: { particles_nb: 2 }
+//           }
+//         },
+//         retina_detect: true
+//       }
     
-        }
-    },
-    methods: { 
-        loadPlayer(){
-            this.$router.push('/player');
-        },
-    },
-    mounted(){
-        var lead = 0;
-       var timer = setInterval(()=>{
-           if(lead == 100) {
-                clearInterval(timer);
+//         }
+//     },
+//     methods: { 
+//         loadPlayer(){
+//             this.$router.push('/player');
+//         },
+//     },
+//     mounted(){
+//         var lead = 0;
+//        var timer = setInterval(()=>{
+//            if(lead == 100) {
+//                 clearInterval(timer);
 
-                this.btn = !this.btn;
-                console.log("done");
-           }else{
-            lead += 5;
-            this.$refs['progress'].value = lead;
-           }
-        },500);
-    }
-}
+//                 this.btn = !this.btn;
+//                 console.log("done");
+//            }else{
+//             lead += 5;
+//             this.$refs['progress'].value = lead;
+//            }
+//         },500);
+//     }
+// }
 </script>
 
 <style lang="scss" scoped>

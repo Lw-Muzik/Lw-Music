@@ -73,10 +73,10 @@ export default {
             break;
        }
     },
-    computed(){
-        //  this.$tours['guides'].start();
+    // created(){
+    //      this.$tours['guides'].start();
 
-    }
+    // }
 }
 </script>
 

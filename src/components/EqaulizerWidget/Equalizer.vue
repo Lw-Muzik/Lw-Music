@@ -42,14 +42,11 @@
 <script>
 import Bands from "./Bands.vue";
 import slider from "../widget/slider.vue";
-import { Presets } from "../../Core/Presets"
-import fs from "fs";
+import { Presets } from "../../Core/Presets";
 export default {
     name: 'EQ',
     components:{  Bands,slider, Presets },
     data(){
-        console.log(fs);
-        // console.log()
         return{
             _bass:0,
             _treble:0,
@@ -62,8 +59,11 @@ export default {
                 'name':"Bass",
                 'value':'bass'
                 },{
-                'name':"BassTreble",
+                'name':"Bass & Treble",
                 'value':'bt'
+                },{
+                'name':"Extreme Bass",
+                'value':'maxbass'
                 },{
                 'name':"Rock",
                 'value':'rock'
@@ -131,6 +131,9 @@ export default {
             switch (this.$refs['choice'].value) {
                 case 'normal':
                     this.eqBand(this.bandSet,Presets.Normal);
+                    break;
+                case 'maxbass':
+                    this.eqBand(this.bandSet,Presets.BassMax);
                     break;
 
                     case 'bass':

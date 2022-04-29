@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import * as mi from "material-icons";
+
 export default {
     name:"Dropdown",
     methods:{

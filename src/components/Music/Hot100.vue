@@ -26,8 +26,6 @@
     </div>
 </template>
 <script>
-const { readFileSync } = window.require("fs");
-
 export default {
     name:'Hot100',
     data() {
@@ -41,9 +39,6 @@ export default {
             this.$store.commit('playStream',audio);
         }
     },
-      created(){
-           this.songs = (JSON.parse(readFileSync("/home/blabs/Desktop/vue/ziki-amp-web/stream.json")));
-        }
 }
 </script>
 <style lang="scss" scoped>
