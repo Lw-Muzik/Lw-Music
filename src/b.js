@@ -33,63 +33,7 @@
 //         icon:isDevelopment?join(__dirname,'./assets/pAudio.png'):'./pAudio.png',
 //     });
   
-//     //    ipcMain.on('openDir',(event,args)=>{
-//     //        let temp = [];
-//     //         let db =[];
-//     //         let directories = [];
-//     //         var recursiveFolders = (dir)=>{
-//     //             var store = readdirSync(dir);
-//     //             store.forEach((track,index)=>{
-//     //                 //  
-//     //                 let newPath = dir+'/'+track;
-//     //                 if(statSync(newPath).isDirectory() == true){
-//     //                      recursiveFolders(newPath);
-//     //                      directories = [...directories,{dir:newPath}]
-//     //                 }else if(statSync(newPath).isFile() == true && extname(newPath) == ".mp3"){
-//     //                     console.log(newPath);
-//     //                     temp = [...temp,{track:newPath}];
-//     //                 }
-//     //             });
-//     //           }
-//     //           dialog.showOpenDialog(win,{
-//     //               properties:['openDirectory'],
-//     //               defaultPath:app.getPath("music"),
-//     //               buttonLabel:"Select music folder",
-//     //               title:"Choose a folder"
 
-//     //           }).then((filePath)=>{
-//     //           recursiveFolders(filePath.filePaths[0]);
-//     //            event.sender.send('files',[...db,temp,directories]);
-//     //           });
-//     //    });
-//     /***
-//      * Get hot 100
-//      */
-//         let stream = [];
-//        ipcMain.on('hot100',(e,url)=>{
-//            axios.get(url).then((response)=>{
-//               var dom = response.data;
-//             //   console.log(dom);
-              
-//               const ch = cheerio.load(dom);
-//               let trackList = ch('.hot100')
-//               // let trackPic = ch('img.imagefillstr');
-//           trackList.each((index,element)=>{
-//               let hot100 = {
-//                   title:`${element.children[0].children[5].children[0].children[0].data}`,
-//                   artist:`${element.children[0].children[5].children[1].children[0].data}`,
-//                   artWork:`${element.children[0].children[3].children[1].attribs.data}`,
-//                   url:element.children[2].children[3].children[1].attribs.src
-//               }
-//               // stream = [...stream,hot100];
-//             //   console.log(stream)
-//               // writeFileSync("stream.json",JSON.stringify(stream));
-//             });
-//           // var songs = (JSON.parse(readFileSync("/home/blabs/Desktop/vue/ziki-amp-web/stream.json")));
-//           //  e.sender.send('stream',songs);
-//          });
-
-//     });
 
 //       ipcMain.on('focus',(e,args)=>{
 //         // app.show();
@@ -110,14 +54,7 @@
 //         // });
          
 //        })
-//      //***fetch lyrics */
-//      ipcMain.on('fetchLyrics',(e,data)=>{
-//         musixmatch.getURL(`${data[0]} ${data[1]}`).then((url)=>{
-//             musixmatch.getLyrics(url).then((lyrics)=>{
-//               console.log(lyrics);
-//             e.sender.send('lyrics',lyrics);
-//             }).catch((error) => dialog.showErrorBox("Lyrics Error",`${error}`))
-//         });
+
      
 //      });
 //      if (process.env.WEBPACK_DEV_SERVER_URL) {

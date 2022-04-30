@@ -24,14 +24,14 @@
 
     <div class="more">
         <p>
-            <b>Bass {{Number((_bass/10)*100).toFixed(1)}} dB</b>
-        <input type="range" @input="updateBass" max="10" min="0" step="0.01" v-model="_bass"/>
+            <b>Bass {{Number((_bass/7)*100).toFixed(1)}} dB</b>
+        <input type="range" @input="updateBass" max="7" min="0" step="0.001" v-model="_bass"/>
 
         </p>
 
           <p>
-          <b>Treble {{Number((_treble/8) * 100).toFixed(1)}} dB</b>
-            <input type="range" @input="trebleUpdate" max="6" min="0" step="0.01" v-model="_treble"/>
+          <b>Treble {{Number((_treble/3) * 100).toFixed(1)}} dB</b>
+            <input type="range" @input="trebleUpdate" max="3" min="0" step="0.001" v-model="_treble"/>
         </p>
     </div>
 
@@ -121,7 +121,7 @@ export default {
         },
         trebleUpdate(e){
             //   console.log(e.value);
-            this.$store.commit('tuneTreble',this.treble);
+            this.$store.commit('tuneTreble',this._treble);
         },
         updateBass(){
             // console.log(this._bass);

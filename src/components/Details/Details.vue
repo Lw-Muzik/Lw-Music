@@ -2,12 +2,12 @@
     <div class="container">
             <p v-if="(title.length)<30" class="title">{{(title).replace(".mp3","")}}</p>
             <p v-else class="title">
-                <marquee direction="left" scrollamount="3" scrolldelay="5" behavior="scrolling">
+                <marquee direction="left" scrollamount="2" scrolldelay="5" behavior="scrolling">
                     {{(title).replace(".mp3","")}}
                 </marquee>
             </p>
             <!-- <div class="more"> -->
-                <span v-if="((album.length) < 40)">
+                <span v-if="((album.length) < 30)">
                     
                    <span class="txt"> {{artist}}</span>
                     <span class="bar">|</span>
@@ -18,7 +18,7 @@
                     </span>
                 </span>
 <!-- Aniamate the bigger text -->
-                <marquee direction="left" scrollamount="5" scrolldelay="2" behavior="scrolling" v-else class="more">
+                <marquee direction="left" scrollamount="6" scrolldelay="12" behavior="scrolling" v-else class="more">
                    <span class="txt"> {{artist}}</span>
                     <span>|</span>
                    <span class="txt">{{album}} </span>

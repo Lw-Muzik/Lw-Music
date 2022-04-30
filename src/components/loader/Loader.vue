@@ -88,17 +88,19 @@ export default {
 
         button{
             margin: 10px;
-            border: 1px solid #ddd;
-            background: rgba(0, 0, 0, 1);
+            border: none;
+            outline:none;
+            background: rgb(26, 23, 23);
+            box-shadow:inset 0px 0px 2px 0px rgb(211, 190, 190),inset 0px 2px 2px 0px rgb(211, 190, 190),inset 0px -3px 2px 0px rgb(211, 190, 190);
             color:#ddd;
             width: 50px;
             height: 50px;
             border-radius: 50%;
             transform: scale(1,1);
-            transition: 0.3s ease-in-out;
+            transition: 0.00001s ease-in-out;
             cursor: pointer;
             &:hover{
-                transform: scale(1.05,1.05);
+                transform: scale(1.02,1.02);
             }
         }
         input{
@@ -124,7 +126,7 @@ export default {
             transition: 0.3s ease-in-out;
             cursor: pointer;
             &:hover{
-                transform: scale(1.05,1.05);
+                transform: scale(1.02,1.02);
             }
             b{
                 font-size: 16px;

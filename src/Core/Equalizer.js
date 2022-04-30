@@ -45,24 +45,24 @@ class Equalizer{
 | Peaking | 16000 Hz | 1.41 | -11.1 dB |
          */
         this.bands = [
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:35,gain:0}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:55,gain:0}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:80,gain:0}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:150,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:31,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:58,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:85,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:250,gain:0}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:400,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:350,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:500,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:1000,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:2000,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:8000,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:16000,gain:0}),
         ];
         // base nknob
-        this.bass = new BiquadFilterNode(this.audioCtx, {type:'lowpass',frequency:80,gain:0});
+        this.bass = new BiquadFilterNode(this.audioCtx, {type:'lowpass',frequency:55,gain:0});
         this.bassBooster = new GainNode(this.audioCtx,{gain:0});
         /**
          * Stereo band boost
          */
-        this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:3000,gain:0});
+        this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:1000,gain:0});
         this.trebleBooster = new GainNode(this.audioCtx,{gain:0});
             /**
              * Room effects

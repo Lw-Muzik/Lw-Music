@@ -1,9 +1,9 @@
 
 import { createStore } from 'vuex'
 import { Equalizer } from '../Core/Equalizer';
+const { ipcRenderer } = window.require('electron');
 const { image } = require("../Core/default");
 import * as id3 from "music-metadata-browser";
-import axios from 'axios';
 // const { ipcRenderer } = window.require('electron');
 import MediaLibrary from 'media-library';
 const audio = new Audio();
@@ -30,12 +30,13 @@ export default createStore({
   },
   mutations: {
     setVolume(state,payload){
-      console.log(payload);
+      // console.log(payload);
       state.player.volume = payload;
     },
     updatePlaylist(state,payload){
       state.playlist = [...state.playlist,payload];
-      // localStorage.setItem("playlist",JSON.stringify(state.playlist));
+           ipcRenderer.sendSync('saveUserData',payload);
+      
     },
     dataList(state,payload){
       var library = new MediaLibrary({
@@ -78,7 +79,7 @@ export default createStore({
       state.bass.gain.value = payload;
     },
     tuneTreble(state,payload){
-      // console.log('treble '+payload)
+      console.log(payload)
       state.treble.gain.value = payload;
     },
     incrementCount(state,payload){

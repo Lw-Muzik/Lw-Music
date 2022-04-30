@@ -10,9 +10,9 @@ const routes = [
   // {
   //   path: '/hot100',
   //   name: 'Hot100',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
   //   component: () => import(/* webpackChunkName: "about" */ '../views/hot100.vue')
   // }
 ]
