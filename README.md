@@ -1,4 +1,4 @@
-## Ziki-Amp WebVersion
+#  B-labs Musix 
 
 ### Current Features
 - Loads multiple files in one microsecond
@@ -11,7 +11,7 @@
 
 * More features are coming....
 
-## ScreenShots
+## ScreenShots( Mobile View )
 
 <div style="display:flex;flex-direction:row;width:400px;">
 <img title="View one" style="margin:35px"src="./src/assets/shot1.png" width="230px;"/>
