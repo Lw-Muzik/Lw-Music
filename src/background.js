@@ -1,8 +1,10 @@
-'use strict'
+'use strict';
+
 import { readdirSync,  statSync, writeFileSync } from "fs";
 import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
+// import { setupTitlebar, attachTitlebarToWindow } from "custom-electron-titlebar";
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { extname, join } from 'path';
 const { musixmatch } = require('4lyrics');
@@ -11,11 +13,12 @@ const cheerio = require('cheerio');
 var MediaLibrary = require('media-library');
 const mm = require('music-metadata-browser');
 const { streams,processed } = require("./Main/System/Paths.js");
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
-
+// setupTitlebar();
 let temp = [];
 //   let db =[];
   let directories = [];
@@ -43,9 +46,11 @@ async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
-    alwaysOnTop:true,
+    // alwaysOnTop:true,
+    // frame:false,
     height: 600,
     webPreferences: {
+      preload:join(__dirname,"preload.js"),
            nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
             contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
             enableRemoteModule: process.env.ELECTRON_NODE_INTEGRATION,
@@ -54,10 +59,7 @@ async function createWindow() {
             nodeIntegrationInWorker:process.env.ELECTRON_NODE_INTEGRATION
     }
   });
-
-    
-    recursiveFolders(app.getPath("music"));
-
+  // attachTitlebarToWindow(win);
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
@@ -70,24 +72,22 @@ async function createWindow() {
   }
   // save user playlist
   // ipcMain.on('saveUserData',(event,args) => {
-    writeFileSnyc(processed,JSON.stringify(args));
+    // writeFileSnyc(processed,JSON.stringify(args));
   // })
 /**
  * load tracks from selected directory
  */
          ipcMain.on('openDir',(event,args)=>{
-          // 
+          // choose music directorty
+              dialog.showOpenDialog(win,{
+                  properties:['openDirectory'],
+                  defaultPath:app.getPath("music"),
+                  buttonLabel:"Select music folder",
+                  title:"Choose a folder"
 
-           
-              // dialog.showOpenDialog(win,{
-              //     properties:['openDirectory'],
-              //     defaultPath:app.getPath("music"),
-              //     buttonLabel:"Select music folder",
-              //     title:"Choose a folder"
-
-              // }).then((filePath)=>{
-              // recursiveFolders(filePath.filePaths[0]);
-              // });
+              }).then((filePath)=>{
+              recursiveFolders(filePath.filePaths[0]);
+              });
        });
     /*
     Get hot 100 

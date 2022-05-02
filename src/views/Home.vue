@@ -15,7 +15,6 @@
         :class="[showEQ?'active':'','EQ']"
           @closeEQ="closeEQ"
           :bandSet="eqBands"
-          
         />
 
       <Loader 
@@ -72,6 +71,7 @@
         @live="liveS"
        /> -->
        <div  class="b">
+         <button v-show="!showEQ" @click="viewLib">Library</button>
          <button v-show="!showEQ" @click="viewOpt">View</button>
          <button v-show="!showEQ" @click="loadLyrics">Lyrics</button>
          <button v-show="!showEQ" @click="loadHot100">Hot 100</button>
@@ -150,86 +150,30 @@ import Lyrics from "@/components/Lyrics/Lyrics.vue";
 import GridView from "@/components/Queue/Grid.vue";
 import Hot100 from "@/components/Music/Hot100.vue";
 import BottomSheet from "@/components/model/BottomSheet.vue";
-// import { mapGetters } from 'vuex';
-// const { ipcRenderer } = window.require('electron');
-const { Visualizer } = require("../Core/Visualizer");
-const { image } = require("../Core/default");
+const { ipcRenderer } = window.require('electron');
+import { Visualizer } from "@/Core/Visualizer";
+import { image } from "@/Core/default";
+
 export default {
-  name: 'Home',
+  name: 'Player',
   data(){
-  
     return {
-      displayVisual:false,
-       audio:null,
-       playlist:[],
-       bufferArray:[],
-       current:[],
-       delayArr:[],
-       feedBackArr:[],
-       title:"",
-       artist:"",
-       album:"",
-       nPlay:{title:"title", artist:"",album:"",artwork:image},
-      nextTrack:{title:"",artist:"",image:image },
-       showEQ:false,
-       showCover:true,
-       showLyrics:false,
-       listView:false,
-       ptr1:true,
-       ptr2:true,
-       showNext:false,
-       image:image,
-       size:0,
-       curlTime:0,
-       roomView:false,
-       progress:0,
-       progMax:1,
-       trackData:File,
-       durlTime:"",
-       showPlay:true,
-       showPause:false,
-       showOpt:false,
-       btnValue:"EQ",
-       queueView:false,
-       showV:false,
-       vol:0,
-       visual:true,
-       loop:false,
-       stopAnime:0,
-       countPlay:0,
-       eqBands:[],
-      canvas:null,
-      showHot100:false,
-      context:null,
-      visualize:null,
-      shuffle:false,
-      checker:false,
-      selected:0,
-      frameResize:false,
-      vise:null,
-      eq:null,
-      lyrics:'',
-      audioSrc:''
+       displayVisual:false,audio:null, playlist:[], bufferArray:[],current:[],
+       delayArr:[],feedBackArr:[], title:"",artist:"",album:"", nPlay:{title:"title", artist:"",album:"",artwork:image},
+       nextTrack:{title:"",artist:"",image:image }, showEQ:false,showCover:true, showLyrics:false,
+       listView:false, ptr1:true,ptr2:true, showNext:false,
+       image:image,size:0, curlTime:0,roomView:false,progress:0,
+       progMax:1, trackData:File, durlTime:"",showPlay:true,showPause:false,
+       showOpt:false, btnValue:"EQ",queueView:false,showV:false,vol:0,visual:true,
+       loop:false,stopAnime:0,countPlay:0, eqBands:[], canvas:null,showHot100:false,
+      context:null,showLib:false, visualize:null, shuffle:false, checker:false,
+      selected:0,frameResize:false, vise:null, eq:null, lyrics:'', audioSrc:''
     }
   
   },
   components: {
-    Slider,
-    Loader,
-    Lyrics,
-    Cover,
-    Details,
-    Hot100,
-    BottomSheet,
-    GridView,
-    Control,
-    Lyrics,
-    Volume,
-    Queue,
-    Dropdown,
-    EQ,
-    Room,
-    Search,
+    Slider, Loader, Lyrics,Cover,Details,Hot100,BottomSheet,GridView,
+    Control,Lyrics, Volume,Queue,Dropdown,EQ,Room,Search
   },
   methods: {
     loadTrack(value){
@@ -254,33 +198,23 @@ export default {
           this.ptr2 = false;
         this.queueView = !this.queueView;
     },
-    viewOpt(){
-      this.showOpt = true;
-    },resize(){
-      this.frameResize = !this.frameResize;
-    },
-    closeHot(){
-      this.showHot100 = !this.showHot100;
-    },
-    liveS(query){ /// to perform a live search
-        this.playlist = this.playlist.filter(song => {
-          return song.findIndex(data => {
-            data.name == query;
-          })
-        });
-        // console.log(this.playlist);
-    },
+    viewOpt(){this.showOpt = true;},
+
+    viewLib(){this.showLib = true;},
+
+    resize(){this.frameResize = !this.frameResize;},
+
+    closeHot(){this.showHot100 = !this.showHot100;},
+    liveS(query){ /* to perform a live search*/ },
   toggleVisualWidget(){
       this.displayVisual = ! this.displayVisual;
      this.stopAnime = this.displayVisual == true?1:0;
   },
-  closeB(){
-    this.showNext = false;
-  },
+  closeB(){this.showNext = false; },
   loadLyrics(){
     this.$store.commit('fetchLyrics',[this.title,this.artist]);
     this.lyrics = "";
-       this.showLyrics = !this.showLyrics;
+    this.showLyrics = !this.showLyrics;
 
   },
   closeLyrics(){
@@ -296,11 +230,7 @@ export default {
     },
     loadSingle(file){
       let id = 0;
-      const listTile = {
-              id:id,
-              data: file,
-              active:false
-              };
+      const listTile = { id:id, data: file, active:false };
       this.playlist = [...this.playlist,listTile];
       this.commonComand(file);
       this.showPlay = !this.showPlay;
@@ -415,7 +345,6 @@ export default {
       this.showCover = !this.showCover;
     },
     executeNext(file){
-        
          mm.parseBlob(file).then((meta)=>{
            const buff = meta.common.picture[0].data;
            this.nextTrack.image = buff == null || buff == undefined ?this.image:this.imageProcess(buff);
@@ -441,6 +370,7 @@ export default {
         playL(queue){
           this.commonComand(queue[0].data);
           this.countPlay = queue[1];
+          console.log(this.playlist[(queue[1]+1)]);
           this.closeLQueue();
           this.toggleList(queue[1]);
           // this.listView = !this.listView;
@@ -453,9 +383,7 @@ export default {
       loadHot100(){
         this.showHot100 = !this.showHot100;
         this.$store.commit('streamMusic',`https://www.nowviba.com/music/pages/top100.php`);
-         //**load online streams */
-  
-      
+         /**load online streams */
       },
     showQueue(){
       this.ptr2 = false;
@@ -506,12 +434,6 @@ export default {
   },
   
   mounted(){
-    // ipcRenderer.sendSync('dataList');
-    
-    // ipcRenderer.on('lib',(e,a)=>{
-    //   this.current = a;
-    //   // console.log(a);
-    // })
 // console.log(new MediaStream().getTracks())
   this.stopAnime = this.displayVisual == true?1:0;
     this.playlist = this.$store.getters.getPlaylist;
@@ -604,273 +526,6 @@ this.showLyrics = false;
  
  <style lang="scss" scoped>
 @import "../Design/Hot100.scss";
- *{
-   user-select: none;
- }
-   .visual{
-          width: 100%;
-          height: 100%;
-           backdrop-filter: blur(94px)!important;
-          z-index: -1!important;
-          position: fixed;
-          top: 0;
-          left: 0;
-          pointer-events:none;
-          background: rgba(0,0,0,0.3);
-          canvas{
-            z-index: 2!important;
-          width:100%;
-          height: 100%;
-
-        }
-    }
-   .home {
-      top: 0;
-      left: 0;
-       background: rgba(0,0,0,0.4);
-        width: 100%;
-        height: 100%;
-        overflow: hidden !important;
-        z-index:2!important;
-        position: fixed;
-         display: flex!important;
-        flex-direction:row!important;
-        justify-content: space-around!important;
-        align-items: center!important;
-        color:#ddd;
-      .prt2,.part1{
-          margin: 15px;
-          opacity:0;
-          display: flex;
-          flex-direction: column!important;
-          justify-content: center!important;
-          z-index: 3!important;
-          align-items: center!important;
-          visibility: hidden!important;
-          transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-        }
-        .prt2.active , .part1.active{
-            opacity:1;
-            visibility: visible !important;
-        }
-      }
-      .EQ{
-        opacity:0;
-        visibility: hidden;
-        transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-        position: absolute;
-      }
-      .EQ.active{
-         opacity:1;
-        visibility: visible;
-      }
-      @keyframes tapEffect {
-        0%{
-          transform:scale(0);
-        }
-        50%{
-          transform:scale(1.2,1.2);
-        }
-        100%{
-          transform:scale(1,1);
-
-        }
-      }
-      .lyrics{
-        width: fit-content;
-        height: max-content;
-        z-index: 30!important;
-        right:-400px;
-        visibility: hidden;
-        top:20px;
-        transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-        position:absolute!important;
-      }
-       .lyrics.active{
-         animation: 2s 2s linear forwards;
-        visibility: visible;
-         right:30px;
-       }
-      .gView{
-        width: 100%;
-        height: 100%;
-        position:absolute;
-        visibility: hidden;
-        left:-5000px;
-        z-index:120px!important;
-        transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-        // opacity:0;
-      }
-      .gView.active{
-          width: 100%;
-          left:0px;
-             visibility:visible;
-        // opacity:1;
-      }
-       .listView{
-         width: fit-content;
-         height: max-content;
-        position:absolute;
-        visibility: hidden;
-        bottom:-5000px;
-        z-index:120px!important;
-        transition: 0.83s ease-in-out;
-        // opacity:0;
-      }
-        .listView.active{
-        bottom:150px;
-          // width: 100%;
-          left:50px;
-             visibility:visible;
-        // opacity:1;
-      }
-     
-    .options{
-      border: 1px solid #eeeeee77;
-      padding:10px;
-      width:140px;
-      height:100px;
-      border-radius:10px;
-      position: absolute;
-      top: 100px;
-      z-index: 6!important;
-      background: rgba(206, 198, 198, 0.356);
-      backdrop-filter: blur(94px);
-       opacity:0;
-        visibility: hidden;
-        transition: 0.3s ease-in-out;
-      p{
-        margin:10px;
-        padding:5px;
-        transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-        &:hover{
-          background:#eeeeee50;
-          border-radius:10px;
-          padding:5.3px;
-        }
-      }
-    }
-    .options.active{
-        opacity:1;
-        visibility: visible;
-    }
-    .b{
-      display: flex;
-      flex-direction: row!important;
-      justify-content: space-evenly;
-      button{
-        width: 90px;
-        height: 40px;
-        border: 1px solid #dddddd4f;
-        background: rgba(0,0,0,0.1);
-        color: #eeeeee50;
-        cursor: pointer;
-        font: 400 16px Ubuntu,Arial;
-        transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-        &:hover{
-             border: 1px solid #dddddd;
-        color: #eee;
-
-        }
-      }
-    }
-      .volume{
-        left: 0px;
-        transition:0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-        position: absolute;
-        visibility: hidden;
-        opacity: 0;
-      }
-      .volume.active{
-        visibility: visible;
-
-        left: 90px;
-        opacity: 1;
-
-      }
-      .room{
-        transition:0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-        opacity:0;
-        position: absolute;
-        bottom:0px;
-        visibility: hidden;
-      }
-      .room.active{
-        bottom: 120px;
-         visibility: visible;
-        opacity: 1;
-      }
-@media (max-width:901px) {
-   .home{
-        backdrop-filter: blur(94px);
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        background: rgba(0,0,0,0.5);
-        top: 0;
-        left: 0;
-        display: flex!important;
-        flex-direction: column  !important;
-        justify-content: center!important;
-        align-items: center!important;
-        color:#ddd;
-        .visual{
-          width: 100%;
-          height: 100%;
-          z-index: 3!important;
-          position: fixed;
-          canvas{
-          width:100%;
-          height: 100%;
-        }
-      }
-        
-       .prt2,.part1{
-           display: flex;
-          flex-direction: column!important;
-          justify-content: center!important;
-          align-items: center!important;
-       }
-   }
-}
-    
-@media (max-width:480px) {
-   .home{
-        backdrop-filter: blur(94px);
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        background: rgba(0,0,0,0.5);
-        top: 0;
-        left: 0;
-        display: flex!important;
-        flex-direction: column  !important;
-        justify-content: center!important;
-        align-items: center!important;
-        color:#ddd;
-        
-       .prt2,.part1{
-          
-           display: flex;
-          flex-direction: column!important;
-          justify-content: center!important;
-          align-items: center!important;
-        }
-      }
-}
-     .bottom{
-         width: 500px;
-          position: absolute;
-          bottom:100px;
-          z-index: 30!important;
-          right: 10px;
-          visibility: hidden;
-          opacity: 0;
-          transition: 0.3s cubic-bezier(0.045, 0.05, 0.55, 0.95);
-    }
-    .bottom.active{
-       right: 500px;
-        visibility: visible;
-          opacity: 1;
-    }
+@import "../Design/player.scss";
+ 
  </style>

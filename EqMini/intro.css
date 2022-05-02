@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css?family=Patua+One');
+
+.body {
+  font-family: 'Patua One', cursive;
+}
+#equalizer {
+  width: 500px;
+  margin: 50px auto;
+  border: 5px solid #4B384C;
+}
+#equalizer h2 {
+  font-size: 50px;
+  text-align: center;
+  color: #632C65;
+  line-height: 1.5px;
+}
+#equalizer .color-1 {
+  color: #E2A9E5;
+  animation-name: color-1;
+  animation-duration: 0.9s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  display: block;
+  width: 5px;
+  height: 10px;
+}
+#equalizer .color-2 {
+  color: #632C65;
+  animation-name: color-2;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  display: block;
+  width: 5px;
+  height: 10px;
+}
+#equalizer .color-3 {
+  color: #4B384C;
+  animation-name: color-3;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  display: block;
+  width: 5px;
+  height: 10px;
+}
+
+@keyframes color-1 {
+  from {
+    width: 5px;
+  }
+  to {
+    width: 500px;
+    background-color: #E2A9E5;
+  }
+}
+@keyframes color-2 {
+  from {
+    width: 5px;
+  }
+  to {
+    width: 450px;
+    background-color: #632C65;
+  }
+}
+@keyframes color-3 {
+  from {
+    width: 5px;
+  }
+  to {
+    width: 475px;
+    background-color: #4B384C;
+  }
+}
+@keyframes ohh {
+  from {
+    color: #E2A9E5;
+  }
+  to {
+    color: #632C65;
+  }
+}

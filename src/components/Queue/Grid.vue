@@ -29,15 +29,13 @@
 export default {
     name:'GridView',
     props:{
-        total:0,
-        listTrack:Array
+        total:0,listTrack:Array
     },
     data() {
         return {
             showProgress:false,
         }
     },
-    components:{},
 }
 </script>
 <style lang="scss" scoped>
@@ -216,15 +214,9 @@ export default {
             cursor: pointer;
         box-shadow: -20px 0px 0px -20px #ddd;
         }
-        &:hover .play{
+        &:hover .play{ bottom: 50px; }
 
-        right: 50px;
-    
-        }
-         &:hover img{
-                transform: scale(1.1,1.1);
-               box-shadow:0px 0px 0px 0px #eee,0px 0px 0px 0px #eee;
-            }
+         &:hover img{ transform: scale(1.1,1.1); }
              &:hover .data{
                 transform: scale(1.05,1.05);
             //    box-shadow:0px 0px 0px 0px #eee,0px 0px 0px 0px #eee;
