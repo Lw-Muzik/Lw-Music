@@ -109,6 +109,16 @@ async function createWindow() {
             webviewTag:true 
     }
   });
+  win.webContents.on('did-start-loading',()=>{
+    /**Settings path */
+    if(existsSync(settings) == false){
+      const set = {
+          savedPaths:[], 
+          volume:0, 
+      };
+      writeFileSync(settings,JSON.stringify(set));
+}
+  });
   // send settings url to render process when dom starts loading
  win.webContents.on('did-stop-loading',async()=>{
      //

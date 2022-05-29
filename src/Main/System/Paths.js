@@ -30,17 +30,10 @@ if(existsSync(downloads) == false){
 if(existsSync(art) == false){
     mkdirSync(art);
 }
-/**Settings path */
-if(existsSync(settings) == false){
-    const set = {
-        savedPaths:[], 
-        volume:0, 
-    };
-    writeFileSync(settings,JSON.stringify(set));
-}
+
 /**generating favourite */
 if (existsSync(favourite) == false) {
-    writeFileSync(settings,JSON.stringify([]))
+    writeFileSync(favourite,JSON.stringify([]))
 }
 export {
     appStore,
