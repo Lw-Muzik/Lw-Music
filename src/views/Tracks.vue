@@ -41,17 +41,10 @@ export default {
   },
   methods:{
       qPlay(song){
-        console.log(this.player);
        this.player.src = song;
        this.player.play();
       
       },
-     async toBlob(path) {
-        // let result = '';
-      const res = await fetch(path);
-          this.url = res.url;
-
-      }
 
   },
   computed: {

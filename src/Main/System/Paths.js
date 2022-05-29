@@ -36,7 +36,7 @@ if(existsSync(settings) == false){
         savedPaths:[], 
         volume:0, 
     };
-    writeFileSync(settings,JSON.stringify(set))
+    writeFileSync(settings,JSON.stringify(set));
 }
 /**generating favourite */
 if (existsSync(favourite) == false) {

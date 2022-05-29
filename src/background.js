@@ -88,7 +88,7 @@ var dPath = "";
     });
 });
  }
-const icon = nativeImage.createFromDataURL(image)
+const icon = nativeImage.createFromDataURL(image);
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -111,15 +111,9 @@ async function createWindow() {
   });
   // send settings url to render process when dom starts loading
  win.webContents.on('did-stop-loading',async()=>{
-   
-     win.webContents.send("settingsUrl",settings);
-     // send the path for songs
-     win.webContents.send("allSongsUrl",processed);
-     // send streams path to the renderer
-     win.webContents.send('stream',streams)
      //
      if (existsSync(favourite) == false) {
-      writeFileSync(favourite,JSON.stringify([]))
+      writeFileSync(favourite,JSON.stringify([]));
   }
 })
 win.webContents.on('did-frame-finish-load',() => {
@@ -141,6 +135,7 @@ win.webContents.on('did-frame-finish-load',() => {
     // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app');
+   win.webContents.openDevTools()
   // win.setIcon(image)
     // Load the index.html when not in development
     await win.loadURL('app://./index.html');
@@ -246,7 +241,7 @@ app.on('ready', async () => {
     try {
       await installExtension(VUEJS3_DEVTOOLS)
     } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
+      console.error('Vue Devtools failed to install:', e.toString());
     }
   }
   
@@ -269,7 +264,7 @@ app.on('ready', async () => {
  let tray = new Tray(icon);
  tray.setContextMenu(menue);
  Menu.setApplicationMenu(menue)
-  createWindow()
+  await createWindow();
 })
 
 // Exit cleanly on request from parent process in development mode.

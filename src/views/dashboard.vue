@@ -47,14 +47,7 @@ export default {
     }
   },
   components:{ Titlebar, SideBar, Top , AddFolder },
-  methods:{
-    openDir(){
-      ipcRenderer.send("openDir");
-    },
-    childPop(){
-      const win = remote.getCurrentWindow();
-      remote.dialog.showCertificateTrustDialog(win);
-    },
+  methods:{ 
     showTrack(){
       let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
       this.load = raw;

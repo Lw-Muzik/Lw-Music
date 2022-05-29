@@ -61,59 +61,32 @@ export default {
   data() {
     return {
       dash:true,
+      url:`${remote.app.getPath('userData')}/settings.json`,
       store:'',
       paths:[]
     }
   },
     components:{Titlebar},
-
- created() {
-   ipcRenderer.on('settingsUrl',(e,args)=>{
-     this.store = args;
-     this.$store.commit('retainSettingsPath',args);
-     /**Checking if the getter has the settings url */
-     if(this.$store.getters.getSettingsPath == ""){
-        this.paths = JSON.parse(readFileSync(args)).savedPaths;
-     }else{
-       this.paths = JSON.parse(readFileSync(this.$store.getters.getSettingsPath)).savedPaths;
-     }
-   });
- },
  mounted() {
-   if (this.$store.getters.getSettingsPath != "") {
-       this.paths = JSON.parse(readFileSync(this.$store.getters.getSettingsPath)).savedPaths;
-   }
-   ipcRenderer.on('allSongsUrl',(eve,args)=>{
-      // console.log(args)
-   });
+       this.paths = JSON.parse(readFileSync(this.url)).savedPaths;
  },
   methods: {
        chooseFolder(){
-        // console.log(this.$store.getters.getSettingsPath);
         ipcRenderer.sendSync("loadFolder");
         ipcRenderer.on("chosenFolder",(event,args)=>{
-          if(this.$store.getters.getSettingsPath != ""){
-          // console.log(`response from main process ${args}`);
-                let s = JSON.parse(readFileSync(this.$store.getters.getSettingsPath));
+                let s = JSON.parse(readFileSync(this.url));
                 this.paths = [...this.paths,args];
                 s.savedPaths = this.paths;
-                writeFileSync(this.$store.getters.getSettingsPath,JSON.stringify(s));
-          }else{
-                let s = JSON.parse(readFileSync(this.store));
-                this.paths = [...this.paths,args];
-                s.savedPaths = this.paths;
-                writeFileSync(this.store,JSON.stringify(s));
-          }
-
+                writeFileSync(this.url,JSON.stringify(s));
           /**After upadating the UI then load the tracks in the database */
           // event.sender.sendSync("loadTracks");
         })
     },
     remove(id){
-      let update = JSON.parse(readFileSync(this.$store.getters.getSettingsPath));
+      let update = JSON.parse(readFileSync(this.url));
         this.paths.splice(id,1);
         update.savedPaths = this.paths;
-        writeFileSync(this.$store.getters.getSettingsPath,JSON.stringify(update));
+        writeFileSync(this.url,JSON.stringify(update));
     },
     goToHome(){
       // this.$router.push('/');

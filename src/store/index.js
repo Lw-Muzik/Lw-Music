@@ -10,9 +10,9 @@ audio.crossOrigin = "anonymous";
 
 const eq = new Equalizer(audio);
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
 export default createStore({
   state: {
-    settingsPath:"",
     volume:0.17,lyrics:'', playlist:[], reduceCount:0,
     player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
     bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),
@@ -63,10 +63,7 @@ export default createStore({
       state.counter = payload;
       // console.log(payload)
   },
-  retainSettingsPath(state,payload){
-    // console.log(payload)
-      state.settingsPath = payload;
-  },
+
   playSong(state,payload){
     state.player.src = payload;
     state.player.play();
@@ -99,7 +96,6 @@ export default createStore({
     getId3:(state)=> state.Id3,
     reduceCount:(state)=> state.reduceCount,
     getCount:(state)=> state.counter,
-    getSettingsPath:(state) => state.settingsPath,
     getGenreCategory:(state) => state.genreCategory,
     getGenreBack:(state) => state.genreBack,
   }
