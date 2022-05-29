@@ -7,7 +7,7 @@
         <!-- sidebar -->
           <side-bar/>
         <!-- Middle grid -->
-        <div class="bg-yellow-600 w-3/4" >
+        <div class="mid w-3/4" >
           <br>
           <br>
             <div class="middle flex flex-auto flex-col justify-center">
@@ -19,10 +19,12 @@
           </div>
 
           <!-- last grid  -->
-          <div class="bg-blue-700 w-96">3</div>
+          <div class="rightSide flex flex-col justify-center">
+              <add-folder/>
+          </div>
   </div>
    <!-- bottom widget -->
-       <div class="layout bg-red-800 p-10 h-20 w-screen">
+       <div class="bg-red-800 p-10 h-20 w-screen">
         
       </div>
   </div>
@@ -35,7 +37,7 @@ import Top from "./widgets/Top.vue";
 import { ipcRenderer, remote } from "electron";
 import { readFileSync } from 'fs';
 import * as mi from "material-icons";
-
+import AddFolder from "./widgets/addFolder.vue";
 export default {
   name:"Dashboard",
   data() {
@@ -44,7 +46,7 @@ export default {
       
     }
   },
-  components:{ Titlebar, SideBar, Top},
+  components:{ Titlebar, SideBar, Top , AddFolder },
   methods:{
     openDir(){
       ipcRenderer.send("openDir");
@@ -66,18 +68,44 @@ export default {
   top: 0;
     width:100%;
   }
+  .mid{ background: #0a001aee;}
   .app{
     overflow: hidden;
   }
   .router-view{
     &::-webkit-scrollbar{
       appearance: none;
-      width: 2px;
+      width: 10px;
     }
+    
+      &::-webkit-scrollbar-thumb{
+      appearance: none;
+      width: 5px;
+      background: #706e65;
+      border-radius: 10px;
+    }
+    
     overflow-x: hidden;
     overflow-y: scroll;
     width:fit-content;
     height: calc(65vh - 0px);
+  }
+  .rightSide{ 
+        &::-webkit-scrollbar{
+      appearance: none;
+      width: 10px;
+    }
+    
+      &::-webkit-scrollbar-thumb{
+      appearance: none;
+      width: 5px;
+      background: #706e65;
+      border-radius: 10px;
+    }
+     overflow-x: hidden;
+    overflow-y: scroll;
+    width:450px;
+    background:#222;
   }
   .middle{
     align-items: center;

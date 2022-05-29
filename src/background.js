@@ -11,13 +11,14 @@ import { Axios } from 'axios';
 const cheerio = require('cheerio');
 const { streams,processed,art ,settings, favourite} = require("./Main/System/Paths.js");
 import NodeID3 from "node-id3";
+//   canvas_el
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
 
-let temp =  JSON.parse(`${readFileSync(processed)}`) , d = '';
+const d = '';
 var dPath = "";
 
  // recursively moves through directories looking for .mp3 files
@@ -26,44 +27,67 @@ var dPath = "";
   * @param {String } dir 
   */
  const recursiveFolders =  async (dir)=>{
-   /**
-    * Reads only mp3 files from directory
-    */
+   /**laoding the music store */
+    let temp =  JSON.parse(`${readFileSync(processed)}`)
+   /** Reads only mp3 files from directory */
+   const persistent = JSON.parse(readFileSync(processed));
   readdir(dir,async (error,files)=>{
+    const store = JSON.parse(readFileSync(processed));
     if (error) throw new Error(`Sync Error ${error}`);
-  files.forEach(async (track, index) => {
-      //  
-      let newPath = dir + '/' + track;
+    
+   
+      files.forEach(async (track, index) => {
+        //  
+        let newPath = dir + '/' + track;
+        if (statSync(newPath).isDirectory() == true) {
+          await recursiveFolders(newPath);
+          d = track;
+          dPath = newPath;
+        } else if (statSync(newPath).isFile() == true && extname(newPath) == ".mp3") {
+          
+          const tags = NodeID3.read(`${newPath}`);
+          // Storing cover arts
+          if(tags.image.imageBuffer != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
+            writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer)
+          }
 
-      if (statSync(newPath).isDirectory() == true) {
-        await recursiveFolders(newPath);
-        d = track;
-        dPath = newPath;
-      } else if (statSync(newPath).isFile() == true && extname(newPath) == ".mp3") {
-
-        // temp = [...temp,{corePath:`${newPath}`}];
-        const tags = NodeID3.read(`${newPath}`)
-     
-        if(tags.image.imageBuffer != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
-          writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer)
-        }
-        let meta =  {
-          title: tags.title == undefined ? track.replace(".mp3", "") : tags.title,
-          genre: tags.genre == undefined ? "Unknown genre" : tags.genre,
-          album: tags.genre == undefined ? "Unknown album" : tags.album,
-          artist: tags.artist == undefined ? "Unknown artist" : tags.artist,
-          artwork: `${join(art, track.replace(".mp3", ".jpeg"))}`,
-          folderPath: dPath,
-          trackPath: newPath,
-          data: `file://${newPath}`,
-        };
-        temp =  [...temp, meta];
+          /**Checking store is not empty and  if the .mp3 file is already stored */
+        if(persistent.length != 0){
+            if(newPath != persistent[index].trackPath){
+                // console.log(newPath == persistent[index].trackPath)
+                  let meta =  {
+                    title: tags.title == undefined ? track.replace(".mp3", "") : tags.title,
+                    genre: tags.genre == undefined ? "Unknown genre" : tags.genre,
+                    album: tags.genre == undefined ? "Unknown album" : tags.album,
+                    artist: tags.artist == undefined ? "Unknown artist" : tags.artist,
+                    artwork:`${join(art, track.replace(".mp3", ".jpeg"))}`,
+                    folderPath: dPath,
+                    trackPath: newPath,
+                    data: `file://${newPath}`,
+                  };
+                  temp =  [...temp, meta];
+                }
+                writeFileSync(processed, JSON.stringify(temp));
+        }else{
+          console.log(persistent.length)
+       
+          let meta =  {
+            title: tags.title == undefined ? track.replace(".mp3", "") : tags.title,
+            genre: tags.genre == undefined ? "Unknown genre" : tags.genre,
+            album: tags.genre == undefined ? "Unknown album" : tags.album,
+            artist: tags.artist == undefined ? "Unknown artist" : tags.artist,
+            artwork:`${join(art, track.replace(".mp3", ".jpeg"))}`,
+            folderPath: dPath,
+            trackPath: newPath,
+            data: `file://${newPath}`,
+          };
+          temp =  [...temp, meta];
       }
       writeFileSync(processed, JSON.stringify(temp));
+    }
     });
 });
  }
-let globalWin = null;
 const icon = nativeImage.createFromDataURL(image)
 async function createWindow() {
   // Create the browser window.
@@ -97,9 +121,18 @@ async function createWindow() {
      if (existsSync(favourite) == false) {
       writeFileSync(favourite,JSON.stringify([]))
   }
-  })
-
-  globalWin = win;
+})
+win.webContents.on('did-frame-finish-load',() => {
+    const paths = JSON.parse(readFileSync(settings)).savedPaths;
+      /** to avoid repeating urls lets use a set*/
+     /* The after send unique data */
+     console.log("Done loading....")
+     if(paths.length != 0){
+       paths.forEach(async (url)=> await recursiveFolders(url));
+     }else{
+      writeFileSync(processed, JSON.stringify([]));
+     }
+})
 
   // attachTitlebarToWindow(win);
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -114,28 +147,13 @@ async function createWindow() {
   }
   // save user playlist
   ipcMain.on('saveUserData',(event,args) => {
-    writeFileSync(processed,JSON.stringify(args));
+    //writeFileSync(processed,JSON.stringify(args));
   })
   /*
    *On response from the rendererer then load save persistent data 
    */
-  //
-    // ipcMain.on('tracks',async ()=>{
-    //   /**
-    //    * @access { Array } paths
-    //    */
-    //   // to avoid repeating urls lets use a set
-    //   const unq = new Set();
 
-    //  const paths = JSON.parse(readFileSync(settings)).savedPaths;
 
-    //  paths.forEach(async (url)=>  unq.add(url));
-    //  /*
-    
-    //  The after send unique data
-    // */
-    //  unq.forEach(async (url)=> await recursiveFolders(url));
-    // });
 /**
  * load tracks from selected directory
  */
@@ -146,17 +164,20 @@ async function createWindow() {
                   defaultPath:app.getPath("music"),
                   buttonLabel:"Select",
                   title:"Choose a music folder"
-              }).then(async (response)=>{
-                event.sender.send("chosenFolder",response.filePaths[0]);
-                await recursiveFolders(`${response.filePaths[0]}`)
+              }).then((response)=>{
+                if (response.filePaths[0] != "") {
+                  event.sender.send("chosenFolder",response.filePaths[0]);
+                  recursiveFolders(`${response.filePaths[0]}`)
+                }else{
+                  event.sender.send("nothing");
+                }
+                
               });
        });
-       
     /*
        Get hot 100
     */
             let stream = [];
-
        ipcMain.on('hot100',(e,url)=>{
            Axios.get(url).then((response)=>{
               var dom = response.data;
@@ -173,22 +194,22 @@ async function createWindow() {
                   url:element.children[2].children[3].children[1].attribs.src
               }
               stream = [...stream,hot100]
-            
               writeFileSync(streams,JSON.stringify(stream));
             });
-          var songs = (JSON.parse(readFileSync(streams)));
-          // console.log(songs);
-          //  e.sender.send('stream',songs);
          });
-
     });
 
-    // ipcMain.on('play',(e,args)=>{
-    //     audio.src = args;
-    //     audio.play();
-    // })
+    ipcMain.on('refresh',(e,args)=>{
+       const paths = JSON.parse(readFileSync(settings)).savedPaths;
+        if(paths.length != 0){
+        console.log("refreshing new ones.....")
+          paths.forEach(async (url)=> await recursiveFolders(url));
+        }else{
+        console.log("refreshing to empty.....")
+        writeFileSync(processed, JSON.stringify([]));
+        }
+    })
   /**
-   * 
    * fetch lyrics
    */
    ipcMain.on('fetchLyrics',(e,data)=>{
@@ -256,7 +277,7 @@ if (isDevelopment) {
   if (process.platform === 'win32') {
     process.on('message', (data) => {
       if (data === 'graceful-exit') {
-        app.quit()
+        app.quit();
       }
     })
   } else {

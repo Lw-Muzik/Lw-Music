@@ -29,15 +29,13 @@
 
   <div class="intro">
     <div class="form">
-       <input accept=".mp3" type="file" id="file" name="file" class="file">
        <label for="file" class="text">Choose a music folder</label>
     <div class="path-panel">
-            
        <p v-if="paths.length == 0" class="no-path-tile ">
           No path selected
        </p>
         <p v-else v-for="(path,index) in paths" :key="path" class="path-tile">
-           <span class="icon mi mi-folder"></span>{{path}} <span class="close" @click="remove(index)">&times;</span>
+           <span class="icon mi mi-folder"></span> <span class="path">{{path}}</span> <span class="close" @click="remove(index)">&times;</span>
        </p>
     </div>
      <br>
@@ -77,10 +75,8 @@ export default {
      if(this.$store.getters.getSettingsPath == ""){
         this.paths = JSON.parse(readFileSync(args)).savedPaths;
      }else{
-      //  console.log(`from created ${this.$store.getters.getSettingsPath}`)
        this.paths = JSON.parse(readFileSync(this.$store.getters.getSettingsPath)).savedPaths;
      }
-     
    });
  },
  mounted() {

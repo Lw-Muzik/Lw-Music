@@ -5,7 +5,6 @@
             <!-- <details class="details"> -->
                 <span class="title flex flex-row justify-around">{{title}}</span> 
                 <span class="badge">{{total}}</span>
-        <!-- </details> -->
         </div>
     </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
     <div class="sidebar flex flex-col justify-space-between items-center w-64" >
-            <img src="../../assets/pAudio.png" class="p-5 w-20 "/>
+            <img src="../../assets/pAudio.png" class="p-3 py-10 w-20 "/>
              <div class="w-full">
                  <list-tile 
                  v-for="(item) in sidebar" 
@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { ipcRenderer } from "electron";
 import ListTile from "./ListTile.vue"
 export default {
     name:"SideBar",
@@ -45,6 +44,7 @@ export default {
 <style lang="scss" scoped>
     .sidebar{
       padding-top:25px;
+      background: #120320;
     }
    
     

@@ -31,6 +31,7 @@ export default {
    }
       width:700px;
       line-height: -20px;
+      color: #eeeeeeaf;
       // box-shadow: -4px -0px 0px 0px #eeee;
       background:rgba($color: #948E8E, $alpha:0.4);
       padding: 4px;
@@ -48,7 +49,7 @@ export default {
        box-shadow: -4px 0px 0px 0px #eeee,
                    4px 0px 0px 0px #eeee;
                           // transform:scale(1.01,1.01);
-        background:rgba($color: #CABCBC, $alpha:0.3);
+        background:rgba($color: #CABCBC, $alpha:0.5);
      }
      span{
         width: 300px;

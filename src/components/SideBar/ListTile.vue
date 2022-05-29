@@ -3,6 +3,7 @@
         <span :class="[col==true?'active':'','tile']" @click="tapHandler">
             <span :class="leading"></span>
             {{title}}
+            <span></span>
         </span>
     </span>
 </template>
@@ -21,7 +22,6 @@ export default {
     methods:{
         tapHandler(){
             this.$emit('onTap');
-            this.col = !this.col;
             
         }
     }
@@ -38,7 +38,7 @@ export default {
         width: 100%;
         padding: 10px;
         margin: 2px;
-        color: #122212;
+        color: #c0cec067;
         &:hover{
             color:white
         }

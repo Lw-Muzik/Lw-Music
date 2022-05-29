@@ -11,7 +11,7 @@
                 <p> &lt; Back</p>
             </div>
         </div>
-        <layout :songs="getSongs()" :grid="true" :list="false"/>
+        <layout :songs="getSongs()" :grid="true" :list="false" :circle="false" />
     </div>
 </template>
 <script>

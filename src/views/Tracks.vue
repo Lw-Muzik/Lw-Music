@@ -1,19 +1,16 @@
 <template lang="html">
-    <section class="overflow-hidden">
-      <div class="py-2 w-full">
-        <!-- <list-view :queueList="load"/> -->
-        <grid-view :items="load"/>
-      </div>
+    <section>
+        <layout :grid="false" :list="true" :songs="load"/>
+
 </section>
 </template>
 <script>
 import { remote } from "electron";
 import { readFileSync } from "fs";
-import GridView from "./widgets/GridView.vue";
-import ListView from "./widgets/ListView.vue";
+import Layout from "./widgets/Layout.vue";
 export default {
     name:'Tracks',
-    components:{ GridView , ListView },
+    components:{ Layout},
     data() {
     return {
       url:'',
