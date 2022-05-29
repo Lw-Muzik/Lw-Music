@@ -5,11 +5,13 @@
          
           <p @click="this.$emit('queuePlay',[list,index])"  v-bind:key="index" v-for="(list,index) in queueList">
              <!-- <b class="material-icons mi-dehaze"></b> -->
-               <img :src="list.artwork" class="cover"/>
-            <!-- <b class="material-icons mi-music-note"></b> {{(list.data.name).replace(".mp3","")}} -->
+               <img :src="list.artwork" class="cover"/> &nbsp; &nbsp;
+             <!-- {{(list.data.name).replace(".mp3","")}} -->
             <span>{{list.title}}</span>
-            <b class="material-icons mi-play-circle"></b> 
-            <!-- <b class="material-icons mi-more-vert"></b> -->
+            &nbsp; &nbsp;
+            <span >{{list.genre}}</span> 
+             &nbsp;
+            <span>{{list.artist}}</span>
           </p>
       </div>
           <button @click="this.$emit('closeQueue')"><b class="material-icons mi-close"></b></button>
@@ -27,6 +29,9 @@ export default {
     queueList:Array,
   },mounted(){
     // this.$refs['scrolls'].scrollTo = 16;
+  },
+  methods:{
+    
   }
 };
 </script>
@@ -34,8 +39,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .queue {
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  // height: 100%;
   background: #07060648;
   backdrop-filter: blur(90px);
   border-radius: 7px;

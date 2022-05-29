@@ -1,11 +1,13 @@
 * {
     margin: 0;
+    // overflow: hidden;
+    // overflow-y: hidden;
   }
   .body {
     margin: 0;
     font-family: 'Dosis', Helvetica, Arial, sans-serif;
     color: #fff;
-    font-size: 20px;
+    // overflow: hidden;
     background-color: #222;
     letter-spacing: 1px;
     min-width: 320px;
@@ -17,6 +19,7 @@
   }
   .logo {
     position: absolute;
+    -webkit-app-region: drag;
     left: 50%;
     top: 40%;
     margin-left: -110px;
@@ -25,6 +28,7 @@
     transition: all .5s;
     animation: trans 1.2s 5s forwards;
   }
+  
   @media (max-width: 678px) {
     .logo {
       animation: transMob 1.2s 5s forwards;
@@ -90,29 +94,113 @@
     justify-content: center;
     height: calc(100vh - 60px);
   }
+  
   .form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 100px;
+    // padding-bottom: 100px;
     opacity: 0;
     animation: opa .8s 5.7s forwards;
-  }
-  .form .text {
-    color: #fff;
-    text-align: center;
-    line-height: 1.5;
-    transition: color .3s;
-  }
-  .form {
-    transition: all .3s;
-  }
-  .form:hover .text {
-    color: #a3ff99;
-    animation: color 4s .3s infinite;
-  }
-  .text--bottom {
-    margin-bottom: 1em;
+    width: 50%;
+    transition: ease-in-out .3s;
+    border: 1px solid #dddddd4f;
+    padding:10px;
+    border-radius: 5px;
+    height: calc(50vh - 60px);
+    .text {
+      color: #fff;
+      font: 200 21px Ubuntu,Arial;
+      line-height: 1.5;
+      transition: color .3s;
+    }
+    &:hover .text {
+      color: #a3ff99;
+      animation: color 4s .3s infinite;
+    }
+   
+    .path-panel{
+      display: flex;
+      border-radius: 5px;
+      // box-shadow:inset -1px 0px 1px 0px #eee;
+      flex-direction: column;
+      justify-content: center!important;
+      align-items: center!important;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      width: 70%;
+      padding: 40px 0 10px 0px;
+      
+      height: calc(50vh - 60px);
+      background: #171818;
+      &::-webkit-scrollbar{
+        appearance: none;
+        width: 5px;
+      }
+      &::-webkit-scrollbar-thumb{
+        appearance: none;
+        width: 3px;
+        background:#fff;
+        border-radius: 5px;
+        // height: 5px;
+      }
+      .no-path-tile{
+        background: #dddddd33;
+          border-radius: 5px;
+          display:flex;
+          flex-direction: row;
+          justify-content: space-around;
+          align-items: center;
+          padding: 10px;
+          margin: 5px;
+          width: 70%;
+          text-align: center;
+      }
+      .path-tile{
+        .icon{
+          box-sizing: border-box;
+          box-shadow:inset 0px 0px 7px 0px #eee;
+          border-radius: 50%;
+          padding: 10px;
+          background: #eeeeee50;
+        }
+        background: #dddddd33;
+        border-radius: 5px;
+        display:flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px;
+        margin: 2px;
+        width: 75%;
+        text-align: center;
+        font: 300 17px Ubuntu,Arial;
+        .close{
+          font-size: 22px;
+          cursor: pointer;
+          // width: 10px;
+          // height:10px;
+          padding: 5px;
+          &:hover{
+              background: #dedede4f;
+          }
+        }
+      }
+    }
+    button{
+      width: 70%;
+      padding:10px;
+      margin: 10px 0 10px;
+      outline: none;
+      font: 400 16px Ubuntu,Arial;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      background: transparent;
+      outline: none;
+      border: 1px solid #dddddd4f;
+    }
+   
   }
   label {
     cursor: pointer;
@@ -205,5 +293,3 @@
     80% {color: #f05868}
     100% {color: #a3ff99}
   }
-  
-  

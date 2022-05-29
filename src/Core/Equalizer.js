@@ -57,13 +57,13 @@ class Equalizer{
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:16000,gain:0}),
         ];
         // base nknob
-        this.bass = new BiquadFilterNode(this.audioCtx, {type:'lowpass',frequency:55,gain:0});
-        this.bassBooster = new GainNode(this.audioCtx,{gain:0});
+        this.bass = new BiquadFilterNode(this.audioCtx, {type:'peaking',frequency:55,gain:0,Q:1.67});
+        // this.bassBooster = new GainNode(this.audioCtx,{gain:0});
         /**
          * Stereo band boost
          */
-        this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:1000,gain:0});
-        this.trebleBooster = new GainNode(this.audioCtx,{gain:0});
+        this.treble = new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:18000,gain:0,Q:0.67});
+        // this.trebleBooster = new GainNode(this.audioCtx,{gain:0});
             /**
              * Room effects
              */
@@ -83,6 +83,10 @@ class Equalizer{
     
                 this.merger.connect(this.audioCtx.destination);
            }
+    /**
+     * @alias parametricEQ
+     */
+    this.parametricEQ = [];
     /******************************************************* */
         this.connects = ()=>{
             let size = this.bands.length;
@@ -108,15 +112,17 @@ class Equalizer{
             this.analyser.connect(this.audioCtx.destination);
             //**bass connections */
             this.source.connect(this.bass);
-            this.bass.connect(this.bassBooster)
-            this.bassBooster.connect(this.analyser);
+            this.bass.connect(this.analyser);
             this.analyser.connect(this.audioCtx.destination);
 
              //**treble connections */
              this.source.connect(this.treble);
-             this.treble.connect(this.trebleBooster)
-             this.trebleBooster.connect(this.analyser);
+             this.treble.connect(this.analyser);
              this.analyser.connect(this.audioCtx.destination);
+             
+             /**r
+              * connect parametric EQ
+              */
              
             this.roomEffect();
             this.audioCtx.resume();
@@ -152,10 +158,10 @@ class Equalizer{
     * Get bass knob control
     */
    getBass(){
-       return this.bassBooster;
+       return this.bass;
    }
    getTreble(){
-       return this.trebleBooster;
+       return this.treble;
    }
 }
 

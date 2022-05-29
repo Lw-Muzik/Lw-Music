@@ -1,103 +1,167 @@
-'use strict';
-
-import { readdirSync,  statSync, writeFileSync } from "fs";
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { readdir,  readFileSync,  statSync, writeFileSync, existsSync } from "fs";
+import { app, protocol,dialog, BrowserWindow, ipcMain,  Menu, Tray, nativeImage } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
-// import { setupTitlebar, attachTitlebarToWindow } from "custom-electron-titlebar";
+// const /*{ setupTitlebar, attachTitlebarToWindow }*/ cs = require("custom-electron-titlebar");
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { extname, join } from 'path';
+import { image }  from "./Core/default"
 const { musixmatch } = require('4lyrics');
-const { axios } = require('axios');
+import { Axios } from 'axios';
 const cheerio = require('cheerio');
-var MediaLibrary = require('media-library');
-const mm = require('music-metadata-browser');
-const { streams,processed } = require("./Main/System/Paths.js");
+const { streams,processed,art ,settings, favourite} = require("./Main/System/Paths.js");
+import NodeID3 from "node-id3";
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
-// setupTitlebar();
-let temp = [];
-//   let db =[];
-  let directories = [];
- // recursively moves through directories looking for .mp3 files
- var recursiveFolders = (dir)=>{
-  var store = readdirSync(dir);
-  store.forEach((track,index)=>{
-      //  
-      let newPath = dir+'/'+track;
-      if(statSync(newPath).isDirectory() == true){
-           recursiveFolders(newPath);
-           directories = [...directories,{dir:newPath}]
-      }else if(statSync(newPath).isFile() == true && extname(newPath) == ".mp3"){
-          // console.log(`${newPath}`);
-          temp = [...temp,{corePath:`${newPath}`}];
 
+let temp =  JSON.parse(`${readFileSync(processed)}`) , d = '';
+var dPath = "";
+
+ // recursively moves through directories looking for .mp3 files
+ /**
+  * 
+  * @param {String } dir 
+  */
+ const recursiveFolders =  async (dir)=>{
+   /**
+    * Reads only mp3 files from directory
+    */
+  readdir(dir,async (error,files)=>{
+    if (error) throw new Error(`Sync Error ${error}`);
+  files.forEach(async (track, index) => {
+      //  
+      let newPath = dir + '/' + track;
+
+      if (statSync(newPath).isDirectory() == true) {
+        await recursiveFolders(newPath);
+        d = track;
+        dPath = newPath;
+      } else if (statSync(newPath).isFile() == true && extname(newPath) == ".mp3") {
+
+        // temp = [...temp,{corePath:`${newPath}`}];
+        const tags = NodeID3.read(`${newPath}`)
+     
+        if(tags.image.imageBuffer != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
+          writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer)
+        }
+        let meta =  {
+          title: tags.title == undefined ? track.replace(".mp3", "") : tags.title,
+          genre: tags.genre == undefined ? "Unknown genre" : tags.genre,
+          album: tags.genre == undefined ? "Unknown album" : tags.album,
+          artist: tags.artist == undefined ? "Unknown artist" : tags.artist,
+          artwork: `${join(art, track.replace(".mp3", ".jpeg"))}`,
+          folderPath: dPath,
+          trackPath: newPath,
+          data: `file://${newPath}`,
+        };
+        temp =  [...temp, meta];
       }
-      // writeFileSync("./store.json",JSON.stringify(temp));
-      // console.log(temp);
+      writeFileSync(processed, JSON.stringify(temp));
+    });
 });
  }
-
-
+let globalWin = null;
+const icon = nativeImage.createFromDataURL(image)
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    // alwaysOnTop:true,
-    // frame:false,
-    height: 600,
+    width: 1000,
+    height:700,
+    alwaysOnTop:true,
+    frame:false,
+    icon:icon,
     webPreferences: {
-      preload:join(__dirname,"preload.js"),
            nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
             contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
             enableRemoteModule: process.env.ELECTRON_NODE_INTEGRATION,
             enableBlinkFeatures:process.env.ELECTRON_NODE_INTEGRATION,
             nodeIntegrationInSubFrames:process.env.ELECTRON_NODE_INTEGRATION,
-            nodeIntegrationInWorker:process.env.ELECTRON_NODE_INTEGRATION
+            nodeIntegrationInWorker:process.env.ELECTRON_NODE_INTEGRATION,
+            webSecurity:false,
+            webgl:false,
+            webviewTag:true 
     }
   });
+  // send settings url to render process when dom starts loading
+ win.webContents.on('did-stop-loading',async()=>{
+   
+     win.webContents.send("settingsUrl",settings);
+     // send the path for songs
+     win.webContents.send("allSongsUrl",processed);
+     // send streams path to the renderer
+     win.webContents.send('stream',streams)
+     //
+     if (existsSync(favourite) == false) {
+      writeFileSync(favourite,JSON.stringify([]))
+  }
+  })
+
+  globalWin = win;
+
   // attachTitlebarToWindow(win);
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    // console.log(appStore);
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
-    createProtocol('app')
+    createProtocol('app');
+  // win.setIcon(image)
     // Load the index.html when not in development
-    win.loadURL('app://./index.html');
+    await win.loadURL('app://./index.html');
   }
   // save user playlist
-  // ipcMain.on('saveUserData',(event,args) => {
-    // writeFileSnyc(processed,JSON.stringify(args));
-  // })
+  ipcMain.on('saveUserData',(event,args) => {
+    writeFileSync(processed,JSON.stringify(args));
+  })
+  /*
+   *On response from the rendererer then load save persistent data 
+   */
+  //
+    // ipcMain.on('tracks',async ()=>{
+    //   /**
+    //    * @access { Array } paths
+    //    */
+    //   // to avoid repeating urls lets use a set
+    //   const unq = new Set();
+
+    //  const paths = JSON.parse(readFileSync(settings)).savedPaths;
+
+    //  paths.forEach(async (url)=>  unq.add(url));
+    //  /*
+    
+    //  The after send unique data
+    // */
+    //  unq.forEach(async (url)=> await recursiveFolders(url));
+    // });
 /**
  * load tracks from selected directory
  */
-         ipcMain.on('openDir',(event,args)=>{
+         ipcMain.on('loadFolder',async (event,args)=>{
           // choose music directorty
-              dialog.showOpenDialog(win,{
+           dialog.showOpenDialog(win,{
                   properties:['openDirectory'],
                   defaultPath:app.getPath("music"),
-                  buttonLabel:"Select music folder",
-                  title:"Choose a folder"
-
-              }).then((filePath)=>{
-              recursiveFolders(filePath.filePaths[0]);
+                  buttonLabel:"Select",
+                  title:"Choose a music folder"
+              }).then(async (response)=>{
+                event.sender.send("chosenFolder",response.filePaths[0]);
+                await recursiveFolders(`${response.filePaths[0]}`)
               });
        });
+       
     /*
-    Get hot 100 
+       Get hot 100
     */
             let stream = [];
+
        ipcMain.on('hot100',(e,url)=>{
-           axios.get(url).then((response)=>{
+           Axios.get(url).then((response)=>{
               var dom = response.data;
             //   console.log(dom);
-              
+              // 
               const ch = cheerio.load(dom);
               let trackList = ch('.hot100')
               // let trackPic = ch('img.imagefillstr');
@@ -105,19 +169,24 @@ async function createWindow() {
               let hot100 = {
                   title:`${element.children[0].children[5].children[0].children[0].data}`,
                   artist:`${element.children[0].children[5].children[1].children[0].data}`,
-                  artWork:`${element.children[0].children[3].children[1].attribs.data}`,
+                  artwork:`${element.children[0].children[3].children[1].attribs.data}`,
                   url:element.children[2].children[3].children[1].attribs.src
               }
-              stream = [...stream,hot100];
+              stream = [...stream,hot100]
             
               writeFileSync(streams,JSON.stringify(stream));
             });
           var songs = (JSON.parse(readFileSync(streams)));
-          console.log(songs)
+          // console.log(songs);
           //  e.sender.send('stream',songs);
          });
 
     });
+
+    // ipcMain.on('play',(e,args)=>{
+    //     audio.src = args;
+    //     audio.play();
+    // })
   /**
    * 
    * fetch lyrics
@@ -159,6 +228,26 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
+  
+  let menue = Menu.buildFromTemplate([
+            {"label":"Amp Music",click:()=>{ 
+            app.focus() 
+            }},
+            {"label":"Min screen",role:"minimize"},
+            {"label":"UI Tools",
+            "submenu":[
+              {label:"Devtools",role:"toggleDevTools",accelerator:"F12"},
+              {"label":"Hot relaod",role:"reload",accelerator:"F6"},
+              {label:"Settings",submenu:[
+                {label:"App UI Theme",click:()=>{ alert("App UI setting")}}
+              ]}
+            ]
+          },
+          {label:"Quit Amp Musix",role:"close",click:()=>{ app.quit()}}
+        ]);
+ let tray = new Tray(icon);
+ tray.setContextMenu(menue);
+ Menu.setApplicationMenu(menue)
   createWindow()
 })
 

@@ -1,34 +1,53 @@
 import { app } from "electron";
-import { existsSync, writeFileSync } from "fs";
-import fs from "fs";
+import { existsSync, writeFileSync, mkdirSync } from "fs";
+
 import { join } from "path";
 const appStore = app.getPath('userData');
 const downloads = `${app.getPath('music')}/AmpMusic`;
 const streams = join(appStore,'streams.json');
 const processed = join(appStore,"processed.json");
-
+const art = join(appStore,'Artwork');
+const settings = join(appStore,'settings.json');
+const favourite = join(appStore,'favourite.json');
 // check if file for streams.json exists.
 if (existsSync(streams) == false) {
-   writeFileSync(streams,JSON.stringify({data:[]}));
+   writeFileSync(streams,JSON.stringify([]));
 }
 /**
  * Proccesed music file
  */
 if(existsSync(processed) == false){
-    writeFileSync(processed,JSON.stringify({songs:[]}));
+    writeFileSync(processed,JSON.stringify([]));
 }
 /**
  * generate folder for downloads
  */
 if(existsSync(downloads) == false){
-    fs.mkdirSync(downloads);
+    mkdirSync(downloads);
 }
 
-
-
+/**Checking if artwork folder is present */
+if(existsSync(art) == false){
+    mkdirSync(art);
+}
+/**Settings path */
+if(existsSync(settings) == false){
+    const set = {
+        savedPaths:[], 
+        volume:0, 
+    };
+    writeFileSync(settings,JSON.stringify(set))
+}
+/**generating favourite */
+if (existsSync(favourite) == false) {
+    writeFileSync(settings,JSON.stringify([]))
+}
 export {
     appStore,
     downloads,
     processed,
-    streams
+    streams,
+    art,
+    settings,
+    favourite
 }

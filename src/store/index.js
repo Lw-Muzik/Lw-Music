@@ -1,20 +1,23 @@
 
 import { createStore } from 'vuex'
 import { Equalizer } from '../Core/Equalizer';
-const { ipcRenderer } = window.require('electron');
+import { ipcRenderer } from 'electron';
 const { image } = require("../Core/default");
 import * as id3 from "music-metadata-browser";
-// const { ipcRenderer } = window.require('electron');
-import MediaLibrary from 'media-library';
+
 const audio = new Audio();
+audio.crossOrigin = "anonymous";
+
 const eq = new Equalizer(audio);
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 export default createStore({
   state: {
+    settingsPath:"",
     volume:0.17,lyrics:'', playlist:[], reduceCount:0,
     player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
     bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),
-    equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,}
+    equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
+    genreCategory:'',genreBack:false,
   },
   mutations: {
     setVolume(state,payload){
@@ -23,19 +26,13 @@ export default createStore({
     updatePlaylist(state,payload){
       state.playlist = [...state.playlist,payload]; ipcRenderer.sendSync('saveUserData',payload);
     },
-    dataList(state,payload){
-      var library = new MediaLibrary({
-        // persistent storage location (optional)
-        dataPath: '/home/blabs/Music',
-        // the paths to scan
-        paths: [ '/home/blabs/Music' ]
-      });
 
-      library.scan().on('done', () => {
-        // listing all tracks
-        library.tracks((err, tracks) => state.playlist = tracks);
-      });
-        // state.playlist = 
+    setGenreCat(state,payload){
+      state.genreCategory = payload;
+    },
+    setGenreBack(state,payload){
+      // console.log(payload)
+      state.genreBack = payload;
     },
     loadPlaylist(state,payload){
         state.playlist = payload;
@@ -45,7 +42,7 @@ export default createStore({
     },
     fetchLyrics(state , payload){
       ipcRenderer.send("fetchLyrics",payload);
-      console.log(payload)
+      // console.log(payload)
     },
     changeFeedBack(state,payload){
         state.feedback[payload[0]].gain.value = payload[1];
@@ -65,6 +62,14 @@ export default createStore({
     incrementCount(state,payload){
       state.counter = payload;
       // console.log(payload)
+  },
+  retainSettingsPath(state,payload){
+    // console.log(payload)
+      state.settingsPath = payload;
+  },
+  playSong(state,payload){
+    state.player.src = payload;
+    state.player.play();
   },
   streamMusic(state,payload){
     // ipcRenderer.sendSync('hot100',payload);
@@ -94,5 +99,8 @@ export default createStore({
     getId3:(state)=> state.Id3,
     reduceCount:(state)=> state.reduceCount,
     getCount:(state)=> state.counter,
+    getSettingsPath:(state) => state.settingsPath,
+    getGenreCategory:(state) => state.genreCategory,
+    getGenreBack:(state) => state.genreBack,
   }
 })

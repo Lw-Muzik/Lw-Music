@@ -4,13 +4,14 @@
     <div class="grid">
          
        <div @click="this.$emit('gridPlay',[a,index])" class="tile" v-for="(a,index) in listTrack" :key="index">
-           <img :src="a.artwork"/>
+           <!-- <img :src="a.artwork"/> -->
            <button class="play">
                <b class="mi mi-play-arrow"></b>
            </button>
            <div class="data">
-            <b>{{a.title}}</b>
-            <b>{{a.artist}}</b>
+               {{(a.data.name).replace(".mp3","")}}
+            <!-- <b>{{a.title}}</b> -->
+            <!-- <b>{{a.artist}}</b> -->
           </div>
        </div>
     </div>

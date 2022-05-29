@@ -1,537 +1,139 @@
-<template>
- <div class="visual">
-       <canvas v-show="displayVisual" ref="canvas"></canvas>
-    </div>
-  <div class="home">
-  <div :class="[ptr1?'active':'','part1']">
-         <Cover 
-         v-if="!queueView" 
-          v-show="showCover"
-          :source="image"
-          :playing="checker"
-          />
+<template lang="html">
+  <div v-show="dash" class="body">
+<!-- <titlebar/> -->
 
-        <EQ
-        :class="[showEQ?'active':'','EQ']"
-          @closeEQ="closeEQ"
-          :bandSet="eqBands"
-        />
+    <div class="wrap">
+  <div class="logo">
+    <svg xmlns="http://www.w3.org/2000/svg" width="175.859" height="47.344" viewBox="14.904 4.22 175.859 47.344" enable-background="new 14.904 4.22 175.859 47.344">
+<path class="sound" fill="none" stroke="#53ff4a" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M127.221,30.934
+    c2.623-2.853-2.554-5.247-5.802-3.284c-8.028,4.852,2.687,11.081,2.461,17.19c-0.206,5.577-9.099,4.291-8.949,0.764
+    c0.227-5.387,17.371-1.531,17.712-9.586c-2.427,1.652-3.146,10.58,0.783,11.754c2.699-3.859,4.232-8.865,3.91-13.561
+    c-0.212-3.066-0.625-6.663-3.814-2.955c-5.467,6.354,9.537,3.03,11.764-0.694c-2.037,1.758-4.058,11.599-0.374,13.487
+    c3.926,2.014,6.479-10.906,6.253-13.453c-1.672,2.269-3.09,10.799,1.215,11.641c4.416,0.865,5.911-9.306,5.925-12.147
+    c-1.679,3.783-1.772,9.163-1.516,13.502c3.101-4.222,5.184-10.569,7.518-15.473c0.402,2.899-2.171,14.032,1.752,14.047
+    c3.69,0.017,5.404-10.553,11.165-10.387c-4.342-0.912-8.76,8.435-6.649,11.735c4.646,7.271,17.386-25.097,18.094-27.76
+    c0.614-2.309,3.619-10.674-0.664-11.029c-3.682-0.306-7.679,13.899-8.194,16.233c-1.041,4.69-2.767,28.959,8.061,26.401"/>
+<path class="t"  fill="none" stroke="#53ff4a" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M72.048,11.07
+    c-0.34,7.199-1.661,14.47-2.314,21.668c-0.363,4-2.04,11.719,1.996,14.662c4.022,2.932,6.989-1.367,7.121-5.188"/>
+<path class="he" fill="none" stroke="#53ff4a" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M62.335,35.443
+    c6.994-2.713,15.478-10.805,20.433-17.371c0.388,2.387,0.121,9.237-0.291,16.189c-0.411,6.953-0.967,14.009-1.159,16.803
+    c0.577-4.233,3.164-15.414,7.998-16.633c0.021,2.35-1.854,9.184,0.766,10.424c5.091,2.407,9.23-10.448,9.039-13.824
+    c-4.682,0.113-5.847,10.457-3.966,13.621c3.318,5.592,8.274-0.102,11.543-2.666"/>
+<path class="s" fill="none" stroke="#53ff4a" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M24.384,30.879
+    c3.375-2.995-3.211-5.841-5.442-1.359c-2.701,5.42,3.819,11.883,3.179,17.26c-3.343,0.668-7.441-1.359-6.607-5.254"/>
+<path class="ee" fill="none" stroke="#53ff4a" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M27.71,42.41
+    c1.609-1.548,10.686-9.492,8.911-13.312c-1.302-2.802-3.932-0.405-5.483,1.517c-2.471,3.062-3.25,10.019-1.833,13.619
+    c4.744,12.046,21.938-11.287,19.31-15.437c-3.284-5.182-7.131,8.084-6.648,10.569c1.295,6.671,16.161,8.828,17.23,2.601"/>
+    </svg>
+  </div>
 
-      <Loader 
-        v-if="!queueView" 
-        @showQueue="showQueue"
-        v-show="showCover"
-        @trackLoader="loadTrack"
-        @toggleEQ="toggleEQ"
-        @showVol="showVol"
-        @loadSingle="loadSingle"
-        @showRoom="roomEffectsComponent"
-        @showVisual="toggleVisualWidget"
-      />
-
-         <Volume
-         :class="[showV?'active':'','volume']"
-          @closeVol="closeVol"
-          
-     />
-
-       <Queue 
-       :class="[listView?'active':'','listView']"
-        @closeQueue="closeLQueue"
-        @queuePlay="playL"
-        :queueList="playlist"/>
-
-         <GridView 
-          :class="[queueView?'active':'','gView']"
-            :listTrack="playlist"
-            @gridPlay="playQueue"
-            @closeQueue="closeQueue"
-            />
+  <div class="intro">
+    <div class="form">
+       <input accept=".mp3" type="file" id="file" name="file" class="file">
+       <label for="file" class="text">Choose a music folder</label>
+    <div class="path-panel">
             
-         <!-- Visulizer -->
+       <p v-if="paths.length == 0" class="no-path-tile ">
+          No path selected
+       </p>
+        <p v-else v-for="(path,index) in paths" :key="path" class="path-tile">
+           <span class="icon mi mi-folder"></span>{{path}} <span class="close" @click="remove(index)">&times;</span>
+       </p>
+    </div>
+     <br>
+     <button class="file-open" @click="chooseFolder"> Add Folder</button>
+     <button v-if="paths.length != 0" @click="goToHome">Continue</button>
+    </div>
   </div>
+</div>
 
-  <!-- <router-link to="/hot100">Hot 100</router-link> -->
-      <Room
-      :class="[roomView?'active':'','room']"
-        
-        :delays="delayArr"
-        :feedback="feedBackArr"
-        @closeRoom="closeRoom"
-       />
-
-
-     <div :class="[ptr2?'active':'','prt2']">
-      
-       <Dropdown
-       v-show="displayVisual"
-       @choice="chooseVisual"
-       />
-       <!-- <Search
-        @live="liveS"
-       /> -->
-       <div  class="b">
-         <!-- <Mini/> -->
-         <Meq/>
-         <!-- <Mviso/> -->
-         <button v-show="!showEQ" @click="viewLib">Library</button>
-         <button v-show="!showEQ" @click="viewOpt">View</button>
-         <button v-show="!showEQ" @click="loadLyrics">Lyrics</button>
-         <button v-show="!showEQ" @click="loadHot100">Hot 100</button>
-       </div>
-       <div :class="[showOpt?'active':'','options']">
-         <p @click="listShow">ListView</p>
-         <p @click="gridShow">GirdView</p>
-       </div>
-        <Details 
-        v-show="showCover"
-          :title="title"
-          :artist="artist"
-          :album="album"
-          :size="size"
-        />
-        <Slider
-            v-show="showCover"
-            @updateChange="updateSlider"
-            :max="progMax"
-            :currentValue="curlTime"
-            :output="progress"
-            :duration="durlTime"
-        />
-
-
-
-
-      <Control 
-          v-show="showCover"
-          @playtrack="playTrack" 
-          @pausetrack="pauseNow"
-          @looptrack="repeatTrack"
-          @seektrack="seekNow"
-          @shuffleTrack="shuffleTracks"
-          @prevTrack="prevSeek"
-          :phide="showPlay"
-          :pshow="showPause"
-          :togglebtn="btnValue"
-          />
-       </div>
-       <Hot100 
-       @closeHot="closeHot"
-       @triggerResize="resize"
-       :class="[showHot100?'active':'','hot100']"
-     
-       />
-        <BottomSheet
-          :class="[showNext?'active':'','bottom']"
-          :playlist="nextTrack"
-          @closeB="closeB"
-          />
-           <Lyrics
-       @closeL="closeLyrics"
-        :class="[showLyrics?'active':'','lyrics']" :content="lyrics"/>
   </div>
-      
-
- 
- 
+  <div v-show="!dash">
+      <router-view/>
+  </div>
 </template>
 <script>
+import * as mi from "material-icons";
+import { ipcRenderer, remote } from 'electron';
+import Titlebar from "@/components/TitleBar/Titlebar.vue";
+import { readFileSync, writeFileSync } from 'fs';
 
-import Slider from '@/components/Slider.vue'; // @ is an alias to /src
-import Cover from '@/components/ImageWidget/Cover.vue'; // @ is an alias to /src
-import Details from "@/components/Details/Details.vue";
-import Control from "@/components/ControlWidget/Control.vue";
-import Loader from "@/components/loader/Loader.vue";
-import Volume from "@/components/VolumeControl/Volume.vue";
-import EQ from "@/components/EqaulizerWidget/Equalizer.vue";
-import Queue from "@/components/Queue/Queue.vue"
-import Search from "@/components/Search/Search.vue";
-import Dropdown from "@/components/Dropdown/Dropdown.vue";
-import Room from "@/components/Room/Room.vue";
-import * as mm from  "music-metadata-browser";
-import Lyrics from "@/components/Lyrics/Lyrics.vue";
-import GridView from "@/components/Queue/Grid.vue";
-import Mini from "@/components/widget/mini.vue";
-import Meq from "@/components/widget/meq.vue";
-import Mviso from "@/components/widget/mviso.vue";
-import Hot100 from "@/components/Music/Hot100.vue";
-import BottomSheet from "@/components/model/BottomSheet.vue";
-const { ipcRenderer } = window.require('electron');
-import { Visualizer } from "@/Core/Visualizer";
-import { image } from "@/Core/default";
 export default {
-  name: 'Player',
-  data(){
+  name:'Initial',
+  data() {
     return {
-       displayVisual:false,audio:null, playlist:[], bufferArray:[],current:[],
-       delayArr:[],feedBackArr:[], title:"",artist:"",album:"", nPlay:{title:"title", artist:"",album:"",artwork:image},
-       nextTrack:{title:"",artist:"",image:image }, showEQ:false,showCover:true, showLyrics:false,
-       listView:false, ptr1:true,ptr2:true, showNext:false,
-       image:image,size:0, curlTime:0,roomView:false,progress:0,
-       progMax:1, trackData:File, durlTime:"",showPlay:true,showPause:false,
-       showOpt:false, btnValue:"EQ",queueView:false,showV:false,vol:0,visual:true,
-       loop:false,stopAnime:0,countPlay:0, eqBands:[], canvas:null,showHot100:false,
-      context:null,showLib:false, visualize:null, shuffle:false, checker:false,
-      selected:0,frameResize:false, vise:null, eq:null, lyrics:'', audioSrc:''
+      dash:true,
+      store:'',
+      paths:[]
     }
-  
   },
-  components: {
-    Slider, Loader, Lyrics,Cover,Details,Hot100,BottomSheet,GridView,
-    Control,Lyrics, Volume,Queue,Dropdown,EQ,Room,Search,Mini,Meq,Mviso
-  },
-  methods: {
-    loadTrack(value){
-      for (let i = 0;i < value.length;i++) {
-        mm.parseBlob(value[i]).then(meta => {
-          const raw = meta.common.picture[0].data;
-           var data = new Uint8Array(raw);
-          const blob = new Blob([data]);
-          const imageURL = URL.createObjectURL(blob);
-          const processed = {id:i+1, data:value[i],active:false,
-                              artwork:(raw == undefined ||raw == null)? image : imageURL,
-                            title:(meta.common.title == null || meta.common.title == undefined) ? (value[i].name).replace(".mp3","") : meta.common.title,
-                           artist:(meta.common.artist == null || meta.common.artist == undefined )? "Unknown artist" : meta.common.artist
-                    };
-             this.playlist = [...this.playlist,processed ];
+    components:{Titlebar},
 
-          this.$store.commit('updatePlaylist',processed);
-           });
-      // localStorage.setItem(i,{id:i,data:value[i],active:false});
-
-      }
-          this.ptr2 = false;
-        this.queueView = !this.queueView;
-    },
-    viewOpt(){this.showOpt = true;},
-
-    viewLib(){this.showLib = true;},
-
-    resize(){this.frameResize = !this.frameResize;},
-
-    closeHot(){this.showHot100 = !this.showHot100;},
-    liveS(query){ /* to perform a live search*/ },
-  toggleVisualWidget(){
-      this.displayVisual = ! this.displayVisual;
-     this.stopAnime = this.displayVisual == true?1:0;
-  },
-  closeB(){this.showNext = false; },
-  loadLyrics(){
-    this.$store.commit('fetchLyrics',[this.title,this.artist]);
-    this.lyrics = "";
-    this.showLyrics = !this.showLyrics;
-
-  },
-  closeLyrics(){
-    this.showLyrics = !this.showLyrics;
-  },
-    roomEffectsComponent(){
-        // this.ptr1 = !this.ptr1;
-        // this.ptr2 = !this.ptr2;
-        this.roomView = !this.roomView;
-    },
-    closeRoom(){
-      this.roomEffectsComponent();
-    },
-    loadSingle(file){
-      let id = 0;
-      const listTile = { id:id, data: file, active:false };
-      this.playlist = [...this.playlist,listTile];
-      this.commonComand(file);
-      this.showPlay = !this.showPlay;
-      this.showPause = !this.showPause;
-      id++;
-    },
-    closeEQ(){
-      this.showEQ = !this.showEQ;
-       this.showCover = !this.showCover;
-    },
-    playTrack(){
-         this.showPlay = !this.showPlay;
-         this.showPause = !this.showPause;
-         this.audio.play();
-    },
-    pauseNow(){
-     this.showPlay = !this.showPlay;
-     this.showPause = !this.showPause;
-      this.audio.pause();
-    },
-    shuffleTracks(){
-         this.shuffle = !this.shuffle;
-    },
-    changeVol(vol){
-        this.audio.volume = vol;
-        // this.vol = vol;
-    },
-    closeVol(){
-      this.showV = !this.showV;
-    },
-    showVol(){
-      this.showV = !this.showV;
-    },
-    getTitle(file){
-        mm.parseBlob(file).then(meta =>{
-            // console.log(meta.common);
-        });
-    },
-    imageProcess(buffer){
-         var data = new Uint8Array(buffer);
-          const blob = new Blob([data]);
-          return URL.createObjectURL(blob);
-    },
-    commonComand(track){
-      const url =  URL.createObjectURL(track);
-      // this.audioSrc = url;
-      this.audio.src = url;
-      this.audio.play();
-      this.size = ((track.size)/1000000);
-    mm.parseBlob(track).then(meta => {
-        // console.log(meta);
-      this.title = meta.common.title == null || meta.common.title == undefined ? (track.name).replace(".mp3","") : meta.common.title;
-      this.artist = meta.common.artist == null || meta.common.artist == undefined ? "Unknown artist" : meta.common.artist;
-      this.album = meta.common.album == null || meta.common.album == undefined ? "Unknown album" : meta.common.album ;
-      this.bufferArray = meta.common.picture[0].data;
-       document.querySelector("title").textContent = `${this.title} - ${this.artist}`;
-      const imageURL = this.imageProcess(this.bufferArray);
-      /**
-       * Track infor processed
-       */
-         
-
-          this.image =  (this.bufferArray == undefined ||this.bufferArray == null)? image : imageURL;
-          document.querySelector("body").style.backgroundImage =(this.bufferArray == undefined ||this.bufferArray == null)?"url("+image+")":"url("+imageURL+")";
-
-          this.image =  (this.bufferArray == undefined || this.bufferArray == '' || this.bufferArray == null)? image : imageURL;
-          
-          document.querySelector("body").style.backgroundImage = (this.bufferArray == undefined || this.bufferArray == '' || this.bufferArray == null)?"url("+image+")":"url("+imageURL+")";
-          
-          const link = document.querySelector("link");
-   link.href.replace(this.image,"");
-  link.href = this.image;
-  // ipcRenderer.sendSync('iconUp',link.href);
-      const notify = new Notification(this.title,{body:this.artist,icon:this.image});
-      notify.onclose = ()=>{
-          // ipcRenderer.send('focus');
-      }
-     const currentTrack = {
-       title:this.title,
-       artist:this.artist,
-       album:this.album,
-       artwork:this.image
-      };
-
-      this.$store.commit('nowPlaying',currentTrack);
-
-  // console.log(link.href)
-      });
-    },
-    seekNow(){
-       this.countPlay += 1;
-       this.commonComand(this.playlist[this.countPlay].data);
-       this.executeNext(this.playlist[this.countPlay+1].data);
-       this.toggleList(this.countPlay);
-    },
-    prevSeek(){
-         this.countPlay -= 1;
-        this.commonComand(this.playlist[this.countPlay].data);
-        this.toggleList(this.countPlay);
-        this.executeNext(this.playlist[this.countPlay+1].data)
-    },
-    repeatTrack(){
-      this.loop = !this.loop;
-       // toggle audio repeat 
-      this.audio.loop = this.loop == true ? true : false;
-    },
-    updateSlider(value){
-         this.audio.currentTime = value;
-    },
-    toggleEQ(){
-      this.showEQ = !this.showEQ;
-      this.showCover = !this.showCover;
-    },
-    executeNext(file){
-         mm.parseBlob(file).then((meta)=>{
-           const buff = meta.common.picture[0].data;
-           this.nextTrack.image = buff == null || buff == undefined ?this.image:this.imageProcess(buff);
-            this.nextTrack.title = meta.common.title == null || meta.common.title == undefined ? (track.name).replace(".mp3","") : meta.common.title;
-             this.nextTrack.artist = meta.common.artist == null || meta.common.artist == undefined ? "Unknown artist" : meta.common.artist;
-          })
-    },
-    listShow(){
-      this.showOpt = false;
-        this.listView = !this.listView;
-    },
-    gridShow(){
-      this.showOpt = false;
-      this.showQueue();
-    },
-    playQueue(queue){
-          this.commonComand(queue[0].data);
-          this.countPlay = queue[1];
-          this.closeQueue();
-          this.toggleList(queue[1]);
-         this.executeNext(this.playlist[(queue[1]+1)]);// console.log(this.getTitle(queue[0].data));
-      },
-        playL(queue){
-          this.commonComand(queue[0].data);
-          this.countPlay = queue[1];
-          console.log(this.playlist[(queue[1]+1)]);
-          this.closeLQueue();
-          this.toggleList(queue[1]);
-          // this.listView = !this.listView;
-          console.log(this.playlist[(queue[1]+1)])
-         this.executeNext(this.playlist[(queue[1]+1)]);// console.log(this.getTitle(queue[0].data));
-      },
-      toggleList(id){
-        // console.log(id);
-              //  this.playlist = this.playlist.map((track) => console.log(track.id) /*track.id == id?{...track,active:!track.active}:track*/)
-      },
-      loadHot100(){
-        this.showHot100 = !this.showHot100;
-        this.$store.commit('streamMusic',`https://www.nowviba.com/music/pages/top100.php`);
-         /**load online streams */
-      },
-    showQueue(){
-      this.ptr2 = false;
-        this.queueView = !this.queueView;
-        this.playlist = this.$store.getters.getPlaylist;
-    },
-    closeQueue(){
-        this.ptr2 = true;
-        this.queueView = !this.queueView;
-       },
-        closeLQueue(){
-        // this.ptr1 = true;
-        this.listView = !this.listView;
-       },
-     chooseVisual(eventValue){
-         switch(parseInt(eventValue)){
-           case 1:
-             this.vise.barsVisualiser(this.stopAnime);
-             break;
-
-             case 2:
-               this.vise.dustyParticles(this.stopAnime)
-               break;
-             case 3:
-               this.vise.histogramVisualiser(this.stopAnime)
-               break;
-
-             case 4:
-               this.vise.sineWaveVisualiser(this.stopAnime)
-               break;
-             case 5:
-               this.vise.rippleWaveVisualiser(this.stopAnime)
-               break;
-              
-             case 6:
-               this.vise.glassTilesVisualiser(this.stopAnime)
-               break;
-              
-             case 7:
-               this.vise.floatingBars(this.stopAnime)
-               break;
-
-                case 8:
-               this.vise.colorstetchVisualiser()
-               break;
-         }
+ created() {
+   ipcRenderer.on('settingsUrl',(e,args)=>{
+     this.store = args;
+     this.$store.commit('retainSettingsPath',args);
+     /**Checking if the getter has the settings url */
+     if(this.$store.getters.getSettingsPath == ""){
+        this.paths = JSON.parse(readFileSync(args)).savedPaths;
+     }else{
+      //  console.log(`from created ${this.$store.getters.getSettingsPath}`)
+       this.paths = JSON.parse(readFileSync(this.$store.getters.getSettingsPath)).savedPaths;
      }
-  },
-  
-  mounted(){
-// console.log(new MediaStream().getTracks())
-  this.stopAnime = this.displayVisual == true?1:0;
-    this.playlist = this.$store.getters.getPlaylist;
-    this.nPlay = this.$store.getters.getNowPlaying;
-    document.querySelector("body").style.backgroundImage = "url("+this.nPlay.artwork+")";
-    // this.$
-    /**default volume = 0.17 */
-
-      /**  Canvas */
-      this.canvas = this.$refs['canvas'];
-      this.context = this.$refs['canvas'].getContext("2d");
-  
-      this.vise = new Visualizer(this.eq.analyser,this.canvas,this.context);
-  
-      this.eq.startEq();
-      this.eqBands = this.eq.getBands();
-      this.delayArr = this.eq.getDelayBands();
-      this.feedBackArr = this.eq.getFeedBack();
-
-    // console.log(localStorage);
-  setInterval(()=>{
-           this.progress = this.audio.currentTime;
-          this.progMax = this.audio.duration;
-        },500);
-
-    this.audio.ontimeupdate = ()=>{
-      /**Display the track's current time */
-       const min = Math.floor((this.audio.currentTime / 60) % 60)
-       const sec = Math.floor(this.audio.currentTime % 60 );
-       this.curlTime = sec < 10 ? min+":0"+sec:min+":"+sec;
-/**Display the track duration */
-       const dmin = Math.floor(((this.audio.duration - this.audio.currentTime) / 60) % 60)
-       const dsec = Math.floor((this.audio.duration - this.audio.currentTime) % 60 );
-       this.durlTime = dsec < 10 ?dmin+":0"+dsec:dmin+":"+dsec;
-    /**Logic for next track */
-     const monitor = Math.floor((this.audio.duration) -this.audio.currentTime);
-            if(monitor == 60){
-              this.showNext = true;
-            //    const notify = new Notification(this.title,{body:this.artist,icon:this.playlist[this.trackId]});
-            } else if(monitor == 30){
-               this.showNext = false;
-            }else if(monitor < 30 || monitor > 60){
-               this.showNext = false;
-            }
-
-    }
-  
-    this.audio.onpause = ()=>{
-      this.checker = false;
-    }
- 
-    this.audio.onended = ()=>{
-               this.checker = false;
-this.showLyrics = false;
-        if(this.shuffle == true){
-            this.countPlay = Math.floor(Math.random() * this.playlist.length);
-            this.commonComand(this.playlist[this.countPlay].data);
-            this.executeNext(this.playlist[this.countPlay+1].data);
-        }else{
-           this.countPlay +=1;
-          this.commonComand(this.playlist[this.countPlay].data);
-          this.executeNext(this.playlist[this.countPlay + 1].data);
-          this.toggleList(this.countPlay);
-        }
-         
-    }
-
-   this.audio.onplay = ()=>{
-     this.checker = true;
-          this.showPlay = false;
-         this.showPause = true;
-    }
-  },
-  
-  created() {
      
-    this.audio = this.$store.getters.getPlayer;
-    this.audio.volume = this.$store.getters.getVolume;
-    this.eq = this.$store.getters.getEqualiser;
-   this.stopAnime = this.displayVisual == true?1:0;
-   /**listen for incomming lyrics */
-  //  ipcRenderer.on('lyrics',(e,lyrics)=>{
-  //    this.lyrics = lyrics;
-  //   //  console.log(lyrics);
-  //  });
-  // console.log(this.$store.getters.getPlaylist)
+   });
+ },
+ mounted() {
+   if (this.$store.getters.getSettingsPath != "") {
+       this.paths = JSON.parse(readFileSync(this.$store.getters.getSettingsPath)).savedPaths;
+   }
+   ipcRenderer.on('allSongsUrl',(eve,args)=>{
+      // console.log(args)
+   });
+ },
+  methods: {
+       chooseFolder(){
+        // console.log(this.$store.getters.getSettingsPath);
+        ipcRenderer.sendSync("loadFolder");
+        ipcRenderer.on("chosenFolder",(event,args)=>{
+          if(this.$store.getters.getSettingsPath != ""){
+          // console.log(`response from main process ${args}`);
+                let s = JSON.parse(readFileSync(this.$store.getters.getSettingsPath));
+                this.paths = [...this.paths,args];
+                s.savedPaths = this.paths;
+                writeFileSync(this.$store.getters.getSettingsPath,JSON.stringify(s));
+          }else{
+                let s = JSON.parse(readFileSync(this.store));
+                this.paths = [...this.paths,args];
+                s.savedPaths = this.paths;
+                writeFileSync(this.store,JSON.stringify(s));
+          }
+
+          /**After upadating the UI then load the tracks in the database */
+          // event.sender.sendSync("loadTracks");
+        })
+    },
+    remove(id){
+      let update = JSON.parse(readFileSync(this.$store.getters.getSettingsPath));
+        this.paths.splice(id,1);
+        update.savedPaths = this.paths;
+        writeFileSync(this.$store.getters.getSettingsPath,JSON.stringify(update));
+    },
+    goToHome(){
+      // this.$router.push('/');
+      this.dash = false;
+      remote.getCurrentWindow().maximize();
+    }
+   
   },
-}
+  }
 </script>
- 
- <style lang="scss" scoped>
-@import "./Design/Hot100.scss";
-@import "./Design/player.scss";
- 
- </style>
+<style lang="scss" scoped>
+  @import "@/Design/Welcome.scss";
+  .titlebar{
+  position:fixed;
+  top: 0;
+  z-index: 3!important;
+    width:100%;
+  }
+</style>
