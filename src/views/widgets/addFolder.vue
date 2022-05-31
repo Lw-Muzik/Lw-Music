@@ -46,14 +46,14 @@ export default {
         chooseFolder(){
         ipcRenderer.sendSync("loadFolder");
         ipcRenderer.on("chosenFolder",(event,args)=>{
-         
-          let c = setInterval(()=>{
+            event.preventDefault();
+            event.stopPropagation();
                 let s = JSON.parse(readFileSync(this.url));
                 this.paths = [...this.paths,args];
                 s.savedPaths = this.paths;
                 writeFileSync(this.url,JSON.stringify(s));
-                clearInterval(c);
-            },500); // to prevent double insertion
+              
+           // to prevent double insertion
           /**After upadating the UI then load the tracks in the database */
           // event.sender.sendSync("loadTracks");
         })
@@ -92,7 +92,7 @@ export default {
       overflow-y: scroll;
       overflow-x: hidden;
       width: 100%;
-      padding: 20px 2px 5px 3px;
+      padding: 120px 0 0 0;
       height: calc(30vh - 60px);
       background: #171818;
       &::-webkit-scrollbar{

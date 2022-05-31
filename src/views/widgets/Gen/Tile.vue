@@ -3,7 +3,7 @@
         <img :src="`file://${cover}`" alt=""/>
         <div class="details flex flex-row justify-around">
             <!-- <details class="details"> -->
-                <span class="title flex flex-row justify-around">{{title}}</span> 
+                <span class="title capitalize flex flex-row justify-around">{{title.replace(/(.*)[\/\\]/,"").split('.')[0]}}</span> 
                 <span class="badge">{{total}}</span>
         </div>
     </div>
