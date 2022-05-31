@@ -5,6 +5,8 @@ import Artist from '../views/Artist.vue';
 import Album from '../views/Album.vue';
 import Streams from '../views/streams.vue';
 import Genre from '../views/Genre.vue';
+import Folder from '../views/folders.vue';
+import FolderView from '../views/widgets/Folders/FolderView.vue';
 import GenreTracks from "../views/widgets/Gen/GenreTracks.vue";
 import ArtistTracks from "../views/widgets/Artist/ArtistView.vue";
 import AlbumTracks from "../views/widgets/Album/AlbumView.vue";
@@ -20,11 +22,15 @@ const routes = [
         { path:'artistTracks', component:ArtistTracks },
       ]
     },
-      { path:'album', component:Album,
-      children:[
+    { path:'album', component:Album,
+    children:[
         { path:'albumTracks', component:AlbumTracks },
       ]
-    },
+   },{ path:'folder', component:Folder,
+   children:[
+       { path:'folderSongs', component:FolderView },
+     ]
+  },
       { path:'stream', component:Streams },
       { path:'genre', component:Genre,
         children:[

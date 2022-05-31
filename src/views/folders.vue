@@ -1,13 +1,61 @@
 <template lang="html">
     <div>
-        <center>Folders</center>
+        <grid :items="folders" @routeTo="routeT" v-show="!getBack"/>
+        <router-view v-show="getBack"/>
     </div>
 </template>
 <script>
+import { readFileSync } from 'fs';
+import { remote } from "electron";
+import Grid from "./widgets/Gen/Grid.vue";
+
 export default {
-    name:'Folder'
+    name:'Folder',
+    components:{ Grid },
+    data() {
+        return {
+            showRoute:false,
+            folders:[],
+            unsorted:[],
+            processed:[],
+            covers:[]
+        }
+    },
+   
+    methods: {
+        routeT(){
+            this.showRoute = !this.showRoute;
+            this.$store.commit('setGenreBack',true);
+            this.$router.push('/folder/folderSongs');
+            // console.log("done")
+        },
+        getTotalSongs(folder){
+            const result = this.processed.filter((d) => (d.folder == folder));
+            return result.length;
+        },
+        getCoverArt(folder){
+            const result = this.processed.filter((d) => (d.folder == folder));
+           return result[(result.length -1)].artwork;
+        }
+    },
+     computed: {
+        getBack(){
+            return this.$store.getters.getGenreBack;
+        }
+    },
+   mounted(){
+        let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
+        this.processed = raw;
+        raw.forEach((data) =>{
+            this.unsorted = [...this.unsorted , data.folder];
+           this.covers = [...this.covers, data.artwork];
+        });
+       const sorted = new Set(this.unsorted);
+       sorted.forEach((g) => {
+           this.folders = [...this.folders, {genre:g,total:this.getTotalSongs(g),cover:this.getCoverArt(g)}]
+       });
+   }
 }
 </script>
-<style lang="">
-    
+<style lang="scss" scoped>
 </style>

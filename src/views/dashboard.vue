@@ -1,16 +1,14 @@
 <template lang="html">
     <titlebar class="titlebar"/>
- <div class="flex flex-col flex-grow col-span-2">
-  <div class="app bg-gray-200">
-
-      <div class="flex flex-row row-span-3">
+  <div class="app flex flex-col justify-center fixed h-full">
+      <div class="flex h-full flex-row row-span-3">
         <!-- sidebar -->
-          <side-bar/>
+          <side-bar  class=" w-48 h-full"/>
         <!-- Middle grid -->
-        <div class="mid w-3/4" >
-          <br>
-          <br>
-            <div class="middle flex flex-auto flex-col justify-center">
+        <div class="h-full" >
+            <div class="middle h-full">
+              <br>
+              <br>
               <top/>
                 <div class="router-view">
                   <router-view/>
@@ -24,11 +22,10 @@
           </div>
   </div>
    <!-- bottom widget -->
-       <div class="bg-red-800 p-10 h-20 w-screen">
-        
+       <div class="btW flex flex-col justify-center absolute z-10 bottom-0 w-11/12">
+         <mini-player />
       </div>
   </div>
-</div>
 </template>
 <script>
 import Titlebar from "../components/TitleBar/Titlebar.vue";
@@ -38,15 +35,20 @@ import { ipcRenderer, remote } from "electron";
 import { readFileSync } from 'fs';
 import * as mi from "material-icons";
 import AddFolder from "./widgets/addFolder.vue";
+import MiniPlayer from "../player/MiniPlayer.vue";
 export default {
   name:"Dashboard",
   data() {
     return {
       load:[],
-      
     }
   },
-  components:{ Titlebar, SideBar, Top , AddFolder },
+    computed: {
+      player(){
+        return this.$store.getters.getPlayer;
+      }
+    },
+  components:{ Titlebar, SideBar, Top , AddFolder, MiniPlayer },
   methods:{ 
     showTrack(){
       let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
@@ -61,9 +63,17 @@ export default {
   top: 0;
     width:100%;
   }
-  .mid{ background: #0a001aee;}
   .app{
     overflow: hidden;
+    // height: 1000px;
+  }
+  .btW{
+    height:5rem;
+    border-radius:10px;
+    background: #0d0118;
+    color: #fff;
+
+
   }
   .router-view{
     &::-webkit-scrollbar{
@@ -80,8 +90,8 @@ export default {
     
     overflow-x: hidden;
     overflow-y: scroll;
-    width:fit-content;
-    height: calc(65vh - 0px);
+    width:120vh;
+    height: calc(75vh - 30px);
   }
   .rightSide{ 
         &::-webkit-scrollbar{
@@ -98,9 +108,11 @@ export default {
      overflow-x: hidden;
     overflow-y: scroll;
     width:450px;
-    background:#222;
+     background: #140125;
+    // background:#222;
   }
   .middle{
     align-items: center;
+     background: #0b0413;
   }
 </style>

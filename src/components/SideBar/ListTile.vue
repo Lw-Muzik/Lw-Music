@@ -1,16 +1,19 @@
 <template>
     <span>
-        <span :class="[col==true?'active':'','tile']" @click="tapHandler">
+        <label :class="[col==true?'active':'','tile']" @click="tapHandler">
             <span :class="leading"></span>
             {{title}}
-            <span></span>
-        </span>
+            <div></div>
+            <!-- <input type="radio" name="sidebar" v-model="index" id="side"/> -->
+        </label>
     </span>
 </template>
 <script>
 export default {
     name:'ListTile',
     props:{
+        index:Number,
+        id:Number,
         leading:String,
         title:String,
     },

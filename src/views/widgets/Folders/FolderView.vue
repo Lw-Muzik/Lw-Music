@@ -11,7 +11,7 @@
                 <p> &lt; Back</p>
             </div>
         </div>
-        <layout :songs="store" :grid="true" :list="false"/>
+        <layout :songs="store" :grid="true" :list="false" :circle="false" />
     </div>
 </template>
 <script>
@@ -20,51 +20,43 @@ import { remote } from "electron";
 import Layout from "../Layout.vue";
 import * as mi from "material-icons";
 export default {
-    name:"GenreTracks",
+    name:"FolderView",
     data() {
         return {
-            store:[],
-            player:null,
-            index:0
+            store:[]
         }
     },
     components:{
         Layout
     },
     computed: {
-        genre(){
+        folder(){
             return this.$store.getters.getGenreCategory;
         },
         getBack(){
             return this.$store.getters.getGenreBack;
-        }
-    },
-    mounted(){
-        let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
-         this.store = raw.filter((song) => (song.genre == this.genre));
-       
-            this.player.onended = function(){
-                    // console.log("ended");
-                    this.index += 1;
-                    console.log(this.store[this.index].data);
-                     this.player.src = this.store[this.index].data;
-                    this.player.play();
-                }
-    },
+    }
+},
     created(){
          this.player = this.$store.getters.getPlayer;
     },
+    mounted(){
+        /**load all tracks */
+          let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
+         this.store = raw.filter((song) => (song.folder == this.folder));
+    },
       methods:{
-          playAll(){
+           playAll(){
               console.log(this.store[this.index].data);
                 this.player.src = this.store[this.index].data;
                 this.player.play();
-          },
+          },        
         goBack(){
              this.$store.commit('setGenreBack',false);
             this.$router.back();
         }
     },
+
 }
 </script>
 <style lang="scss" scoped>

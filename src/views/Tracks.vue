@@ -15,6 +15,7 @@ export default {
     return {
       url:'',
       load:[],
+      audio:new Audio(),
       streams:[
         "https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp",
         "https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp",
@@ -41,9 +42,8 @@ export default {
   },
   methods:{
       qPlay(song){
-       this.player.src = song;
-       this.player.play();
-      
+       this.audio.src = song;
+       this.audio.play();
       },
 
   },

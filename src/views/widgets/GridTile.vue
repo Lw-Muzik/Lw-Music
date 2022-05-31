@@ -12,7 +12,8 @@
 <script>
 export default {
     name:"GridTile",
-    props:{ art:String, artist:String, title:String ,circle:Boolean }
+    props:{ art:String, artist:String, title:String ,circle:Boolean },
+    
 }
 </script>
 <style lang="scss" scoped>

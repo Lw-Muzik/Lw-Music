@@ -2,92 +2,76 @@ import { readdir,  readFileSync,  statSync, writeFileSync, existsSync } from "fs
 import { app, protocol,dialog, BrowserWindow, ipcMain,  Menu, Tray, nativeImage } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
-// const /*{ setupTitlebar, attachTitlebarToWindow }*/ cs = require("custom-electron-titlebar");
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { extname, join } from 'path';
-import { image }  from "./Core/default"
+import { image }  from "./Core/default";
 const { musixmatch } = require('4lyrics');
 import { Axios } from 'axios';
 const cheerio = require('cheerio');
 const { streams,processed,art ,settings, favourite} = require("./Main/System/Paths.js");
 import NodeID3 from "node-id3";
-//   canvas_el
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
 
-const d = '';
-var dPath = "";
+
+/**
+ * 
+ * @param {NodeID3.Tags} tags
+ */
+var saveArtWork = async function(tags,track){
+    //  Storing cover arts
+          if((tags.image.imageBuffer) !== undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
+            writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer)
+          }
+}
 
  // recursively moves through directories looking for .mp3 files
+
  /**
   * 
   * @param {String } dir 
   */
- const recursiveFolders =  async (dir)=>{
-   /**laoding the music store */
-    let temp =  JSON.parse(`${readFileSync(processed)}`)
+ var recursiveFolders =  async function(dir){
    /** Reads only mp3 files from directory */
-   const persistent = JSON.parse(readFileSync(processed));
-  readdir(dir,async (error,files)=>{
-    const store = JSON.parse(readFileSync(processed));
+   let store = JSON.parse(readFileSync(processed));
+  //  console.log(store.toString())
+  readdir(dir,async function(error,files){
     if (error) throw new Error(`Sync Error ${error}`);
-    
-   
-      files.forEach(async (track, index) => {
-        //  
+
+      files.forEach(async function(track, index) {
+
         let newPath = dir + '/' + track;
+
         if (statSync(newPath).isDirectory() == true) {
           await recursiveFolders(newPath);
-          d = track;
-          dPath = newPath;
         } else if (statSync(newPath).isFile() == true && extname(newPath) == ".mp3") {
-          
-          const tags = NodeID3.read(`${newPath}`);
-          // Storing cover arts
-          if(tags.image.imageBuffer != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
-            writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer)
-          }
-
+        let tags = NodeID3.read(`${newPath}`);
           /**Checking store is not empty and  if the .mp3 file is already stored */
-        if(persistent.length != 0){
-            if(newPath != persistent[index].trackPath){
-                // console.log(newPath == persistent[index].trackPath)
                   let meta =  {
                     title: tags.title == undefined ? track.replace(".mp3", "") : tags.title,
                     genre: tags.genre == undefined ? "Unknown genre" : tags.genre,
                     album: tags.genre == undefined ? "Unknown album" : tags.album,
                     artist: tags.artist == undefined ? "Unknown artist" : tags.artist,
                     artwork:`${join(art, track.replace(".mp3", ".jpeg"))}`,
-                    folderPath: dPath,
+                    n_track:track,
                     trackPath: newPath,
+                    folder:dir,
                     data: `file://${newPath}`,
                   };
-                  temp =  [...temp, meta];
+                  store =  [...store, meta];
+                  writeFileSync(processed, JSON.stringify(store));
                 }
-                writeFileSync(processed, JSON.stringify(temp));
-        }else{
-          console.log(persistent.length)
-       
-          let meta =  {
-            title: tags.title == undefined ? track.replace(".mp3", "") : tags.title,
-            genre: tags.genre == undefined ? "Unknown genre" : tags.genre,
-            album: tags.genre == undefined ? "Unknown album" : tags.album,
-            artist: tags.artist == undefined ? "Unknown artist" : tags.artist,
-            artwork:`${join(art, track.replace(".mp3", ".jpeg"))}`,
-            folderPath: dPath,
-            trackPath: newPath,
-            data: `file://${newPath}`,
-          };
-          temp =  [...temp, meta];
-      }
-      writeFileSync(processed, JSON.stringify(temp));
-    }
-    });
-});
+              
+            });
+           
+        });
  }
+
+//await saveArtWork(tags,track);
+
 const icon = nativeImage.createFromDataURL(image);
 async function createWindow() {
   // Create the browser window.
@@ -114,28 +98,46 @@ async function createWindow() {
     if(existsSync(settings) == false){
       const set = {
           savedPaths:[], 
-          volume:0, 
+          volume:0.17,
       };
       writeFileSync(settings,JSON.stringify(set));
+}
+
+if (existsSync(favourite) == false) {
+  writeFileSync(favourite,JSON.stringify([]));
 }
   });
   // send settings url to render process when dom starts loading
  win.webContents.on('did-stop-loading',async()=>{
-     //
-     if (existsSync(favourite) == false) {
-      writeFileSync(favourite,JSON.stringify([]));
-  }
-})
+   
+});
+
 win.webContents.on('did-frame-finish-load',() => {
     const paths = JSON.parse(readFileSync(settings)).savedPaths;
       /** to avoid repeating urls lets use a set*/
+      
+      
      /* The after send unique data */
      console.log("Done loading....")
-     if(paths.length != 0){
-       paths.forEach(async (url)=> await recursiveFolders(url));
-     }else{
+    //  if(paths.length != 0){
+    //    /**first clear the store the rewrite to */
+    //   writeFileSync(processed, JSON.stringify([]));
+    //    paths.forEach(async function(url){
+    //     //  console.log(url);
+    //      await recursiveFolders(url)
+    //    });
+     if(paths.length == 0){
       writeFileSync(processed, JSON.stringify([]));
      }
+});
+
+win.webContents.on('dom-ready',async function(){
+    /**laoding the music store */
+    var store =  JSON.parse(`${readFileSync(processed)}`);
+      store.forEach(async function(element){
+      const tags = await NodeID3.Promise.read(`${element.trackPath}`);
+      await saveArtWork(tags,`${element.n_track}`);
+    });
 })
 
   // attachTitlebarToWindow(win);
@@ -170,9 +172,9 @@ win.webContents.on('did-frame-finish-load',() => {
                   buttonLabel:"Select",
                   title:"Choose a music folder"
               }).then((response)=>{
-                if (response.filePaths[0] != "") {
+                if (response.filePaths[0] != null) {
                   event.sender.send("chosenFolder",response.filePaths[0]);
-                  recursiveFolders(`${response.filePaths[0]}`)
+                   recursiveFolders(`${response.filePaths[0]}`)
                 }else{
                   event.sender.send("nothing");
                 }
@@ -205,10 +207,16 @@ win.webContents.on('did-frame-finish-load',() => {
     });
 
     ipcMain.on('refresh',(e,args)=>{
+       /***first reset the store */
+       writeFileSync(processed, JSON.stringify([]));
        const paths = JSON.parse(readFileSync(settings)).savedPaths;
         if(paths.length != 0){
+         
         console.log("refreshing new ones.....")
-          paths.forEach(async (url)=> await recursiveFolders(url));
+        paths.forEach(async (url)=> {
+          // console.log(url);
+          await recursiveFolders(url)
+        });
         }else{
         console.log("refreshing to empty.....")
         writeFileSync(processed, JSON.stringify([]));
@@ -217,8 +225,8 @@ win.webContents.on('did-frame-finish-load',() => {
   /**
    * fetch lyrics
    */
-   ipcMain.on('fetchLyrics',(e,data)=>{
-        musixmatch.getURL(`${data[0]} ${data[1]}`).then((url)=>{
+   ipcMain.on('fetchLyrics',(e,args)=>{
+        musixmatch.getURL(`${args[0]} ${args[1]}`).then((url)=>{
             musixmatch.getLyrics(url).then((lyrics)=>{
               console.log(lyrics);
             e.sender.send('lyrics',lyrics);
@@ -248,16 +256,16 @@ app.on('activate', () => {
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
-    try {
-      await installExtension(VUEJS3_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString());
-    }
+    // try {
+    //   await installExtension(VUEJS3_DEVTOOLS)
+    // } catch (e) {
+    //   console.error('Vue Devtools failed to install:', e.toString());
+    // }
   }
-  
+
   let menue = Menu.buildFromTemplate([
             {"label":"Amp Music",click:()=>{ 
-            app.focus() 
+            app.show()
             }},
             {"label":"Min screen",role:"minimize"},
             {"label":"UI Tools",

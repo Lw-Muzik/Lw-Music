@@ -1,6 +1,7 @@
 <template lang="html">
     <div class="lg:w-full sm:w-8/12 grid md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
         <grid-tile 
+                @click="playSong(item)"
                 :circle="cir"
                 v-for="(item,index) in items" 
                 :key="index"
@@ -18,7 +19,25 @@ export default {
         items:Array,
         cir:Boolean
     },
-    components:{ GridTile }
+    data() {
+        return {
+            audio:null,
+            eq:null
+        }
+    },
+    components:{ GridTile },
+    methods:{
+        playSong(track){
+            this.audio.src = track.data;
+            this.audio.play();
+            this.eq.startEq();
+            this.$store.commit('musicData',track)
+        }
+    },
+    created() {
+        this.eq = this.$store.getters.getEqualiser;
+        this.audio = this.$store.getters.getPlayer;
+    },
 }
 </script>
 <style lang="scss" scoped>

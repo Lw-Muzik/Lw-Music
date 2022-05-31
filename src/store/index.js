@@ -1,27 +1,31 @@
 
 import { createStore } from 'vuex'
 import { Equalizer } from '../Core/Equalizer';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 const { image } = require("../Core/default");
 import * as id3 from "music-metadata-browser";
-
+import { readFileSync, writeFileSync } from 'fs';
 const audio = new Audio();
 audio.crossOrigin = "anonymous";
-
+let url = `${remote.app.getPath('userData')}/settings.json`;
+const db = JSON.parse(readFileSync(url));
 const eq = new Equalizer(audio);
+eq.startEq();
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 export default createStore({
   state: {
-    volume:0.17,lyrics:'', playlist:[], reduceCount:0,
+    volume:db.volume,lyrics:'', playlist:[], reduceCount:0,trackPlaying:'',
     player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
     bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),
     equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
-    genreCategory:'',genreBack:false,
+    genreCategory:'',genreBack:false,muData:{},defaultCover:image,
   },
   mutations: {
-    setVolume(state,payload){
+    setVolume(state,payload){      
       state.player.volume = payload;
+      db.volume = payload;
+      writeFileSync(url,JSON.stringify(db));
     },
     updatePlaylist(state,payload){
       state.playlist = [...state.playlist,payload]; ipcRenderer.sendSync('saveUserData',payload);
@@ -66,11 +70,9 @@ export default createStore({
 
   playSong(state,payload){
     state.player.src = payload;
-    state.player.play();
   },
-  streamMusic(state,payload){
-    // ipcRenderer.sendSync('hot100',payload);
-    // console.log(payload)
+  musicData(state,payload){
+    state.muData = payload;
   },
   playStream(state,payload){
       state.player.src = payload;
@@ -81,12 +83,11 @@ export default createStore({
     state.reduceCount = payload;
 }
   },
-  
-
   getters:{
     getVolume : (state) => state.volume,
     getPlaylist:(state) => state.playlist,
     getPlayer: (state) => state.player,
+    getDefaultCover:(state) => state.defaultCover,
     getBands: (state) => state.bands,
     getFeedback :(state) => state.feedback,
     getDelays: (state) => state.delays,
@@ -94,6 +95,7 @@ export default createStore({
     getCurrentBass :(state) => state.bass,
     getNowPlaying:(state)=> state.now,
     getId3:(state)=> state.Id3,
+    getMusicData:(state) => state.muData,
     reduceCount:(state)=> state.reduceCount,
     getCount:(state)=> state.counter,
     getGenreCategory:(state) => state.genreCategory,

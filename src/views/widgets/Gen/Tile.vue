@@ -52,14 +52,14 @@ export default {
 
     .details{
         z-index: 10!important;
-        width: 170px;
+        width: 150px;
         padding:3px;
         margin-bottom: 15px;
         background: #ddd;
         border-radius: 10px;
     }
         img{
-            border-radius: 50%!important;
+            border-radius: 10px!important;
             object-fit:cover;
             width: 200px;
             height:200px;

@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="form m-4 px-2">
+    <div class="form w-64 m-4 px-2">
        <center class="title">Saved folders</center>
     <div class="path-panel">
        <p v-if="paths.length == 0" class="no-path-tile ">

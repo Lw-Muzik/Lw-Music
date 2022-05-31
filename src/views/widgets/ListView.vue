@@ -1,6 +1,6 @@
 <template lang="html">
     <div class="">
-       <p @click="this.$emit('queuePlay',[list,index])"  v-bind:key="index" v-for="(list,index) in queueList">
+       <p @click="playSong(list)"  v-bind:key="index" v-for="(list,index) in queueList">
              <!-- <b class="material-icons mi-dehaze"></b> -->
                <img :src="`file://${list.artwork}`" class="cover"/> &nbsp; &nbsp;
              <!-- {{(list.data.name).replace(".mp3","")}} -->
@@ -19,27 +19,41 @@ export default {
     props:{
         queueList:Array,
     },
-}
+    data() {
+      return {
+        audio:null
+      }
+    },
+      created(){
+         this.audio = this.$store.getters.getPlayer;
+    },
+    methods:{
+        playSong(track){
+            this.audio.src = track.data;
+            this.audio.play();
+            this.$store.commit('musicData',track)
+        }
+    },
+   }
 </script>
 <style lang="scss" scoped>
      p{
         .cover{
-     width:45px;
-     height: 45px;
-     border-radius:10px;
+     width:55px;
+     height: 55px;
+     border-radius:50%;
      box-shadow: -3px -2px 1px 0px #eee;
    }
       width:700px;
       line-height: -20px;
-      color: #eeeeeeaf;
+      color: #eeeeee;
       // box-shadow: -4px -0px 0px 0px #eeee;
-      background:rgba($color: #948E8E, $alpha:0.4);
+      background:rgba($color: #948E8E, $alpha:0);
       padding: 4px;
       border-radius:5px;
-      
       display: flex;
       cursor: pointer;
-      margin:5px;
+      margin:10px;
       flex-direction:row;
       transition:0.3s ease-in-out;
       transform:scale(1,1);
@@ -54,7 +68,7 @@ export default {
      span{
         width: 300px;
         text-align: left;
-        font:300 14px Ubuntu,Arial;
+        font:400 14px Ubuntu,Arial;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -71,10 +85,9 @@ export default {
       width:400px;
       line-height: -20px;
       // box-shadow: -4px -0px 0px 0px #eeee;
-      background:rgba($color: #948E8E, $alpha:0.4);
+      background:rgba($color: #000000, $alpha:0);
       padding: 4px;
       border-radius:5px;
-      
       display: flex;
       cursor: pointer;
       margin:5px;
