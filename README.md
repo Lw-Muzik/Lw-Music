@@ -9,7 +9,7 @@
 - Visualisers
 - Room Effects (Scene , Small Room ,...)
 
-* More features are coming....
+* More features are coming......
 
 ## ScreenShots( Mobile View )
 
