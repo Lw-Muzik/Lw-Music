@@ -9,6 +9,8 @@ const audio = new Audio();
 audio.crossOrigin = "anonymous";
 let url = `${remote.app.getPath('userData')}/settings.json`;
 const db = JSON.parse(readFileSync(url));
+// set volume basing on the one saved in the previous session
+audio.volume = db.volume;
 const eq = new Equalizer(audio);
 eq.startEq();
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -61,6 +63,7 @@ export default createStore({
       state.bass.gain.value = payload;
     },
     tuneTreble(state,payload){
+      console.log(payload);
       state.treble.gain.value = payload;
     },
     incrementCount(state,payload){

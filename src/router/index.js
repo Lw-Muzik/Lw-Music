@@ -11,33 +11,61 @@ import GenreTracks from "../views/widgets/Gen/GenreTracks.vue";
 import ArtistTracks from "../views/widgets/Artist/ArtistView.vue";
 import AlbumTracks from "../views/widgets/Album/AlbumView.vue";
 import Favourite from '../views/Favourite.vue';
+import SoundQ from '../views/Sound/SoundQ.vue';
+import  Room from '../views/Sound/Rooms/Room.vue';
+import  Eq from '../views/Sound/EQ/EQ.vue';
+import  AudioPresets from '../views/Sound/AudioPreset/AudioPreset.vue';
+import  Speakers from '../views/Sound/spKs/Speaker.vue';
+
 const routes = [ 
   {
     path: '/',
     component: Dashboard,
     children:[
       { path:'tracks', component:Tracks },
+      // artists
       { path:'artist', component:Artist ,
       children:[
+        // artist tracks
         { path:'artistTracks', component:ArtistTracks },
       ]
     },
+
+    // albums
     { path:'album', component:Album,
     children:[
         { path:'albumTracks', component:AlbumTracks },
       ]
-   },{ path:'folder', component:Folder,
+   },
+   // folders
+   { path:'folder', component:Folder,
    children:[
        { path:'folderSongs', component:FolderView },
      ]
   },
+  // streams
       { path:'stream', component:Streams },
+
+      // genres
       { path:'genre', component:Genre,
         children:[
           { path:'genres', component:GenreTracks },
         ]
     },
-      { path:'favourite', component:Favourite }
+    // favourties
+      { path:'favourite', component:Favourite },
+
+      // soundQ
+      {path:"soundQ", component:SoundQ },
+      // EQ
+      {path:"eq", component:Eq },
+      // Speakers
+      {path:"sps", component:Speakers },
+      // audio presets
+      {path:"aps", component:AudioPresets },
+      // room effects
+      {path:"rms", component:Room },
+
     ]
     },
 ];

@@ -45,25 +45,25 @@ class Equalizer{
 | Peaking | 16000 Hz | 1.41 | -11.1 dB |
          */
         this.bands = [
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:25,Q:1.67,gain:7.5}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:48,Q:1.67,gain:6.5}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:85,Q:1.67,gain:3.0}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:150,Q:1.67,gain:-2.5}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:350,Q:1.67,gain:-1.5}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:500,Q:1.67,gain:-3.0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:25,Q:1.67,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:48,Q:1.67,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:85,Q:1.67,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:150,Q:1.67,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:350,Q:1.67,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:500,Q:1.67,gain:0}),
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:1000,Q:1.67,gain:0}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:2000,Q:1.67,gain:-1.1}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:8000,Q:1.67,gain:3.3}),
-            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:16000,Q:1.67,gain:3.3}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:2000,Q:1.67,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:8000,Q:1.67,gain:0}),
+            new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:16000,Q:1.67,gain:0}),
         ];
         // base nknob
-        this.bass = new BiquadFilterNode(this.audioCtx, {type:'lowpass',frequency:60,gain:56,Q:2.67});
-        this.bassBooster = new GainNode(this.audioCtx,{gain:5.8});
+        this.bass = new BiquadFilterNode(this.audioCtx, {type:'lowpass',frequency:60,gain:0,Q:2.67});
+        this.bassBooster = new GainNode(this.audioCtx,{gain:0});
         /**
          * Stereo band boost
          */
-        this.treble = new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:18000,gain:0,Q:0.67});
-        // this.trebleBooster = new GainNode(this.audioCtx,{gain:0});
+        this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:12000,gain:0,Q:1.67});
+         this.trebleBooster = new GainNode(this.audioCtx,{gain:0});
             /**
              * Room effects
              */
@@ -120,7 +120,8 @@ class Equalizer{
 
              //**treble connections */
              this.source.connect(this.treble);
-             this.treble.connect(this.analyser);
+             this.treble.connect(this.trebleBooster)
+             this.trebleBooster.connect(this.analyser);
              this.analyser.connect(this.audioCtx.destination);
              
              /**r
@@ -164,7 +165,7 @@ class Equalizer{
        return this.bassBooster;
    }
    getTreble(){
-       return this.treble;
+       return  this.trebleBooster;
    }
 }
 

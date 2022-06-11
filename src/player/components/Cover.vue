@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="ui flex flex-row justify-evenly items-center">
         <div class=" w-24 h-10 flex flex-col justify-center items-center rounded-2xl">
-            <img v-if="track.artwork != null" :src="`file://${track.artwork}`" class="p-4 rounded-2xl object-cover"/>
+            <img v-if="track.artwork != null" :src="`file://${track.artwork}`" class="p-2 drop-shadow rounded-2xl object-cover"/>
             <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/>
         </div>
         <div class="flex p-5 flex-row justify-between items-center ">

@@ -70,7 +70,7 @@ export default {
   .btW{
     height:5rem;
     border-radius:10px;
-    background: #0d0118;
+    // background: #0d0118;
     color: #fff;
 
 

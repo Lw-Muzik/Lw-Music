@@ -1,0 +1,102 @@
+.widget{
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+    height: fit-content;
+    color: #fff;
+.side{
+ display: flex;
+ flex-direction:row;
+ justify-content:space-around!important;
+ align-items: center  !important;
+
+}
+.more{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around!important;
+    align-items:center !important;
+    padding: 10px;
+    p{
+        b{
+            font: 300 16px Ubuntu,Arial;
+            margin: 10px;
+        }
+    }
+    input{
+        cursor: pointer;
+        appearance: none;
+        width: 300px;
+        height: 3px;
+    }
+}
+.equalizer {
+     background: #1111115D;
+    backdrop-filter: blur(20px);
+    margin: 10px;
+    padding: 15px;
+    border-radius:5px;
+     z-index: 8;
+     border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:300px;
+    height: 650px;
+    transform:rotate(-90deg);
+}
+}
+//   .closeEQ{
+//       border:1px solid #eee;
+//       width:100px;
+//       background:transparent;
+//       position: absolute;
+//       color:#ddd;
+//       right:50px;
+//       padding:10px;
+//       border-radius:10px;
+//       transform: scale(1,1);
+//       font:300 16px Ubuntu,Arial;
+//       transition:0.3s ease-in-out;
+//       cursor:pointer;
+//   }
+//   .closeEQ:hover{
+//       transform: scale(1.1,1.1);
+// }
+@media(max-width:910px) {
+
+.widget{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+.equalizer {
+     background: #1111115D;
+    backdrop-filter: blur(20px);
+    border-radius:5px;
+     border: 1px solid #ddd;
+    width:270px;
+    height: 350px;
+}
+
+.closeEQ{
+  border:1px solid #eee;
+  width:100px;
+  background:transparent;
+  color:#ddd;
+  padding:10px;
+  border-radius:10px;
+  transform: scale(1,1);
+  font:300 16px Ubuntu,Arial;
+  transition:0.3s ease-in-out;
+  cursor:pointer;
+  bottom: 10px;
+}
+    .closeEQ:hover{
+      transform: scale(1.1,1.1);
+    }
+  }
+}

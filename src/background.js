@@ -93,6 +93,7 @@ async function createWindow() {
             webviewTag:true 
     }
   });
+
   win.webContents.on('did-start-loading',()=>{
     /**Settings path */
     if(existsSync(settings) == false){
@@ -102,6 +103,7 @@ async function createWindow() {
       };
       writeFileSync(settings,JSON.stringify(set));
 }
+
 
 if (existsSync(favourite) == false) {
   writeFileSync(favourite,JSON.stringify([]));
@@ -115,15 +117,14 @@ if (existsSync(favourite) == false) {
 win.webContents.on('did-frame-finish-load',() => {
     const paths = JSON.parse(readFileSync(settings)).savedPaths;
       /** to avoid repeating urls lets use a set*/
-      
-      
+
      /* The after send unique data */
      console.log("Done loading....")
     //  if(paths.length != 0){
     //    /**first clear the store the rewrite to */
     //   writeFileSync(processed, JSON.stringify([]));
     //    paths.forEach(async function(url){
-    //     //  console.log(url);
+
     //      await recursiveFolders(url)
     //    });
      if(paths.length == 0){

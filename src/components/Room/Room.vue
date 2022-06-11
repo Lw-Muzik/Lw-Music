@@ -40,7 +40,7 @@ import Tuner from "./Tuner.vue";
 import Feedback from "./Feedback.vue";
 import { Rooms } from "../../Core/Presets"
 export default {
-    name:"Room",
+    name:"RoomEffects",
     components:{
         Tuner,
         Feedback

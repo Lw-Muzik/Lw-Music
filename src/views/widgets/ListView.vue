@@ -9,6 +9,8 @@
             <span >{{list.genre}}</span> 
              &nbsp;
             <span>{{list.artist}}</span>
+  &nbsp;
+               <span>{{list.album}}</span>
           </p>
       </div>
           <!-- <button @click="this.$emit('closeQueue')"><b class="material-icons mi-close"></b></button> -->
@@ -39,18 +41,19 @@ export default {
 <style lang="scss" scoped>
      p{
         .cover{
-     width:55px;
-     height: 55px;
-     border-radius:50%;
-     box-shadow: -3px -2px 1px 0px #eee;
+     width:60px;
+     height: 60px;
+     border-radius:5px;
+     padding:3px;
+    //  box-shadow: -1px -2px 1px 0px #eee
    }
-      width:700px;
+      width:100%;
       line-height: -20px;
       color: #eeeeee;
       // box-shadow: -4px -0px 0px 0px #eeee;
       background:rgba($color: #948E8E, $alpha:0);
       padding: 4px;
-      border-radius:5px;
+      border-radius:0px;
       display: flex;
       cursor: pointer;
       margin:10px;
@@ -60,10 +63,7 @@ export default {
       justify-content: space-around!important;
       align-items: center;
      &:hover{
-       box-shadow: -4px 0px 0px 0px #eeee,
-                   4px 0px 0px 0px #eeee;
-                          // transform:scale(1.01,1.01);
-        background:rgba($color: #CABCBC, $alpha:0.5);
+        background:rgba($color: #CABCBC, $alpha:0.2);
      }
      span{
         width: 300px;
@@ -82,7 +82,7 @@ export default {
      border-radius:10px;
      box-shadow: -3px -2px 1px 0px #eee;
    }
-      width:400px;
+      width:100%;
       line-height: -20px;
       // box-shadow: -4px -0px 0px 0px #eeee;
       background:rgba($color: #000000, $alpha:0);
@@ -97,10 +97,8 @@ export default {
       justify-content: space-around!important;
       align-items: center;
      &:hover{
-       box-shadow: -4px 0px 0px 0px #eeee,
-                   4px 0px 0px 0px #eeee;
                           // transform:scale(1.01,1.01);
-        background:rgba($color: #CABCBC, $alpha:0.3);
+        background:rgba($color: #cabcbc31, $alpha:0.3);
      }
      span{
         width: 300px;
