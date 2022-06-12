@@ -12,6 +12,7 @@ import ArtistTracks from "../views/widgets/Artist/ArtistView.vue";
 import AlbumTracks from "../views/widgets/Album/AlbumView.vue";
 import Favourite from '../views/Favourite.vue';
 import SoundQ from '../views/Sound/SoundQ.vue';
+import Settings from '../views/settings/Settings.vue';
 import  Room from '../views/Sound/Rooms/Room.vue';
 import  Eq from '../views/Sound/EQ/EQ.vue';
 import  AudioPresets from '../views/Sound/AudioPreset/AudioPreset.vue';
@@ -66,6 +67,10 @@ const routes = [
       // room effects
       {path:"rms", component:Room },
 
+      // settings
+      {path:"setings", component:Settings },
+
+      
     ]
     },
 ];

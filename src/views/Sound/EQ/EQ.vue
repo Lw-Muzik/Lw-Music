@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import EqualizerComponent from "../../../components/EqaulizerWidget/Equalizer.vue";
+import EqualizerComponent from "@/components/EqaulizerWidget/Equalizer.vue";
 export default {
     name:"EQ",
     components:{ EqualizerComponent },

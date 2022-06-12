@@ -14,7 +14,7 @@ const SoundQ = {
 | Peaking | 8000 Hz  | 1.41 | 0.9 dB  |
 | Peaking | 16000 Hz | 1.41 | -4.7 dB |
     */
-'Amazon Echo Buds Gen':{
+'Amazon Buds':{
     frequency:[31,62,125,250,500,1000,2000,4000,8000,16000], 
     Q:1.41,
     gain:[-1.3,-3.5,0.5,4.9,-2.7,-2.0,3.3,0.9,-4.7]

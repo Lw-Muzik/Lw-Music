@@ -8,8 +8,6 @@
         <div class="h-full" >
             <div class="middle h-full">
               <br>
-              <br>
-              <top/>
                 <div class="router-view">
                   <router-view/>
               </div>
@@ -70,10 +68,7 @@ export default {
   .btW{
     height:5rem;
     border-radius:10px;
-    // background: #0d0118;
     color: #fff;
-
-
   }
   .router-view{
     &::-webkit-scrollbar{
@@ -91,7 +86,7 @@ export default {
     overflow-x: hidden;
     overflow-y: scroll;
     width:120vh;
-    height: calc(75vh - 30px);
+    height: calc(85vh - 30px);
   }
   .rightSide{ 
         &::-webkit-scrollbar{

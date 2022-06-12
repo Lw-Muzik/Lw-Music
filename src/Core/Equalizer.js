@@ -24,7 +24,13 @@ class Equalizer{
             new DelayNode(this.audioCtx,{delayTime:0}),
             new DelayNode(this.audioCtx,{delayTime:0}),
         ];
+        /***Compresseor */
+        this.compressor = this.audioCtx.createDynamicsCompressor();
+        /*********/
+        // Audio Balance
+        this.balance = new StereoPannerNode(this.audioCtx,{ pan:0 });
 
+        // Audio Playback rate
         this.feedback = [
             new GainNode(this.audioCtx,{gain:0}),
             new GainNode(this.audioCtx,{gain:0}),
@@ -57,12 +63,12 @@ class Equalizer{
             new BiquadFilterNode(this.audioCtx,{type:'peaking',frequency:16000,Q:1.67,gain:0}),
         ];
         // base nknob
-        this.bass = new BiquadFilterNode(this.audioCtx, {type:'lowpass',frequency:60,gain:0,Q:2.67});
+        this.bass = new BiquadFilterNode(this.audioCtx, {type:'lowpass',frequency:65,gain:0,Q:2.67});
         this.bassBooster = new GainNode(this.audioCtx,{gain:0});
         /**
          * Stereo band boost
          */
-        this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:12000,gain:0,Q:1.67});
+        this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:1000,gain:0,Q:1.97});
          this.trebleBooster = new GainNode(this.audioCtx,{gain:0});
             /**
              * Room effects
@@ -107,7 +113,8 @@ class Equalizer{
             // this.bands[8].connect(this.bands[9]);
             // this.bands[9].connect(this.bands[10]);
 
-            this.bands[size-1].connect(this.analyser);
+            this.bands[size-1].connect(this.balance)
+            this.balance .connect(this.analyser);
             
             this.analyser.connect(this.audioCtx.destination);
 

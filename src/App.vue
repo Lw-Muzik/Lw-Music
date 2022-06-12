@@ -40,7 +40,7 @@
     </div>
      <br>
      <button class="file-open" @click="chooseFolder"> Add Folder</button>
-     <button v-if="paths.length != 0" @click="goToHome">Continue</button>
+     <button  @click="goToHome">Continue</button>
     </div>
   </div>
 </div>
@@ -70,17 +70,15 @@ export default {
  mounted() {
        this.paths = JSON.parse(readFileSync(this.url)).savedPaths;
  },
+ computed: {
+    //this.paths = 
+ },
   methods: {
        chooseFolder(){
         ipcRenderer.sendSync("loadFolder");
-        ipcRenderer.on("chosenFolder",(event,args)=>{
-                let s = JSON.parse(readFileSync(this.url));
-                this.paths = [...this.paths,args];
-                s.savedPaths = this.paths;
-                writeFileSync(this.url,JSON.stringify(s));
-          /**After upadating the UI then load the tracks in the database */
-          // event.sender.sendSync("loadTracks");
-        })
+        ipcRenderer.on('chosen',(event, args)=>{
+            this.paths = [this.paths , args];
+        });
     },
     remove(id){
       let update = JSON.parse(readFileSync(this.url));

@@ -1,6 +1,6 @@
 <template lang="html">
     <section>
-        <layout :grid="false" :list="true" :songs="load"/>
+        <layout :grid="false" :list="true" :songs="load" :artWork="`file://${load[0].artwork}`" :title="title" />
 
 </section>
 </template>
@@ -8,12 +8,14 @@
 import { remote } from "electron";
 import { readFileSync } from "fs";
 import Layout from "./widgets/Layout.vue";
+
 export default {
     name:'Tracks',
-    components:{ Layout},
+    components:{ Layout },
     data() {
     return {
       url:'',
+      title:"All Tracks",
       load:[],
       audio:new Audio(),
     }

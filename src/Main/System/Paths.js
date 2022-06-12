@@ -8,7 +8,16 @@ const streams = join(appStore,'streams.json');
 const processed = join(appStore,"processed.json");
 const art = join(appStore,'Artwork');
 const settings = join(appStore,'settings.json');
+
+const recentPlays = join(appStore,'recents.json');
+
 const favourite = join(appStore,'favourite.json');
+
+// generate the recents.json file is doesn't exist
+if(existsSync(recentPlays) == false){
+    writeFileSync(recentPlays , JSON.stringify([]));
+  }
+
 // check if file for streams.json exists.
 if (existsSync(streams) == false) {
    writeFileSync(streams,JSON.stringify([]));
@@ -35,6 +44,8 @@ if(existsSync(art) == false){
 if (existsSync(favourite) == false) {
     writeFileSync(favourite,JSON.stringify([]))
 }
+
+
 export {
     appStore,
     downloads,
@@ -42,5 +53,6 @@ export {
     streams,
     art,
     settings,
+    recentPlays,
     favourite
 }

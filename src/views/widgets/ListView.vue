@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-    name:"GridView",
+    name:"ListView",
     props:{
         queueList:Array,
     },

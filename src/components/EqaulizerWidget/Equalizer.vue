@@ -30,8 +30,8 @@
         </p>
 
           <p>
-          <b>Treble {{Number((_treble/3) * 100).toFixed(1)}} dB</b>
-            <input type="range" @input="trebleUpdate" max="3" min="0" step="0.001" v-model="_treble"/>
+          <b>Treble {{Number((_treble/7) * 100).toFixed(1)}} dB</b>
+            <input type="range" @input="trebleUpdate" max="7" min="0" step="0.001" v-model="_treble"/>
         </p>
     </div>
     </div>
