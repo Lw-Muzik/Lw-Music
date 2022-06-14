@@ -1,26 +1,30 @@
 <template>
-    <div class="bands">
+    <div class="bands rotate-180">
         <span class="label">
-            {{(frequency > 500)?frequency.toString().replace("000","k"):frequency}}Hz
+            {{toneTitle}}
+            <!-- {{(frequency > 500)?frequency.toString().replace("000","k"):frequency}}Hz -->
         </span>
-             <input type="range" v-model="bandValue" @input="updateBand" max="15" min="-15" step="0.01">
-        <span class="label">{{Number(bandValue).toFixed(1)}}</span>
+             <input type="range" v-model="current" @input="updateBand" max="10" min="0" step="0.01">
+        <span class="label">{{Number((parseInt(current)/10)*100).toFixed(1)}} dB</span>
    
     </div>
 </template>
 
 <script>
 export default {
-    name: 'Bands',
+    name: 'Tones',
+    data() {
+        return {
+            bandValue:0,
+        }
+    },
     props: {
-        id:Number,
-        bandValue:Number,
-        frequency:Number,
-        bandGain:Number,
+        current:Number,
+        toneTitle:String,
     },
     methods: {
         updateBand(){
-            this.$store.commit('updateBands',[this.id,this.bandValue])
+           this.$emit('onUpdate',this.current);
         }
     }
 }
@@ -29,27 +33,31 @@ export default {
 <style lang="scss" scoped>
 .bands{
         display:flex;
+        
         flex-direction: row;
         justify-content: space-around;
-        padding:25px;
+        padding: 18px;
+        //  transform:rotate(-90deg);
         width:300px;
         .label{
             transform:rotate(90deg);
-            margin:7px;
+            margin:5px;
             
             }
         .label:last-child{
+            width: 50px;
+            white-space:nowrap;
             font:300 14px Ubuntu;
             }
 
              .label:first-child{
-            font:500 14px Ubuntu;
+            font:700 19px Ubuntu;
             color:#ddd;
             }
         input{
             appearance:none;
             height:2px;
-            width:230px;
+            width:430px;
           &::-webkit-slider-thumb{
               width:23px;
               height:18px;
@@ -69,10 +77,10 @@ export default {
         justify-content: space-around;
         padding: 7px;
         width:300px;
-        margin: 0px;
+        margin: 6px;
         .label{
             transform:rotate(90deg);
-            margin:5px;
+            margin:10px;
             
             }
         .label:last-child{

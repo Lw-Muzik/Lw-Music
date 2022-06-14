@@ -4,8 +4,12 @@
         <div class="flex flex-row justify-between pt">
        
          <div class="section flex flex-col justify-evenly items-center" >
-                    <p>{{title}}</p>
-                       <p>
+            <br>
+                    <p class="text-lg"> {{subtitle}}</p>
+                    
+                    <p class="title capitalize p-2">{{title.replace(/(.*)[\/\\]/,"").split('.')[0]}}</p>
+    
+                     <p v-show="showPlay">
                     <button @click="playAll" class="mi mi-play-arrow"></button> &nbsp;
                     Play All
                     </p>
@@ -17,7 +21,7 @@
             <br>
             <button @click="back" class="mi mi-arrow-left text-6xl"></button>
             &nbsp; &nbsp;
-            <button  @click="forward" class="mi mi-arrow-right"></button>
+            <!-- <button  @click="forward" class="mi mi-arrow-right"></button> -->
         </div>
         </div>
     </div>
@@ -27,9 +31,12 @@
 export default {
     name:'Top',
     props:{
+        showPlay:Boolean,
         artWork:String,
         songData: Array,
-        title:String
+        title:String,
+        subtitle:String,
+
     },
     data() {
         return { }
@@ -76,5 +83,8 @@ export default {
 }
   .pt{
     width: 50%;
+  }
+  .title{ 
+    font: 800 34px Ubuntu,Arial;
   }
 </style>

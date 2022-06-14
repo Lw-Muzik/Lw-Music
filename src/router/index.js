@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/dashboard.vue';
 import Tracks from '../views/Tracks.vue';
+import Home from '../views/Home.vue';
 import Artist from '../views/Artist.vue';
 import Album from '../views/Album.vue';
 import Streams from '../views/streams.vue';
@@ -23,6 +24,7 @@ const routes = [
     path: '/',
     component: Dashboard,
     children:[
+      { path:'/', component:Home },
       { path:'tracks', component:Tracks },
       // artists
       { path:'artist', component:Artist ,
@@ -68,7 +70,7 @@ const routes = [
       {path:"rms", component:Room },
 
       // settings
-      {path:"setings", component:Settings },
+      {path:"settings", component:Settings },
 
       
     ]

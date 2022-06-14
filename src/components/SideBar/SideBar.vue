@@ -31,7 +31,7 @@ export default {
            {icon:"mi mi-album",label:"Albums",active:false,route:'/album',id:4},
            {icon:"mi mi-folder",label:"Folders",active:false,route:'/folder',id:4},
            {icon:"mi mi-stream",label:"Streams",active:false,route:'/stream',id:6},
-           {icon:"mi mi-book",label:"Favorite",active:false,route:'/favourite',id:5},
+           {icon:"mi mi-thumb-up",label:"Favorite",active:false,route:'/favourite',id:5},
            {icon:"mi mi-speaker",label:"SoundQ",active:false,route:'/soundQ',id:6},
            {icon:"mi mi-settings",label:"Settings",active:false,route:'/settings',id:7},
 
@@ -41,6 +41,14 @@ export default {
     methods:{
       route(a){
         this.$router.push(a);
+        if(a == '/'){
+           this.$store.commit('setShowSidenav', false);
+        } else if(a == '/soundQ'){ 
+           this.$store.commit('setShowSidenav', false);
+        } else if(a == '/settings'){
+        }else{
+           this.$store.commit('setShowSidenav', true);
+        }      
       }
     }
 }

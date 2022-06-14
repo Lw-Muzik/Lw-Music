@@ -1,6 +1,6 @@
 <template lang="html">
     <section>
-        <layout :grid="false" :list="true" :songs="load" :artWork="`file://${load[0].artwork}`" :title="title" />
+        <layout :grid="false" :list="true" :subtitle="sub" :songs="load" :artWork="cover" :title="title" />
 
 </section>
 </template>
@@ -16,8 +16,10 @@ export default {
     return {
       url:'',
       title:"All Tracks",
+      sub:'',
       load:[],
       audio:new Audio(),
+      cover:''
     }
   },
   methods:{
@@ -35,6 +37,8 @@ export default {
   mounted(){
        let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
        this.load = raw;
+       this.sub = `${raw.length} songs`
+       this.cover = `file://${raw[0].artwork}`;
   },
   
 }

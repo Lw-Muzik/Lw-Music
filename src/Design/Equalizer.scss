@@ -1,23 +1,15 @@
 .widget{
     display: flex;
     flex-direction: column;
-    justify-content:center;
-    align-items: center;
-    height: fit-content;
+    justify-content:space-between;
     color: #fff;
-.side{
- display: flex;
- flex-direction:row;
- justify-content:space-around!important;
- align-items: center  !important;
-
-}
 .more{
     display: flex;
-    flex-direction: column;
-    justify-content:space-around!important;
-    align-items:center !important;
+    flex-direction: row;
+    justify-content:space-evenly!important;
+    // align-items:center !important;
     padding: 10px;
+    z-index: 5!important;
     p{
         b{
             font: 300 16px Ubuntu,Arial;
@@ -32,71 +24,16 @@
     }
 }
 .equalizer {
-     background: #1111115D;
-    backdrop-filter: blur(20px);
     margin: 10px;
-    padding: 15px;
-    border-radius:5px;
-     z-index: 8;
-     border: 1px solid #ddd;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width:300px;
-    height: 650px;
+    width:800px;
+    height: 250px;
+    z-index: 1;
     transform:rotate(-90deg);
+    // pointer-events: ;
 }
-}
-//   .closeEQ{
-//       border:1px solid #eee;
-//       width:100px;
-//       background:transparent;
-//       position: absolute;
-//       color:#ddd;
-//       right:50px;
-//       padding:10px;
-//       border-radius:10px;
-//       transform: scale(1,1);
-//       font:300 16px Ubuntu,Arial;
-//       transition:0.3s ease-in-out;
-//       cursor:pointer;
-//   }
-//   .closeEQ:hover{
-//       transform: scale(1.1,1.1);
-// }
-@media(max-width:910px) {
-
-.widget{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-.equalizer {
-     background: #1111115D;
-    backdrop-filter: blur(20px);
-    border-radius:5px;
-     border: 1px solid #ddd;
-    width:270px;
-    height: 350px;
-}
-
-.closeEQ{
-  border:1px solid #eee;
-  width:100px;
-  background:transparent;
-  color:#ddd;
-  padding:10px;
-  border-radius:10px;
-  transform: scale(1,1);
-  font:300 16px Ubuntu,Arial;
-  transition:0.3s ease-in-out;
-  cursor:pointer;
-  bottom: 10px;
-}
-    .closeEQ:hover{
-      transform: scale(1.1,1.1);
-    }
-  }
 }

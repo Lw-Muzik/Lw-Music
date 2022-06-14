@@ -1,7 +1,7 @@
 <template lang="html">
     <div>
         <br/>
-        <top class="fixed z-10 top-1" :artWork="artWork" :title="title" :songData="songs" />
+        <top class="fixed z-10 top-1" :artWork="artWork" :title="title" :subtitle="subtitle" :songData="songs" />
         <br>
         <br>
         <br>
@@ -25,7 +25,9 @@ export default {
         songs:Array,
          circle:Boolean,   
           artWork:String,
-         title:String 
+         title:String,
+         subtitle:String,
+         showPlay:Boolean
         },
     components:{ ListView , GridView, Top }
 }

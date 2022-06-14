@@ -68,7 +68,7 @@ class Equalizer{
         /**
          * Stereo band boost
          */
-        this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:1000,gain:0,Q:1.97});
+        this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:12000,gain:0,Q:1.97});
          this.trebleBooster = new GainNode(this.audioCtx,{gain:0});
             /**
              * Room effects

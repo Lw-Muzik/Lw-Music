@@ -1,10 +1,7 @@
 <template lang="html">
     <div class="volume flex flex-row justify-center items-center">
-       <p>Volume: <input type="range" step="0.01" max="1" min="0" v-model="volume" @input="updateVol"/> {{volume}} </p> 
-    </div>
-    <div>
-        <button class="btn" @click="this.$emit('shuffleTrack')"><b class="mi mi-shuffle"></b></button>
-       <button class="btn" @click="this.$emit('prevTrack')" ><b class="mi mi-fast-rewind"></b></button>
+       <p>Volume: <input type="range" step="0.01" max="1" min="0" v-model="volume" @input="updateVol"/> {{parseInt(volume * 100)}} % </p> 
+       
     </div>
 </template>
 <script>
@@ -26,5 +23,18 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    
+       input{
+            appearance:none;
+            height:2px;
+            width:230px;
+          &::-webkit-slider-thumb{
+              width:23px;
+              height:18px;
+              border-radius: 5px;
+              cursor: pointer;
+              border:1px solid #ddd;
+              appearance:none;
+              background: #3739B4;
+          }
+        }
 </style>

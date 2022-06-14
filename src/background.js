@@ -8,7 +8,7 @@ import { image }  from "./Core/default";
 const { musixmatch } = require('4lyrics');
 import { Axios } from 'axios';
 const cheerio = require('cheerio');
-const { streams,processed,art ,settings, favourite} = require("./Main/System/Paths.js");
+const { streams,processed,art, appStore ,settings, favourite} = require("./Main/System/Paths.js");
 import NodeID3 from "node-id3";
 
 // Scheme must be registered before the app is ready
@@ -103,18 +103,24 @@ async function createWindow() {
     /**Settings path */
     if(existsSync(settings) == false){
       const set = {
-          savedPaths:[], 
+          savedPaths:[ `${app.getPath('music') }` ], 
           volume:0.17,
-          eq:[],
+          eq:[3.3,2.0,1.0,0.0,0.0,1.0,2.3,2.6,2.0,3.0],
           bass:0,
           treble:0, 
-          trebleQ:1.67,
-          bassQ:1.67,
+          trebleQ:1.97,
+          bassQ:2.67,
+          eqPreset:"normal",
           bassFreq:65,
-          tFreq:1000,
-          room:[]
+          tFreq:12000,
+          room:{
+            delay:[0,0],
+            feedback:[0,0],
+          }
       };
       writeFileSync(settings,JSON.stringify(set));
+      /**Send all necessary data to renderer*/
+      
 }
 
 
@@ -124,8 +130,13 @@ if (existsSync(favourite) == false) {
   });
   // send settings url to render process when dom starts loading
  win.webContents.on('did-stop-loading',async()=>{
+    win.webContents.send('settings',settings);
+    win.webContents.send('processed',processed);
+    win.webContents.send('streams',streams);
+    win.webContents.send('favourite',favourite);
    
 });
+
 
 win.webContents.on('did-frame-finish-load',() => {
     const paths = JSON.parse(readFileSync(settings)).savedPaths;
@@ -137,7 +148,6 @@ win.webContents.on('did-frame-finish-load',() => {
     //    /**first clear the store the rewrite to */
     //   writeFileSync(processed, JSON.stringify([]));
     //    paths.forEach(async function(url){
-
     //      await recursiveFolders(url)
     //    });
      if(paths.length == 0){
@@ -193,10 +203,7 @@ win.webContents.on('dom-ready',async function(){
                  
                 // we save the files back to the store
                    writeFileSync(processed, JSON.stringify(store));
-                   console.log(`Songs to save => ${store}`)
-
                    // then after load the response
-                   
                    if(store.length != 0){
                      store.forEach(async function(element){
                        const tags = await NodeID3.Promise.read(`${element.trackPath}`);
