@@ -15,8 +15,6 @@ import NodeID3 from "node-id3";
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
-
-
 /**
  * 
  * @param {NodeID3.Tags} tags
