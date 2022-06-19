@@ -1,17 +1,17 @@
 <template lang="html">
-    <div>
+    <top-widget v-if="!getBack"  :total="folders.length" :label="`Folders`"/>
         <grid :items="folders" @routeTo="routeT" v-show="!getBack"/>
         <router-view v-show="getBack"/>
-    </div>
+  
 </template>
 <script>
 import { readFileSync } from 'fs';
 import { remote } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
-
+import TopWidget from "./widgets/ToWidget.vue";
 export default {
     name:'Folder',
-    components:{ Grid },
+    components:{ Grid, TopWidget },
     data() {
         return {
             showRoute:false,
@@ -24,7 +24,6 @@ export default {
    
     methods: {
         routeT(){
-            this.showRoute = !this.showRoute;
             this.$store.commit('setGenreBack',true);
             this.$router.push('/folder/folderSongs');
             // console.log("done")
@@ -54,6 +53,7 @@ export default {
        sorted.forEach((g) => {
            this.folders = [...this.folders, {genre:g,total:this.getTotalSongs(g),cover:this.getCoverArt(g)}]
        });
+       console.log(this.folders[0].cover)
    }
 }
 </script>

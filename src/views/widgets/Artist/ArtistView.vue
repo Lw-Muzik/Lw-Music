@@ -1,6 +1,6 @@
 <template lang="html">
     <div>
-        <div class="top flex flex-row justify-between items-center fixed z-10">
+        <!-- <div class="top flex flex-row justify-between items-center fixed z-10">
              <div class=" flex flex-row justify-center items-center p-3  m-4  bg-black rounded-lg h-10 ">
                  <p>{{genre}} - {{getSongs().length}} songs</p>
             </div>
@@ -10,7 +10,8 @@
             <div class=" cursor-pointer flex flex-row justify-center items-center p-3 m-4 bg-black rounded-lg h-10" @click="goBack">
                 <p> &lt; Back</p>
             </div>
-        </div>
+        </div> -->
+         <to-widget :label="artist" :total="store.length" />
         <layout :songs="getSongs()" :grid="true" :list="false" :circle="false" />
     </div>
 </template>
@@ -18,6 +19,7 @@
 import { readFileSync } from "fs";
 import { remote } from "electron";
 import Layout from "../Layout.vue";
+import ToWidget from "../ToWidget.vue";
 import * as mi from "material-icons";
 export default {
     name:"ArtistTracks",
@@ -27,10 +29,10 @@ export default {
         }
     },
     components:{
-        Layout
+        Layout,ToWidget
     },
     computed: {
-        genre(){
+        artist(){
             return this.$store.getters.getGenreCategory;
         },
         getBack(){
@@ -40,7 +42,7 @@ export default {
       methods:{
         getSongs(){
              let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
-            return raw.filter((song) => (song.artist == this.genre));
+            return raw.filter((song) => (song.artist == this.artist));
         },
         
         goBack(){

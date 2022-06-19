@@ -1,6 +1,6 @@
 <template lang="html">
-    <div class="">
-       <p @click="playSong(list)"  v-bind:key="index" v-for="(list,index) in queueList">
+    <div class="listView">
+       <p @click="playSong(list,index)"  v-bind:key="index" v-for="(list,index) in queueList">
              <!-- <b class="material-icons mi-dehaze"></b> -->
                <img :src="`file://${list.artwork}`" class="cover"/> &nbsp; &nbsp;
              <!-- {{(list.data.name).replace(".mp3","")}} -->
@@ -21,22 +21,45 @@ export default {
     },
     data() {
       return {
-        audio:null
+        audio:null,
+        j:0
       }
     },
       created(){
          this.audio = this.$store.getters.getPlayer;
     },
+    mounted() {
+      this.audio.onended = ()=>{
+        this.j += 1;
+         this.audio.src = this.queueList[this.j].data;
+            this.audio.play();
+      }
+    },
     methods:{
-        playSong(track){
+        playSong(track,id){
+          this.j = id;
             this.audio.src = track.data;
             this.audio.play();
-            this.$store.commit('musicData',track)
+            this.$store.commit('currentProcess',[this.queueList,id]);
+            this.$store.commit('musicData',track);
         }
     },
    }
 </script>
 <style lang="scss" scoped>
+     .listView{ overflow-y:scroll; overflow-x: hidden; height: 460px;
+       &::-webkit-scrollbar{
+      appearance: none;
+      width: 10px;
+    }
+    
+      &::-webkit-scrollbar-thumb{
+      appearance: none;
+      width: 5px;
+      background: #c7c5be;
+      border-radius: 10px;
+    }
+     }
      p{
         .cover{
      width:55px;
@@ -44,16 +67,15 @@ export default {
      border-radius:50%;
      box-shadow: -3px -2px 1px 0px #eee;
    }
-      width:700px;
+      width:100%;
       line-height: -20px;
       color: #eeeeee;
-      // box-shadow: -4px -0px 0px 0px #eeee;
       background:rgba($color: #948E8E, $alpha:0);
-      padding: 4px;
+      padding: 3px;
       border-radius:5px;
       display: flex;
       cursor: pointer;
-      margin:10px;
+      margin:5px;
       flex-direction:row;
       transition:0.3s ease-in-out;
       transform:scale(1,1);
@@ -63,7 +85,7 @@ export default {
        box-shadow: -4px 0px 0px 0px #eeee,
                    4px 0px 0px 0px #eeee;
                           // transform:scale(1.01,1.01);
-        background:rgba($color: #CABCBC, $alpha:0.5);
+        background:rgba($color: #CABCBC, $alpha:0.25);
      }
      span{
         width: 300px;

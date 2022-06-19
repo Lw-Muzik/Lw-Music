@@ -11,11 +11,12 @@ let url = `${remote.app.getPath('userData')}/settings.json`;
 const db = JSON.parse(readFileSync(url));
 const eq = new Equalizer(audio);
 eq.startEq();
+audio.volume = db.volume;
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 export default createStore({
   state: {
-    volume:db.volume,lyrics:'', playlist:[], reduceCount:0,trackPlaying:'',
+    volume:db.volume,lyrics:'', playlist:[], reduceCount:0,trackPlaying:'',currentData:[],
     player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
     bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),
     equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
@@ -38,6 +39,10 @@ export default createStore({
       // console.log(payload)
       state.genreBack = payload;
     },
+    currentProcess(state,payload){
+      state.currentData = payload;
+    },
+    
     loadPlaylist(state,payload){
         state.playlist = payload;
     },
@@ -100,5 +105,6 @@ export default createStore({
     getCount:(state)=> state.counter,
     getGenreCategory:(state) => state.genreCategory,
     getGenreBack:(state) => state.genreBack,
+    getCurrentData:(state) => state.currentData
   }
 })

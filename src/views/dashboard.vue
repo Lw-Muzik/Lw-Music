@@ -9,7 +9,7 @@
             <div class="middle h-full">
               <br>
               <br>
-              <top/>
+              <!-- <top/> -->
                 <div class="router-view">
                   <router-view/>
               </div>
@@ -22,7 +22,7 @@
           </div>
   </div>
    <!-- bottom widget -->
-       <div class="btW flex flex-col justify-center absolute z-10 bottom-0 w-11/12">
+       <div class="btW flex flex-col justify-center absolute z-10 bottom-0">
          <mini-player />
       </div>
   </div>
@@ -68,30 +68,18 @@ export default {
     // height: 1000px;
   }
   .btW{
-    height:5rem;
+    width: 90%;
+    height:4.5rem;
     border-radius:10px;
     background: #0d0118;
     color: #fff;
-
-
   }
   .router-view{
-    &::-webkit-scrollbar{
-      appearance: none;
-      width: 10px;
-    }
-    
-      &::-webkit-scrollbar-thumb{
-      appearance: none;
-      width: 5px;
-      background: #706e65;
-      border-radius: 10px;
-    }
     
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: hidden;
     width:120vh;
-    height: calc(75vh - 30px);
+    height: calc(85vh - 30px);
   }
   .rightSide{ 
         &::-webkit-scrollbar{

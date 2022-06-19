@@ -3,6 +3,7 @@
         <input 
             type="range"
              step="0.01" 
+              
              :max="Number(dur)" 
                 min="0" v-model="progress" 
                 @input="updateSlider"/>
@@ -40,9 +41,10 @@ export default {
         overflow:hidden;
         &::-webkit-slider-thumb{
             appearance:none;
-            width: 10px;
-            height:100vh;
-            background: #0743b3;
+            width: 10vh;
+            height:10px;
+            margin-right: 500000vh!important;
+            background: #f1bb09;
         }
     }
 </style>

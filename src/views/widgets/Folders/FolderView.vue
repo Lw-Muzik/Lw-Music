@@ -1,6 +1,6 @@
 <template lang="html">
     <div>
-        <div class="top flex flex-row justify-between items-center fixed z-10">
+        <!-- <div class="top flex flex-row justify-between items-center fixed z-10">
              <div class=" flex flex-row justify-center items-center p-3  m-4  bg-black rounded-lg h-10 ">
                  <p>{{genre}} - {{store.length}} songs</p>
             </div>
@@ -10,7 +10,8 @@
             <div class=" cursor-pointer flex flex-row justify-center items-center p-3 m-4 bg-black rounded-lg h-10" @click="goBack">
                 <p> &lt; Back</p>
             </div>
-        </div>
+        </div>  :cover="store[Math.floor(Math.random() * store.length)].artwork"-->
+        <to-widget :label="folder" :total="store.length" />
         <layout :songs="store" :grid="true" :list="false" :circle="false" />
     </div>
 </template>
@@ -19,6 +20,7 @@ import { readFileSync } from "fs";
 import { remote } from "electron";
 import Layout from "../Layout.vue";
 import * as mi from "material-icons";
+import ToWidget from "../ToWidget.vue";
 export default {
     name:"FolderView",
     data() {
@@ -27,8 +29,9 @@ export default {
         }
     },
     components:{
-        Layout
-    },
+    Layout,
+    ToWidget
+},
     computed: {
         folder(){
             return this.$store.getters.getGenreCategory;

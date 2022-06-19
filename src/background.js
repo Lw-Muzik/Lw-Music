@@ -107,6 +107,7 @@ if (existsSync(favourite) == false) {
   writeFileSync(favourite,JSON.stringify([]));
 }
   });
+  
   // send settings url to render process when dom starts loading
  win.webContents.on('did-stop-loading',async()=>{
    
