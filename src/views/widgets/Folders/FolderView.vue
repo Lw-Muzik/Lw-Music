@@ -13,6 +13,15 @@
         </div>  :cover="store[Math.floor(Math.random() * store.length)].artwork"-->
         <to-widget :label="folder" :total="store.length" />
         <layout :songs="store" :grid="true" :list="false" :circle="false" />
+        <layout
+         :songs="store"
+          :grid="true"
+           :list="false"
+            :title="title" 
+            :showPlay="playAll"
+             :artWork="cover"
+             :subtitle="subt"
+              />
     </div>
 </template>
 <script>
@@ -25,7 +34,10 @@ export default {
     name:"FolderView",
     data() {
         return {
-            store:[]
+            store:[],
+            playAll:true,
+            title:"",
+            subt:"",
         }
     },
     components:{
@@ -47,6 +59,9 @@ export default {
         /**load all tracks */
           let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
          this.store = raw.filter((song) => (song.folder == this.folder));
+         this.title = `${this.folder}`
+         this.cover = `file://${this.store[0].artwork}`;
+         this.subt = `${this.store.length} songs`
     },
       methods:{
            playAll(){

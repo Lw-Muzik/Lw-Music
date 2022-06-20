@@ -5,10 +5,17 @@ import { ipcRenderer, remote } from 'electron';
 const { image } = require("../Core/default");
 import * as id3 from "music-metadata-browser";
 import { readFileSync, writeFileSync } from 'fs';
+
+// declarations
 const audio = new Audio();
 audio.crossOrigin = "anonymous";
-let url = `${remote.app.getPath('userData')}/settings.json`;
+var url = `${remote.app.getPath('userData')}/settings.json`,
+favUrl = `${remote.app.getPath('userData')}/favourite.json`,
+recentUrl =  `${remote.app.getPath('userData')}/recents.json`;
 const db = JSON.parse(readFileSync(url));
+
+// set volume basing on the one saved in the previous session
+audio.volume = db.volume;
 const eq = new Equalizer(audio);
 eq.startEq();
 audio.volume = db.volume;
@@ -20,57 +27,157 @@ export default createStore({
     player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
     bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),
     equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
-    genreCategory:'',genreBack:false,muData:{},defaultCover:image,
+    genreCategory:'',genreBack:false,muData:{},defaultCover:image,showSidenav:false,
+    balance:eq.balance,compressor:eq.compressor,recentPlays:JSON.parse(readFileSync(recentUrl)),
+    favourite:JSON.parse(readFileSync(favUrl)),currentIndex:0,bbass:db.bass, btreble:db.treble,eqPreset:db.eqPreset,
+    currentRoom:db.room.delay, currentRoomFeed:db.room.feedback, currentEq:db.eq, cBass:db.bassFreq, cTreble:db.tFreq,QTreb:db.trebleQ,Qbass:db.bassQ
   },
   mutations: {
+    // show side nav
+    setShowSidenav(state,payload){
+      state.showSidenav = payload;
+    },
+    // sets the volume globally
     setVolume(state,payload){      
       state.player.volume = payload;
       db.volume = payload;
       writeFileSync(url,JSON.stringify(db));
     },
+    // updates the playlist data
     updatePlaylist(state,payload){
-      state.playlist = [...state.playlist,payload]; ipcRenderer.sendSync('saveUserData',payload);
+      state.playlist = [...state.playlist,payload];
     },
-
+    // updates the equalizer presets
+    setEqPreset(state,payload){
+      state.eqPreset = payload;
+      db.eqPreset = payload;
+      writeFileSync(url,JSON.stringify(db))
+    },
+    // saves recents plays
+    saveRecentPlays(state,payload){
+        state.recentPlays = [...state.recentPlays, payload];
+        writeFileSync(recentUrl , JSON.stringify(state.recentPlays));
+    },
+    // saves favourites tracks
+    saveFavourite(state,payload){
+      state.favourite = [...state.favourite, payload];
+      writeFileSync(favUrl,JSON.stringify(state.favourite));
+    },
+    // sets the genre category
     setGenreCat(state,payload){
       state.genreCategory = payload;
     },
+    // updates between routes in artist, genres, albums
     setGenreBack(state,payload){
-      // console.log(payload)
       state.genreBack = payload;
     },
-    currentProcess(state,payload){
-      state.currentData = payload;
-    },
-    
+    // loads current playlist
     loadPlaylist(state,payload){
         state.playlist = payload;
     },
+    // works on current track playing
     nowPlaying(state,payload){
         state.now = payload;
     },
+    // acts as global player for the app
+    audioPlayer(state, payload){
+      console.log(payload);
+        state.player.src = payload[state.currentIndex];
+        state.player.play();
+        // playnext after currentTarget
+        state.player.onended = ()=>{
+            state.currentIndex += 1;
+            state.player.src = payload[state.currentIndex];
+            state.player.play();
+
+        }
+    },
+    playNext(state,payload){
+      
+    },
+    prevTrack(state,payload){
+      state.currentIndex -= 1;
+      state.player.src = payload[state.currentIndex];
+      state.player.play();
+    },
+    // fetch lyrics from internet using musixmatch as the source
     fetchLyrics(state , payload){
       ipcRenderer.send("fetchLyrics",payload);
-      // console.log(payload)
     },
+    // updates the current equalizer array
+    updateCurrentEq(state,payload){
+        state.currentEq = payload;
+        db.eq = payload;
+        writeFileSync(url,JSON.stringify(db));
+    },
+    // updates the delay array
+    updateCurrentRoom(state,payload){
+        state.currentRoom = payload;
+        db.room.delay = payload;
+        writeFileSync(url,JSON.stringify(db));
+    },
+    // updates the feedback array
+    updateCurrentRoomFeed(state,payload){
+        state.currentRoomFeed = payload;
+        db.room.feedback = payload;
+        writeFileSync(url,JSON.stringify(db));
+    },
+    // updates the bass gain
+    updateCurrentBass(state,payload){
+        state.equalizer.bass.frequency.value = payload;
+        state.cBass = payload;
+        db.bassFreq = payload;
+        writeFileSync(url,JSON.stringify(db));
+    },
+    // updates the treble gain 
+    updateCurrentTreble(state,payload){
+      state.equalizer.treble.frequency.value = payload;
+        state.cTreble = payload;
+        db.tFreq = payload;
+        writeFileSync(url,JSON.stringify(db));
+    },
+    // chnages the feedback value
     changeFeedBack(state,payload){
         state.feedback[payload[0]].gain.value = payload[1];
     },
+    // chnages the feedback value
     changeDelays(state,payload){
         state.delays[payload[0]].delayTime.value = payload[1];
     },
+    // updates the bands value in the hood
     updateBands(state,payload){
       state.bands[payload[0]].gain.value = payload[1];
     },
+    // updates the treble quality
+    updateTrebleQ(state,payload){
+      state.equalizer.treble.Q.value = payload;
+        state.Qbass = payload;
+        db.trebleQ = payload;
+        writeFileSync(url,JSON.stringify(db));
+    },
+    // updates the bass quality
+    updateBassQ(state, payload){
+      state.equalizer.bass.Q.value = payload;
+      state.QTreb = payload;
+      db.bassQ = payload;
+        writeFileSync(url,JSON.stringify(db));
+    },
+    // updates the bass gain
     tuneBass(state,payload){
       state.bass.gain.value = payload;
+      state.bbass = payload;
+      db.bass = payload;
+        writeFileSync(url,JSON.stringify(db));
     },
+    // updates the treble gain
     tuneTreble(state,payload){
       state.treble.gain.value = payload;
+      state.btreble = payload;
+      db.treble = payload
+      writeFileSync(url,JSON.stringify(db));
     },
     incrementCount(state,payload){
       state.counter = payload;
-      // console.log(payload)
   },
 
   playSong(state,payload){
@@ -88,6 +195,7 @@ export default createStore({
     state.reduceCount = payload;
 }
   },
+  // getters to update the system
   getters:{
     getVolume : (state) => state.volume,
     getPlaylist:(state) => state.playlist,
@@ -97,7 +205,8 @@ export default createStore({
     getFeedback :(state) => state.feedback,
     getDelays: (state) => state.delays,
     getEqualiser:(state) => state.equalizer,
-    getCurrentBass :(state) => state.bass,
+    getBass :(state) => state.bass,
+    getTreble: state => state.treble,
     getNowPlaying:(state)=> state.now,
     getId3:(state)=> state.Id3,
     getMusicData:(state) => state.muData,
@@ -105,6 +214,20 @@ export default createStore({
     getCount:(state)=> state.counter,
     getGenreCategory:(state) => state.genreCategory,
     getGenreBack:(state) => state.genreBack,
-    getCurrentData:(state) => state.currentData
+    getFavourites:(state) => state.favourite,
+    getRecents: (state) => state.recentPlays,
+    getCompressor: state => state.compressor,
+    getBalance: state => state.balance,
+    getTrebleQ:state => state.QTreb,
+    getBassQ: state => state.Qbass,
+    getCurrentRoom: state => state.currentRoom,
+    getCurrentEq: state => state.currentEq,
+    getCurrentBass: state => state.cBass,
+    getCurrentTreble: state => state.cTreble,
+    getBassB: state => state.bbass,
+    getTrebleB: state => state.btreble,
+    getEqPreset: state => state.eqPreset,
+    getCurrentRoomFeed: state => state.currentRoomFeed,
+    showSidenav: state => state.showSidenav,
   }
 })

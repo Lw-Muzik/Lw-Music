@@ -40,7 +40,7 @@ import Tuner from "./Tuner.vue";
 import Feedback from "./Feedback.vue";
 import { Rooms } from "../../Core/Presets"
 export default {
-    name:"Room",
+    name:"RoomEffects",
     components:{
         Tuner,
         Feedback
@@ -51,8 +51,8 @@ export default {
     },
 data(){
     return{
-        f:[0,0],
-        d:[0,0]
+        f:this.$store.getters.getCurrentRoomFeed,
+        d:this.$store.getters.getCurrentRoom,
     }
 },
     methods:{
@@ -74,7 +74,6 @@ data(){
                 }
         },
         getRoomPreset(){
-            // console.log()
             switch(this.$refs['choose'].value){
                 case 'echo':
                     this.manuplateFeedBack(this.$store.getters.getFeedback, Rooms.Echo.feedback);

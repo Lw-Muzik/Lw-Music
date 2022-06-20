@@ -8,16 +8,14 @@
         <div class="h-full" >
             <div class="middle h-full">
               <br>
-              <br>
-              <!-- <top/> -->
-                <div class="router-view">
+                <div :class="[showSidenav == true ? 'active': 'w-screen','router-view']">
                   <router-view/>
               </div>
             </div>
           </div>
 
           <!-- last grid  -->
-          <div class="rightSide flex flex-col justify-center">
+          <div v-show="showSidenav" class="rightSide flex flex-col justify-center">
               <add-folder/>
           </div>
   </div>
@@ -46,6 +44,9 @@ export default {
     computed: {
       player(){
         return this.$store.getters.getPlayer;
+      },
+      showSidenav(){
+        return this.$store.getters.showSidenav;
       }
     },
   components:{ Titlebar, SideBar, Top , AddFolder, MiniPlayer },
@@ -71,15 +72,18 @@ export default {
     width: 90%;
     height:4.5rem;
     border-radius:10px;
-    background: #0d0118;
     color: #fff;
   }
   .router-view{
     
     overflow-x: hidden;
-    overflow-y: hidden;
-    width:120vh;
+    overflow-y: scroll;
+    // width:120vh;
     height: calc(85vh - 30px);
+    transition:0.3s ease-in-out;
+    &.active{ 
+       width:120vh;
+    }
   }
   .rightSide{ 
         &::-webkit-scrollbar{

@@ -1,8 +1,8 @@
 <template lang="html">
     <div class="ui flex flex-row justify-evenly items-center">
-        <div class="w-24 h-24 flex flex-col justify-center items-center">
-            <img v-if="track.artwork != null" :src="`file://${track.artwork}`" class="p-4 rounded-3xl w-full h-full object-cover"/>
-            <img v-else :src="defaultCover" class="p-4 rounded-full object-cover"/>
+        <div class=" w-24 h-10 flex flex-col justify-center items-center rounded-2xl">
+            <img v-if="track.artwork != null" :src="`file://${track.artwork}`" class="p-2 w-full drop-shadow rounded-2xl object-cover"/>
+            <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/>
         </div>
         <div class="flex flex-row justify-between items-center">
             <button class="p-2 btn" @click="prevTrack" ><b class="mi mi-fast-rewind"></b></button>

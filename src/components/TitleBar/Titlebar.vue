@@ -35,7 +35,7 @@
 </template>
 
 <script>
-const {remote} = window.require("electron");
+const { remote } = window.require("electron");
 
     export default {
         name:"Titlebar",
