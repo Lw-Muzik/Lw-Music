@@ -31,11 +31,11 @@ export default {
         display:flex;
         flex-direction: row;
         justify-content: space-around;
-        padding: 18px;
+        padding:25px;
         width:300px;
         .label{
             transform:rotate(90deg);
-            margin:5px;
+            margin:7px;
             
             }
         .label:last-child{
