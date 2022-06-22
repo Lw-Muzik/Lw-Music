@@ -2,7 +2,9 @@
   <div class="customTitleBar bg1">
     <div class="leftSide">
       <!-- <img id="logo" src="@/RendererProcess/assets/images/Logo.png" /> -->
-      <p>{{appName}}</p>
+      <p>
+        <span class="mi mi-music-note"></span>
+        {{appName}}</p>
     </div>
     <div class="ctrls">
       <div class="ctrl" @click="minimize">

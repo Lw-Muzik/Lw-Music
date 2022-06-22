@@ -51,7 +51,7 @@ export default {
         width: 170px;
         padding:3px;
         margin-bottom: 15px;
-        background: #ddd;
+        // background: #ddd;
         border-radius: 10px;
     }
         img{

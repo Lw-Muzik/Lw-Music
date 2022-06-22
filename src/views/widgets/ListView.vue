@@ -2,8 +2,9 @@
     <div class="listView">
        <p @click="playSong(list,index)"  v-bind:key="index" v-for="(list,index) in queueList">
              <!-- <b class="material-icons mi-dehaze"></b> -->
-               <img :src="`file://${list.artwork}`" class="cover"/> &nbsp; &nbsp;
-             <!-- {{(list.data.name).replace(".mp3","")}} -->
+               <img  :src="`file://${list.artwork}`" class="cover"/> &nbsp; &nbsp;
+               <!-- <img  v-if="existsSync(`${list.artwork}`) == false" src="../../assets/pAudio.png" class="cover"/> &nbsp; &nbsp; -->
+            
             <span>{{list.title}}</span>
             &nbsp; &nbsp;
             <span >{{list.genre}}</span> 
@@ -16,6 +17,8 @@
           <!-- <button @click="this.$emit('closeQueue')"><b class="material-icons mi-close"></b></button> -->
 </template>
 <script>
+import{ image } from "../../Core/default";
+import { remote } from "electron"
 export default {
     name:"ListView",
     props:{
@@ -23,6 +26,7 @@ export default {
     },
     data() {
       return {
+        image:image,
         audio:null,
         j:0
       }
@@ -34,22 +38,38 @@ export default {
       this.audio.onended = ()=>{
         this.j += 1;
          this.audio.src = this.queueList[this.j].data;
+         this.nativeExecute(this.queueList[this.j]);
+         this.$store.commit('currentProcess',[this.queueList[this.j],this.j]);
+            this.$store.commit('musicData',this.queueList[this.j]);
             this.audio.play();
       }
     },
     methods:{
+       nativeExecute(id3){
+          var img =  `file://${id3.artwork}`;
+          document.querySelector("body").style.backgroundImage = img;
+          remote.getCurrentWindow().setTitle(id3.title);
+         const link = document.querySelector("link");
+        link.href.replace(img,"");
+        link.href = img;
+      
+            const notify = new Notification(id3.title,{body:id3.artist,icon:img});
+            notify.onclose = ()=>{  }
+        },
         playSong(track,id){
           this.j = id;
             this.audio.src = track.data;
             this.audio.play();
             this.$store.commit('currentProcess',[this.queueList,id]);
             this.$store.commit('musicData',track);
-        }
+            this.nativeExecute(track);
+        },
+       
     },
    }
 </script>
 <style lang="scss" scoped>
-     .listView{ overflow-y:scroll; overflow-x: hidden; height: 460px;
+     .listView{ overflow-y:scroll; overflow-x: hidden; height: 600px;
        &::-webkit-scrollbar{
       appearance: none;
       width: 10px;
@@ -66,9 +86,9 @@ export default {
         .cover{
      width:60px;
      height: 60px;
-     border-radius:5px;
+     border-radius:10px;
      padding:3px;
-    //  box-shadow: -1px -2px 1px 0px #eee
+    //  box-shadow: -1px 0px 0px 0px #eee
    }
       width:100%;
       line-height: -20px;

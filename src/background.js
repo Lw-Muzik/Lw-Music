@@ -201,9 +201,12 @@ win.webContents.on('dom-ready',async function(){
                   (async function(){
                     await recursiveFolders(`${response.filePaths[0]}`)
                  })();
-                 
+
+                 // loading widget
+
                 // we save the files back to the store
                    writeFileSync(processed, JSON.stringify(store));
+                   console.log('Done saving songs');
                    // then after load the response
                    if(store.length != 0){
                      store.forEach(async function(element){
@@ -269,6 +272,7 @@ win.webContents.on('dom-ready',async function(){
         writeFileSync(processed, JSON.stringify([]));
         }
     })
+
   /**
    * fetch lyrics
    */
@@ -296,6 +300,7 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -1,6 +1,13 @@
 <template lang="html">
     <div>
-        <audio-slider :progress="update" @updateProgress="changeProgress"/>
+        <audio-slider
+        class="p-2"
+             :progress="update"
+              :currentTime="curlTime"
+               :duration="`-${durlTime}`"
+                @updateProgress="changeProgress"
+                 :max="progMax"
+                 />
     </div>
 </template>
 <script>
@@ -12,6 +19,11 @@ export default {
         return {
             audio:null,
             update:0,
+            progress:0,
+            progMax:0,
+            min:0,
+           curlTime:"0:00",
+           durlTime:"0:00",
         }
     },
     created() {
@@ -20,10 +32,15 @@ export default {
     },
     methods: {
         changeProgress(value){
-            this.audio.currentTime = value
+            this.audio.currentTime = value;
         }
     },
     mounted(){
+        setInterval(()=>{
+           this.update = this.audio.currentTime;
+          this.progMax = this.audio.duration;
+        },500);
+
          this.audio.ontimeupdate = ()=>{
       /**Display the track's current time */
        const min = Math.floor((this.audio.currentTime / 60) % 60)

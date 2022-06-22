@@ -75,11 +75,11 @@ export default {
     color: #fff;
   }
   .router-view{
-    
-    overflow-x: hidden;
-    overflow-y: scroll;
-    // width:120vh;
-    height: calc(85vh - 30px);
+    overflow: hidden;
+    // overflow-y: scroll;
+    height: calc(90vh - 80px);
+    // background-color: #fff;
+    // height: 200vh !important;
     transition:0.3s ease-in-out;
     &.active{ 
        width:120vh;
@@ -106,5 +106,8 @@ export default {
   .middle{
     align-items: center;
      background: #0b0413;
+     overflow:hidden;
+    // height: calc(100vh - 80px);
+
   }
 </style>

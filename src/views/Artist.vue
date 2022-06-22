@@ -1,5 +1,5 @@
 <template lang="html">
-    <div>
+    <div class="overflow-scroll">
        <grid :items="genre" @routeTo="routeT" v-show="!getBack"/>
         <router-view v-show="getBack"/>
     </div>
@@ -53,6 +53,6 @@ export default {
    }
 }
 </script>
-<style lang="">
+<style lang="scss" scoped>
     
 </style>

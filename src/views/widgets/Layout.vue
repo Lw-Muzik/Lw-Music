@@ -32,12 +32,9 @@ export default {
     components:{ ListView , GridView, Top }
 }
 </script>
-<style lang="scss" scoped>
-<<<<<<< HEAD
-   
-=======
+<style lang="scss" scss>
     div{
         color:aliceblue;
     }
->>>>>>> 3bb5b3ac0081bd8830a5e8dc40d88094ba3fb25c
+
 </style>

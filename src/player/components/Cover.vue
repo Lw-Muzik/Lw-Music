@@ -1,20 +1,13 @@
 <template lang="html">
-    <div class="ui flex flex-row justify-evenly items-center">
-        <div class=" w-24 h-10 flex flex-col justify-center items-center rounded-2xl">
-            <img v-if="track.artwork != null" :src="`file://${track.artwork}`" class="p-2 w-full drop-shadow rounded-2xl object-cover"/>
+    <div class="ui flex flex-row justify-between items-center">
+        <div class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
+            <img v-if="track.artwork != null" :src="`file://${track.artwork}`" class="w-full drop-shadow rounded-2xl"/>
             <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/>
         </div>
-        <div class="flex flex-row justify-between items-center">
-            <button class="p-2 btn" @click="prevTrack" ><b class="mi mi-fast-rewind"></b></button>
-    
-                <button class="p-2 play" v-show="!show" @click="togglePlay"><b class="mi mi-play-arrow"></b></button>
-           
-                <button  class="p-2 pause" v-show="show"  @click="togglePause"><b class="mi mi-pause"></b></button>
-
-            <button class="p-2 btn" @click="seektrack"><b class="mi mi-fast-forward"></b></button>
-        </div>
-
-        <div class="content">
+<!-- spacer div --> 
+ <div class="p-3"></div>
+<!-- end of spacer div -->
+        <div class="content max-w-3xl mx-2">
             <b class="title">{{track.title}}</b>&nbsp;
             <p class="artist">{{track.artist}}</p>
          </div>
@@ -101,7 +94,7 @@ export default {
         width: 350px!important;
         // background: teal;
     .title{
-        font: 500 15px Ubuntu,Arial;
+        font: 500 17px Ubuntu,Arial;
         white-space: nowrap!important;
         //  background: green;
           text-overflow: ellipsis;
@@ -112,7 +105,7 @@ export default {
 
     }
     .artist{
-        font: 300 14px Ubuntu,Arial;
+        font: 300 15px Ubuntu,Arial;
         font-style: oblique;
         padding:5px;
         text-decoration-style: wavy;
@@ -120,5 +113,5 @@ export default {
      }
 
     
-    .ui{ width: 80%;  overflow: hidden;}
+    .ui{   overflow: hidden;}
 </style>
