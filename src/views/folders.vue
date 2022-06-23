@@ -1,5 +1,5 @@
 <template lang="html">
-    <top-widget v-if="!getBack"  :total="folders.length" :label="`Folders`"/>
+    <top-widget v-if="!getBack"  :total="folders.length" :label="`${getBack}`"/>
         <grid :items="folders" @routeTo="routeT" v-show="!getBack"/>
         <router-view v-show="getBack"/>
   
@@ -25,7 +25,7 @@ export default {
     methods: {
         routeT(){
             this.$store.commit('setGenreBack',true);
-            this.$router.push('/folder/folderSongs');
+            this.$router.push('/folderSongs');
             // console.log("done")
         },
         getTotalSongs(folder){

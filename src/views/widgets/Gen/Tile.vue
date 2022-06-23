@@ -11,7 +11,7 @@
 <script>
 export default {
     name:"Tile",
-    props:{  title:String , total:Number, cover:String },
+    props:{  title:String , total:Number, cover:String, round: Boolean },
     methods:{
         gotoTrack(route){
             this.$store.commit('setGenreCat',route);

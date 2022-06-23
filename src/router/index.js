@@ -35,26 +35,19 @@ const routes = [
     },
 
     // albums
-    { path:'album', component:Album,
-    children:[
-        { path:'albumTracks', component:AlbumTracks },
-      ]
-   },
+    { path:'album', component:Album },
+
+    { path:'albumTracks', component:AlbumTracks },
    // folders
-   { path:'folder', component:Folder,
-   children:[
-       { path:'folderSongs', component:FolderView },
-     ]
-  },
+   { path:'folder', component:Folder },
+
+   { path:'/folderSongs', component:FolderView },
   // streams
       { path:'stream', component:Streams },
 
       // genres
-      { path:'genre', component:Genre,
-        children:[
-          { path:'genres', component:GenreTracks },
-        ]
-    },
+      { path:'genre', component:Genre },
+      { path:'genres', component:GenreTracks },
     // favourties
       { path:'favourite', component:Favourite },
 

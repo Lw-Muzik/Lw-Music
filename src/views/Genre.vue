@@ -26,7 +26,7 @@ export default {
         routeT(){
             this.showRoute = !this.showRoute;
             this.$store.commit('setGenreBack',true);
-            this.$router.push('/genre/genres');
+            this.$router.push('/genres');
             // console.log("done")
         },
         getTotal(genre){

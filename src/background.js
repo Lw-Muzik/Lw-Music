@@ -1,4 +1,4 @@
-import { readdir,  readFileSync,  statSync, writeFileSync, existsSync, readdirSync } from "fs";
+import {  readFileSync,  statSync, writeFileSync, existsSync, readdirSync } from "fs";
 import { app, protocol,dialog, BrowserWindow, ipcMain,  Menu, Tray, nativeImage } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
@@ -226,7 +226,6 @@ win.webContents.on('dom-ready',async function(){
        ipcMain.on('hot100',(e,url)=>{
            Axios.get(url).then((response)=>{
               var dom = response.data;
-            //   console.log(dom);
               // 
               const ch = cheerio.load(dom);
               let trackList = ch('.hot100')

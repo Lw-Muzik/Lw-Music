@@ -6,6 +6,7 @@ const { image } = require("../Core/default");
 import * as id3 from "music-metadata-browser";
 import { readFileSync, writeFileSync } from 'fs';
 
+
 // declarations
 const audio = new Audio();
 audio.crossOrigin = "anonymous";
@@ -27,12 +28,18 @@ export default createStore({
     player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
     bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),
     equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
-    genreCategory:'',genreBack:false,muData:{},defaultCover:image,showSidenav:false,
+    genreCategory:'',genreBack:false,muData:{},defaultCover:image,showSidenav:false,streamUrl:'',
     balance:eq.balance,compressor:eq.compressor,recentPlays:JSON.parse(readFileSync(recentUrl)),
     favourite:JSON.parse(readFileSync(favUrl)),currentIndex:0,bbass:db.bass, btreble:db.treble,eqPreset:db.eqPreset,
     currentRoom:db.room.delay, currentRoomFeed:db.room.feedback, currentEq:db.eq, cBass:db.bassFreq, cTreble:db.tFreq,QTreb:db.trebleQ,Qbass:db.bassQ
   },
   mutations: {
+    // streams url
+    streamsUrl(){
+      ipcRenderer.on('streams',(e,args) => {
+        streamUrl = args;
+      });
+    },
     // show side nav
     setShowSidenav(state,payload){
       state.showSidenav = payload;
@@ -229,5 +236,7 @@ export default createStore({
     getEqPreset: state => state.eqPreset,
     getCurrentRoomFeed: state => state.currentRoomFeed,
     showSidenav: state => state.showSidenav,
+    getStreamUrl:state => state.streamUrl,
+
   }
 })
