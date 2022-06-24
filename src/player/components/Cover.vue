@@ -1,15 +1,26 @@
 <template lang="html">
     <div class="ui flex flex-row justify-between items-center">
-        <div class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
-            <img v-if="track.artwork != null" :src="`file://${track.artwork}`" class="w-full drop-shadow rounded-2xl"/>
-            <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/>
+        <div v-if="track != null" class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
+            <img :src="`file://${track.artwork}`" class="w-full drop-shadow rounded-2xl"/>
+            <!-- <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/> -->
+        </div>
+        <!-- else if null  -->
+          <div v-else class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
+            <img :src="`file://${currentSong.artwork}`" class="w-full drop-shadow rounded-2xl"/>
+            <!-- <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/> -->
         </div>
 <!-- spacer div --> 
  <div class="p-3"></div>
 <!-- end of spacer div -->
-        <div class="content max-w-3xl mx-2">
+<!-- if track is null lets get what was played before -->
+        <div v-if="track != null" class="content max-w-3xl mx-2">
             <b class="title">{{track.title}}</b>&nbsp;
             <p class="artist">{{track.artist}}</p>
+         </div>
+         <!-- else -->
+          <div v-else class="content max-w-3xl mx-2">
+            <b class="title">{{currentSong.title}}</b>&nbsp;
+            <p class="artist">{{currentSong.artist}}</p>
          </div>
     </div>
   
@@ -32,7 +43,10 @@ export default {
         },
        current(){
            return this.$store.getters.getCurrentData;
-       }
+       },
+        currentSong(){
+            return this.$store.getters.getCurentSong;
+        },
     },
     methods: {
         togglePlay(){

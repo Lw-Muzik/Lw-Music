@@ -38,7 +38,10 @@ export default {
         },
        current(){
            return this.$store.getters.getCurrentData;
-       }
+       },
+        currentSong(){
+            return this.$store.getters.getCurentSong;
+        },
     },
     methods:{
         updateVol(){
@@ -46,7 +49,12 @@ export default {
         },
         togglePlay(){
             this.show = !this.show;
+            if (this.currentSong != null) {
+                this.player.src = this.currentSong.data;
+                
+            }
             this.player.play();
+
         },
         seektrack(){
             this.nowID += 1;

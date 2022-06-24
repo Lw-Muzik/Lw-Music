@@ -30,6 +30,7 @@ export default createStore({
     equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
     genreCategory:'',genreBack:false,muData:{},defaultCover:image,showSidenav:false,streamUrl:'',
     balance:eq.balance,compressor:eq.compressor,recentPlays:JSON.parse(readFileSync(recentUrl)),
+    currentTime:db.currentTime,currentDuration:db.currentDuration,currentSong:db.currentSong,currentPlayingState:db.playing,
     favourite:JSON.parse(readFileSync(favUrl)),currentIndex:0,bbass:db.bass, btreble:db.treble,eqPreset:db.eqPreset,
     currentRoom:db.room.delay, currentRoomFeed:db.room.feedback, currentEq:db.eq, cBass:db.bassFreq, cTreble:db.tFreq,QTreb:db.trebleQ,Qbass:db.bassQ
   },
@@ -39,6 +40,23 @@ export default createStore({
       ipcRenderer.on('streams',(e,args) => {
         streamUrl = args;
       });
+    },
+    // saves the current state of player
+    saveCurrentState(state,payload){
+      state.currentTime = payload[0];
+      state.currentDuration = payload[1];
+     
+      // for persistent storage
+      db.currentTime = payload[0];
+      db.currentDuration = payload[1];
+      // save to persistent storage (settings.json)
+      writeFileSync(url,JSON.stringify(db));
+    },
+    updateIsPlaying(state,payload){
+      state.currentPlayingState = payload;
+      db.playing = payload;
+          // save to persistent storage (settings.json)
+          writeFileSync(url,JSON.stringify(db));
     },
     // show side nav
     setShowSidenav(state,payload){
@@ -192,6 +210,9 @@ export default createStore({
   },
   musicData(state,payload){
     state.muData = payload;
+    db.currentSong = payload;
+    // save new playing song
+    writeFileSync(url,JSON.stringify(db));
   },
   playStream(state,payload){
       state.player.src = payload;
@@ -235,8 +256,13 @@ export default createStore({
     getTrebleB: state => state.btreble,
     getEqPreset: state => state.eqPreset,
     getCurrentRoomFeed: state => state.currentRoomFeed,
+   // getter for toggling the sidenav
     showSidenav: state => state.showSidenav,
     getStreamUrl:state => state.streamUrl,
-
+    // getters for current time, duration, and track 
+    getCurrentTime: state => state.currentTime,
+    getCurrentDuration: state => state.currentDuration,
+    getCurrentSong: state => state.currentSong,
+    getCurrentPlayingState: state => state.currentPlayingState
   }
 })

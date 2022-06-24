@@ -55,7 +55,8 @@ var saveArtWork = async function(tags,track){
         if (statSync(newPath).isDirectory() == true) {
           await recursiveFolders(newPath);
           console.log(`Paths in queue ${newPath}`);
-        } else if (statSync(newPath).isFile() == true) { //&& extname(newPath) == ".mp3"
+          // allows both mp4 , m4a and amp3
+        } else if (statSync(newPath).isFile() == true &&( extname(newPath) == ".mp3" || extname(newPath) == ".mp4" || extname(newPath) == ".m4a")) {
         let tags = NodeID3.read(`${newPath}`);
           /**Checking store is not empty and  if the .mp3 file is already stored */
                   let meta =  {
@@ -109,6 +110,11 @@ async function createWindow() {
           bass:0,
           treble:0, 
           trebleQ:1.97,
+          currentTime:0,
+          currentDuration:0,
+          playing:false,
+          currentSong:{},
+          duration:0,
           bassQ:2.67,
           eqPreset:"normal",
           bassFreq:65,
@@ -202,8 +208,7 @@ win.webContents.on('dom-ready',async function(){
                     await recursiveFolders(`${response.filePaths[0]}`)
                  })();
 
-                 // loading widget
-
+                 
                 // we save the files back to the store
                    writeFileSync(processed, JSON.stringify(store));
                    console.log('Done saving songs');
