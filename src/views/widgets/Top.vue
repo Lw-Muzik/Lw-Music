@@ -50,7 +50,7 @@ export default {
             this.$store.commit('audioPlayer',this.songData);
         },
         forward(){
-            this.$router.go(1);
+            this.$router.forward();
             // this.$store.commit('setGenreBack',false);
         }
     }

@@ -1,5 +1,5 @@
 import {  readFileSync,  statSync, writeFileSync, existsSync, readdirSync } from "fs";
-import { app, protocol,dialog, BrowserWindow, ipcMain,  Menu, Tray, nativeImage } from 'electron'
+import { app, protocol,dialog, BrowserWindow, ipcMain,  Menu, Tray, nativeImage, nativeTheme } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -86,6 +86,8 @@ async function createWindow() {
     height:700,
     alwaysOnTop:true,
     frame:false,
+    hasShadow:true,
+    roundedCorners:true,
     icon:icon,
     webPreferences: {
            nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -99,6 +101,8 @@ async function createWindow() {
             webviewTag:true 
     }
   });
+  //
+  nativeTheme.themeSource = 'dark';
 
   win.webContents.on('did-start-loading',()=>{
     /**Settings path */
@@ -129,12 +133,11 @@ async function createWindow() {
       
 }
 
-
 if (existsSync(favourite) == false) {
   writeFileSync(favourite,JSON.stringify([]));
 }
   });
-  
+
   // send settings url to render process when dom starts loading
  win.webContents.on('did-stop-loading',async()=>{
     win.webContents.send('settings',settings);
@@ -148,7 +151,10 @@ if (existsSync(favourite) == false) {
 win.webContents.on('did-frame-finish-load',() => {
     const paths = JSON.parse(readFileSync(settings)).savedPaths;
       /** to avoid repeating urls lets use a set*/
-
+      win.webContents.send('settings',settings);
+    win.webContents.send('processed',processed);
+    win.webContents.send('streams',streams);
+    win.webContents.send('favourite',favourite);
      /* The after send unique data */
      console.log("Done loading....")
     //  if(paths.length != 0){

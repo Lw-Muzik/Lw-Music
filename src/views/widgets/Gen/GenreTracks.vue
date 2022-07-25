@@ -16,7 +16,6 @@
 </template>
 <script>
 import { readFileSync } from "fs";
-import { remote } from "electron";
 import Layout from "../Layout.vue";
 import * as mi from "material-icons";
 export default {
@@ -40,7 +39,9 @@ export default {
         }
     },
     mounted(){
-        let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
+        ipcRenderer.on('processed',(event, args)=>{
+
+        let raw = JSON.parse(`${readFileSync(args)}`);
          this.store = raw.filter((song) => (song.genre == this.genre));
        
             this.player.onended = function(){
@@ -50,6 +51,7 @@ export default {
                      this.player.src = this.store[this.index].data;
                     this.player.play();
                 }
+            })
     },
     created(){
          this.player = this.$store.getters.getPlayer;

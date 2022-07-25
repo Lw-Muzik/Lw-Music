@@ -25,7 +25,7 @@ export default {
     methods: {
         routeT(){
             this.$store.commit('setGenreBack',true);
-            this.$router.push('/folderSongs');
+            this.$router.push('/folder/folderSongs');
             // console.log("done")
         },
         getTotalSongs(folder){

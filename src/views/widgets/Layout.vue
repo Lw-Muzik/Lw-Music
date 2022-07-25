@@ -23,7 +23,7 @@ export default {
          grid:Boolean, 
         list:Boolean, 
         songs:Array,
-         circle:Boolean,   
+         circle:Boolean,
           artWork:String,
          title:String,
          subtitle:String,

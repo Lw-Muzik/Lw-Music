@@ -6,7 +6,7 @@
 </template>
 <script>
 import { readFileSync } from 'fs';
-import { remote } from "electron";
+import { ipcRenderer, remote } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
 
 export default {
@@ -26,7 +26,7 @@ export default {
         routeT(){
             this.showRoute = !this.showRoute;
             this.$store.commit('setGenreBack',true);
-            this.$router.push('/genres');
+            this.$router.push('/genre/genres');
             // console.log("done")
         },
         getTotal(genre){
@@ -44,7 +44,8 @@ export default {
         }
     },
    mounted(){
-        let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
+    ipcRenderer.on('processed',(event, args) => {
+         let raw = JSON.parse(`${readFileSync(args)}`);
         this.processed = raw;
         raw.forEach((data) =>{
             this.unsorted = [...this.unsorted , data.genre];
@@ -54,6 +55,8 @@ export default {
        sorted.forEach((g) => {
            this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g)}]
        });
+    })
+       
    }
 }
 </script>
