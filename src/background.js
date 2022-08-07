@@ -10,6 +10,7 @@ import { Axios } from 'axios';
 const cheerio = require('cheerio');
 const { streams,processed,art, appStore ,settings, favourite} = require("./Main/System/Paths.js");
 import NodeID3 from "node-id3";
+// import { Stream } from "stream";
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -26,9 +27,9 @@ var store = JSON.parse(readFileSync(processed));
  * @param { String } urls
  */
  var savePath = function(urls){
-  let paths = JSON.parse(readFileSync(settings));
-  paths.savedPaths = [...paths.savedPaths ,urls];
-  writeFileSync(settings,JSON.stringify(paths));
+    let paths = JSON.parse(readFileSync(settings));
+    paths.savedPaths = [...paths.savedPaths ,urls];
+    writeFileSync(settings,JSON.stringify(paths));
 }
 /**
  * 
@@ -36,12 +37,16 @@ var store = JSON.parse(readFileSync(processed));
  * @param {*} track 
  */
 var saveArtWork = async function(tags,track){
-    //  Storing cover arts
-          if((tags.image.imageBuffer) != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
+  
+    try {
+      if((tags.image.imageBuffer) !== undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
             writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer);
-            console.log(`Loading cover ${track.replace(".mp3",".jpeg")}`);
-
-          }
+      }
+    } catch (e) {
+      console.log(`Error in loading cover art => ${e}`);
+    }
+    //  Storing cover arts
+      
 }
 
  // recursively moves through directories looking for .mp3 files
@@ -186,7 +191,7 @@ win.webContents.on('dom-ready',async function(){
     // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app');
-   win.webContents.openDevTools()
+   win.webContents.openDevTools();
   // win.setIcon(image)
     // Load the index.html when not in development
     await win.loadURL('app://./index.html');
@@ -195,6 +200,11 @@ win.webContents.on('dom-ready',async function(){
   ipcMain.on('saveUserData',(event,args) => {
     //writeFileSync(processed,JSON.stringify(args));
   })
+  // maximize when fullscreen event triggered
+  ipcMain.on("fullscreen",(event,args) => {
+    win.maximize();
+  })
+
   /*
    *On response from the rendererer then load save persistent data 
    */

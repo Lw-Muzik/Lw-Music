@@ -49,10 +49,11 @@
   <div v-show="!dash">
       <router-view/>
   </div>
+
 </template>
 <script>
 import * as mi from "material-icons";
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import Titlebar from "@/components/TitleBar/Titlebar.vue";
 import { readFileSync, writeFileSync } from 'fs';
 
@@ -61,14 +62,17 @@ export default {
   data() {
     return {
       dash:true,
-      url:`${remote.app.getPath('userData')}/settings.json`,
+      url:"",
       store:'',
       paths:[]
     }
   },
     components:{Titlebar},
  mounted() {
-       this.paths = JSON.parse(readFileSync(this.url)).savedPaths;
+  ipcRenderer.on("settings",(e,args) => {
+       this.paths = JSON.parse(readFileSync(args)).savedPaths;
+       this.url = args;
+  })
  },
  computed: {
     //this.paths = 
@@ -87,9 +91,8 @@ export default {
         writeFileSync(this.url,JSON.stringify(update));
     },
     goToHome(){
-      // this.$router.push('/');
       this.dash = false;
-      remote.getCurrentWindow().maximize();
+      // ipcRenderer.sendSync("fullscreen");
     }
    
   },
