@@ -4,7 +4,6 @@
  */
 class Equalizer{
     /**
-     * 
      * @param {HTMLAudioElement} audio 
      * @param {HTMLCanvasElement} canvas
      * @param {CanvasRenderingContext2D} context
@@ -29,7 +28,8 @@ class Equalizer{
         /*********/
         // Audio Balance
         this.balance = new StereoPannerNode(this.audioCtx,{ pan:0 });
-
+        // Audio gain
+        this.gain = new GainNode(this.audioCtx,{ gain:1});
         // Audio Playback rate
         this.feedback = [
             new GainNode(this.audioCtx,{gain:0}),
@@ -68,6 +68,7 @@ class Equalizer{
         /**
          * Stereo band boost
          */
+
         this.treble = new BiquadFilterNode(this.audioCtx,{type:'highpass',frequency:12000,gain:0,Q:1.97});
          this.trebleBooster = new GainNode(this.audioCtx,{gain:0});
             /**
@@ -114,7 +115,8 @@ class Equalizer{
             // this.bands[9].connect(this.bands[10]);
 
             this.bands[size-1].connect(this.balance)
-            this.balance .connect(this.analyser);
+            this.balance.connect(this.gain);
+            this.gain.connect(this.analyser);
             
             this.analyser.connect(this.audioCtx.destination);
 

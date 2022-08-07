@@ -20,6 +20,13 @@
           </div>
   </div>
    <!-- bottom widget -->
+   <div class="vol fixed bottom-80 right-3 bg-yellow-500 w-60">
+      <div class="p-3 m-3 flex flex-row justify-between items-center">
+        <input class="w-full"  type="range" step="0.01" max="1" min="0" @input="updateVol(vol)" v-model="vol"/>
+        <b class="label  flex flex-row justify-between items-center" >{{Math.floor(vol * 100)}}%</b>
+      </div>
+   </div>
+   <!-- end of volume widget -->
        <div class="btW flex flex-col justify-center absolute z-10 bottom-0">
          <mini-player />
       </div>
@@ -39,12 +46,15 @@ export default {
   data() {
     return {
       load:[],
+      vol:this.$store.getters.getVolume,
+      // volume:this.vol
     }
   },
     computed: {
       player(){
         return this.$store.getters.getPlayer;
       },
+     
       showSidenav(){
         return this.$store.getters.showSidenav;
       }
@@ -54,11 +64,53 @@ export default {
     showTrack(){
       let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
       this.load = raw;
-    }
+    },
+    updateVol(val){
+      console.log(val)
+      this.$store.commit("setVolume",this.vol);
+    },
+    mounted() {
+      this.vol = this.$store.getters.getVolume;
+      console.log(this.vol);
+    },
   }
 }
 </script>
 <style lang="scss" scoped>
+.vol{
+  transform:rotate(-90deg);
+  border-radius:10px;
+    background:#232323!important;
+  box-shadow:inset -2px 0px 2px 0px #ddd;
+  bottom:200px;
+  &::before{
+    width:20px;
+    height:20px;
+    transform:rotate(45deg);
+    margin-left: -10px;
+  box-shadow:inset 0px 0px 0.2px 0px #4444;
+
+       background:#232323!important;
+  margin-top: 24px;
+content:'';
+    position: absolute;
+    background: #fff;
+  }
+}
+.label{
+  transform:rotate(90deg);
+}
+input[type="range"]{
+  outline:none;
+  appearance:none;
+  height:2px;
+ &::-webkit-slider-thumb{
+  width: 30px;
+  height:30px;
+  border-radius:50%;
+ }
+}
+
 .titlebar{
   position:fixed;
   top: 0;

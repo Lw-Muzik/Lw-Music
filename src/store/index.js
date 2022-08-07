@@ -45,7 +45,7 @@ export default createStore({
     saveCurrentState(state,payload){
       state.currentTime = payload[0];
       state.currentDuration = payload[1];
-     
+
       // for persistent storage
       db.currentTime = payload[0];
       db.currentDuration = payload[1];
@@ -63,7 +63,8 @@ export default createStore({
       state.showSidenav = payload;
     },
     // sets the volume globally
-    setVolume(state,payload){      
+    setVolume(state,payload){
+      console.log(`Volume:${payload}`);
       state.player.volume = payload;
       db.volume = payload;
       writeFileSync(url,JSON.stringify(db));
@@ -221,7 +222,27 @@ export default createStore({
   },
   decreaseCount(state,payload){
     state.reduceCount = payload;
-}
+},
+// setting bass quality
+setBassQ(state,payload){
+  state.equalizer.bass.Q.value = payload;
+},
+// setting bass quality
+setBassFreq(state,payload){
+  state.equalizer.bass.frequency.value = payload;
+},
+// settings the treble quality
+setTrebleQ(state,payload){
+  state.equalizer.treble.Q.value = payload;
+},
+// settings the master gain for the player
+setGain(state,payload){
+  state.equalizer.gain.gain.value = payload;
+},
+// setting the audio playback rate
+setSpeed(state,payload){
+  state.player.playbackRate = payload;
+},
   },
   // getters to update the system
   getters:{
@@ -256,6 +277,16 @@ export default createStore({
     getTrebleB: state => state.btreble,
     getEqPreset: state => state.eqPreset,
     getCurrentRoomFeed: state => state.currentRoomFeed,
+    // retriving current bassFreq
+    getBassFreq: state => state.equalizer.bass.frequency.value,
+    // get current bass Q
+    getBassQ: state => state.equalizer.bass.Q.value,
+    // get current treble frequency
+    getTrebleQ: state => state.equalizer.treble.Q.value,
+    // get current gain
+    getGain: state => state.equalizer.gain.gain.value,
+    // get current audioplay back
+    getSpeed: state => state.player.playbackRate,
    // getter for toggling the sidenav
     showSidenav: state => state.showSidenav,
     getStreamUrl:state => state.streamUrl,

@@ -30,11 +30,17 @@ var store = JSON.parse(readFileSync(processed));
   paths.savedPaths = [...paths.savedPaths ,urls];
   writeFileSync(settings,JSON.stringify(paths));
 }
-
+/**
+ * 
+ * @param { NodeID3.Tags } tags 
+ * @param {*} track 
+ */
 var saveArtWork = async function(tags,track){
     //  Storing cover arts
-          if((tags.image.imageBuffer) !== undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
-            writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer)
+          if((tags.image.imageBuffer) != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
+            writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer);
+            console.log(`Loading cover ${track.replace(".mp3",".jpeg")}`);
+
           }
 }
 
@@ -123,6 +129,7 @@ async function createWindow() {
           eqPreset:"normal",
           bassFreq:65,
           tFreq:12000,
+          gain:1,
           room:{
             delay:[0,0],
             feedback:[0,0],
@@ -130,7 +137,6 @@ async function createWindow() {
       };
       writeFileSync(settings,JSON.stringify(set));
       /**Send all necessary data to renderer*/
-      
 }
 
 if (existsSync(favourite) == false) {
@@ -144,7 +150,6 @@ if (existsSync(favourite) == false) {
     win.webContents.send('processed',processed);
     win.webContents.send('streams',streams);
     win.webContents.send('favourite',favourite);
-   
 });
 
 
@@ -170,6 +175,7 @@ win.webContents.on('did-frame-finish-load',() => {
 
 win.webContents.on('dom-ready',async function(){
     /**loading the music store */
+    console.log("Dom ready");
   
 })
 

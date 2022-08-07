@@ -16,7 +16,7 @@
 import Layout from "./widgets/Layout.vue";
 import Spinner from './widgets/Spinner.vue';
 import{ load }from "cheerio";
-import { writeFileSync } from "fs";
+import { writeFileSync , readFileSync } from "fs";
 import axios from 'axios';
 import { ipcRenderer } from "electron";
 export default {
@@ -29,7 +29,7 @@ export default {
         return {
             streamUrl:'',
             online:true,
-            stream:readFileSync(),
+            stream:readFileSync(""),
         }
     },
     mounted(){
@@ -63,9 +63,12 @@ if(true){
     //  })();
     },
     created() {
-        // ipcRenderer.on('stream',(e,args)=>{
-        //     this.stream = JSON.parse(readFileSync(args));
-        // })
+        ipcRenderer.on('stream',(e,args)=>{
+            this.stream = JSON.parse(readFileSync(args));
+        })
+    },
+    mounted() {
+        console.log(this.stream);
     },
 }
 </script>
