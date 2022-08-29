@@ -1,26 +1,38 @@
 <template lang="html">
-    <div class="p-5 m-6">
-        <center>Settings</center>
+  <center>Settings</center>
+    <div class="p-5 m-6 grid grid-flow-col grid-cols-2">
+        <div class="m-5 p-5">
+          <fieldset class="border-2 rounded-md">
+            <legend class="p-2 text-lg">Equalizer Settings</legend>
         <br>
        <p class="p-5" >Bass Frequency:&nbsp;&nbsp; <input type="range" step="1" max="150" min="10" @input="modifyBassFreq" v-model="bFreq">&nbsp;&nbsp;&nbsp; {{bFreq}}Hz</p>
-       <hr> 
+       <!-- <hr>  -->
        <p class="p-5" >Bass Quality:&nbsp;&nbsp; <input type="range" step="0.01" max="3" min="-1" @input="modifyBassQ" v-model="bQ">&nbsp;&nbsp;&nbsp; {{Number(bQ).toFixed(2)}}dB</p>
-       <hr>
+       <!-- <hr> -->
        <p class="p-5">Treble Quality: &nbsp;&nbsp;&nbsp;&nbsp;<input type="range" step="0.01" max="3" min="-1" @input="modifyTrebleQ" v-model="tQ">&nbsp;&nbsp;{{Number(tQ).toFixed(2)}} dB</p>
-       <hr>
+       <!-- <hr> -->
        <p class="p-5">Master Gain:&nbsp;&nbsp; <input type="range" step="0.01" max="3" min="0" @input="modifyGain" v-model="gain"/> {{Number(gain).toFixed(2)}}dB </p>
-       <hr>
+       <!-- <hr> -->
        <p class="p-5" >Playback rate: &nbsp;&nbsp;<input type="range" step="0.01" max="3" min="-1.6" @input="modifySpeed" v-model="speed"> {{Number(speed).toFixed(2)}}</p>
-
-
-
+    <br>
+    </fieldset> 
+     </div>
+       
+       <div class="m-5 p-5 w-60">
+        <fieldset  class="border-2 rounded-md">
+            <legend  class="p-2 text-lg">Add music folder</legend>
+            <add-folder/>
+        </fieldset>
+       </div>
+    
     </div>
 </template>
 <script>
+import AddFolder from "../widgets/addFolder.vue";
 import Slider from '../../components/slider/slider.vue';
 export default {
     name: "Settings",
-    components: { Slider },
+    components: { Slider, AddFolder },
     data() {
         return {
             bQ:0,

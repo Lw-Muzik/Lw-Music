@@ -27,7 +27,7 @@ const routes = [
       { path:'/', component:Home },
       { path:'tracks', component:Tracks },
       // artists
-      { path:'artist', component:Artist  },
+      { path:'artist', component:Artist},
 
         // artist tracks
         { path:'artistTracks', component:ArtistTracks },
@@ -40,15 +40,13 @@ const routes = [
    { path:'folder', component:Folder },
 
    { path:'folderSongs', component:FolderView },
+
   // streams
-      { path:'stream', component:Streams },
+  { path:'stream', component:Streams },
 
       // genres
-      { path:'genre', component:Genre,
-      children:[
-        { path:'genres', component:GenreTracks },
-      ]
-    },
+      { path:'genre', component:Genre},
+      { path:'genres', component:GenreTracks },
     
     // favourties
       { path:'favourite', component:Favourite },

@@ -1,12 +1,12 @@
 <template lang="html">
-    <div>
+    <div class="m-5 w-3/4">
         <grid :items="genre" @routeTo="routeT" v-show="!getBack"/>
-        <router-view v-show="getBack"/>
+        <router-view/>
     </div>
 </template>
 <script>
 import { readFileSync } from 'fs';
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
 
 export default {
@@ -26,7 +26,7 @@ export default {
         routeT(){
             this.showRoute = !this.showRoute;
             this.$store.commit('setGenreBack',true);
-            this.$router.push('/genre/genres');
+            this.$router.push('/genres');
             // console.log("done")
         },
         getTotal(genre){

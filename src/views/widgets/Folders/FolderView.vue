@@ -11,7 +11,7 @@
                 <p> &lt; Back</p>
             </div>
         </div>  :cover="store[Math.floor(Math.random() * store.length)].artwork"-->
-        <to-widget :label="folder" :total="store.length" />
+        <!-- <to-widget :label="folder" :total="store.length" /> -->
         <layout :songs="store" :grid="true" :list="false" :circle="false" />
         <layout
          :songs="store"

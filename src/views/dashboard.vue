@@ -1,24 +1,20 @@
 <template lang="html">
     <titlebar class="titlebar"/>
   <div class="app flex flex-col justify-center fixed h-full">
-      <div class="flex h-full flex-row row-span-3">
+      <div class="flex h-full flex-row row-span-2">
         <!-- sidebar -->
-          <side-bar  class=" w-48 h-full"/>
+          <side-bar  class="h-full"/>
         <!-- Middle grid -->
-        <div class="h-full" >
+        <div class="h-screen">
             <div class="middle h-full">
               <br>
-                <div :class="[showSidenav == true ? 'active': 'w-screen','router-view']">
+                <div class= 'w-full router-view'>
                   <router-view/>
               </div>
             </div>
           </div>
-
-          <!-- last grid  -->
-          <div v-show="showSidenav" class="rightSide flex flex-col justify-center">
-              <add-folder/>
-          </div>
   </div>
+  
    <!-- bottom widget -->
    <div class="vol fixed bottom-80 right-3 bg-yellow-500 w-60">
       <div class="p-3 m-3 flex flex-row justify-between items-center">
@@ -27,6 +23,7 @@
       </div>
    </div>
    <!-- end of volume widget -->
+
        <div class="btW flex flex-col justify-center absolute z-10 bottom-0">
          <mini-player />
       </div>
@@ -36,10 +33,9 @@
 import Titlebar from "../components/TitleBar/Titlebar.vue";
 import SideBar from "../components/SideBar/SideBar.vue";
 import Top from "./widgets/Top.vue";
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer } from "electron";
 import { readFileSync } from 'fs';
 import * as mi from "material-icons";
-import AddFolder from "./widgets/addFolder.vue";
 import MiniPlayer from "../player/MiniPlayer.vue";
 export default {
   name:"Dashboard",
@@ -59,11 +55,12 @@ export default {
         return this.$store.getters.showSidenav;
       }
     },
-  components:{ Titlebar, SideBar, Top , AddFolder, MiniPlayer },
+  components:{ Titlebar, SideBar, Top , MiniPlayer },
   methods:{ 
     showTrack(){
-      let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
-      this.load = raw;
+        let raw = this.$store.getters.getPlaylist;
+        this.load = raw;
+      
     },
     updateVol(val){
       console.log(val)
@@ -80,7 +77,7 @@ export default {
 .vol{
   transform:rotate(-90deg);
   border-radius:10px;
-    background:#232323!important;
+    background:#23232399!important;
   box-shadow:inset -2px 0px 2px 0px #ddd;
   bottom:200px;
   &::before{
@@ -90,9 +87,9 @@ export default {
     margin-left: -10px;
   box-shadow:inset 0px 0px 0.2px 0px #4444;
 
-       background:#232323!important;
+       background:#23232399!important;
   margin-top: 24px;
-content:'';
+    content:'';
     position: absolute;
     background: #fff;
   }
@@ -151,15 +148,16 @@ input[type="range"]{
     }
      overflow-x: hidden;
     overflow-y: scroll;
-    width:450px;
-     background: #140125;
+    width:0%;
+     background: #1401250e;
     // background:#222;
   }
   .middle{
     align-items: center;
-     background: #0b0413;
+     background: #00000071;
+     backdrop-filter: blur(80px);
      overflow:hidden;
-    // height: calc(100vh - 80px);
+    height: calc(100vh - 80px);
 
   }
 </style>

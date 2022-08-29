@@ -21,10 +21,27 @@ const eq = new Equalizer(audio);
 eq.startEq();
 audio.volume = db.volume;
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+var musicFiles = [] ,globalPaths = [];
+
+ipcRenderer.on("donewithsongs",(e,args)=>{
+    musicFiles = args;
+    console.log(`Songs done => ${args}`)
+});
+
+ipcRenderer.on("sPaths",(e,args) => {
+  globalPaths = args;
+});
+
+// ipcRenderer.on("sPaths",(e,args) => {
+
+// });
+
+
 
 export default createStore({
+
   state: {
-    volume:db.volume,lyrics:'', playlist:[], reduceCount:0,trackPlaying:'',currentData:[],
+    volume:db.volume,lyrics:'', playlist:musicFiles, reduceCount:0,trackPlaying:'',currentData:[],paths:globalPaths,
     player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
     bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),
     equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
@@ -246,6 +263,10 @@ setSpeed(state,payload){
   },
   // getters to update the system
   getters:{
+    // get systems paths
+    getGlobalPaths:(state) => state.paths,
+    // get the recent plays
+    getRecentPlays:(state) => state.recentPlays,
     getVolume : (state) => state.volume,
     getPlaylist:(state) => state.playlist,
     getPlayer: (state) => state.player,

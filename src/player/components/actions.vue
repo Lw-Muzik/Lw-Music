@@ -86,6 +86,8 @@ export default {
             this.player.src = this.now[this.nowID].data;
             this.player.play();
         }
+      
+      
     },
     created() {
         this.volume = this.$store.getters.getVolume;

@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar flex flex-col justify-space-between items-center " >
+    <div class="sidebar w-64 flex flex-col justify-space-between items-center " >
             <img src="../../assets/pAudio.png" class="p-10 py-10 w-40"/>
              <div class="w-full view">
                  <list-tile 
@@ -57,7 +57,8 @@ export default {
 <style lang="scss" scoped>
     .sidebar{
       padding-top:25px;
-      background: #150327;
+      backdrop-filter:blur(40px);
+      background: linear-gradient(to right, rgba(0,0,0,1) 10%,rgba(0,0,0,0.5) 100%);
       .view{
         &::-webkit-scrollbar{
           appearance: none;

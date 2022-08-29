@@ -7,6 +7,8 @@
         <br>
         <br>
         <br>
+        <div class="gridView m-8">
+
     <div class="lg:w-full sm:w-8/12 grid md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-5 grid-rows-3">
         <tile 
                 @routeGenre="this.$emit('routeTo')"
@@ -16,6 +18,7 @@
                 :cover="item.cover"
                 :total="item.total"
                  />
+    </div>
     </div>
 </template>
 <script>

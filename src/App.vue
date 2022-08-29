@@ -34,8 +34,9 @@
        <p v-if="paths.length == 0" class="no-path-tile ">
           No path selected
        </p>
+
         <p v-else v-for="(path,index) in paths" :key="path" class="path-tile">
-           <span class="icon mi mi-folder"></span> <span class="path">{{path}}</span> <span class="close" @click="remove(index)">&times;</span>
+           <span class="icon mi mi-folder"></span> <span class="path">{{path}}</span> <span class="close" @click="remove(index)">&nbsp;&times;&nbsp;</span>
        </p>
     </div>
      <br>
@@ -55,7 +56,7 @@
 import * as mi from "material-icons";
 import { ipcRenderer } from 'electron';
 import Titlebar from "@/components/TitleBar/Titlebar.vue";
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 
 export default {
   name:'Initial',
@@ -68,11 +69,18 @@ export default {
     }
   },
     components:{Titlebar},
- mounted() {
+ created() {
   ipcRenderer.on("settings",(e,args) => {
        this.paths = JSON.parse(readFileSync(args)).savedPaths;
+       console.log(`Songs paths" => ${args}`)
        this.url = args;
   })
+ },
+ mounted() {
+  this.paths = this.$store.getters.getGlobalPaths;
+  ipcRenderer.on("loaded",(e,args) => {
+      console.log(`Songs " => ${args}`)
+    });
  },
  computed: {
     //this.paths = 
@@ -81,14 +89,22 @@ export default {
        chooseFolder(){
         ipcRenderer.sendSync("loadFolder");
         ipcRenderer.on('chosen',(event, args)=>{
-            this.paths = [this.paths , args];
+            this.paths = [...this.paths , args];
         });
     },
     remove(id){
-      let update = JSON.parse(readFileSync(this.url));
+      var local = [];
         this.paths.splice(id,1);
-        update.savedPaths = this.paths;
-        writeFileSync(this.url,JSON.stringify(update));
+        local = this.paths;
+
+        ipcRenderer.sendSync("updatePath",local);
+        console.log(`Updated paths" => ${local}`);
+        // console.log(`Songs paths" => ${update.savedPaths}`);
+    ipcRenderer.on("savedPath",(e,args) => {
+      //  this.paths = JSON.parse(readFileSync(args)).savedPaths;
+       console.log(`Songs paths => ${args}`)
+      //  this.url = args;
+    })
     },
     goToHome(){
       this.dash = false;

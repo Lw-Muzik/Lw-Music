@@ -33,9 +33,8 @@ export default {
     },
       created(){
          this.audio = this.$store.getters.getPlayer;
-    },
-    mounted() {
-      this.audio.onended = ()=>{
+
+         this.audio.onended = ()=>{
         this.j += 1;
          this.audio.src = this.queueList[this.j].data;
          this.nativeExecute(this.queueList[this.j]);
@@ -44,16 +43,65 @@ export default {
             this.audio.play();
       }
     },
+    mounted() {
+      
+    },
     methods:{
+      
        nativeExecute(id3){
           var img =  `file://${id3.artwork}`;
-          document.querySelector("body").style.backgroundImage = img;
+          document.body.style.backgroundImage = `url('${img}')`;
           remote.getCurrentWindow().setTitle(id3.title);
          const link = document.querySelector("link");
         link.href.replace(img,"");
         link.href = img;
       
-            const notify = new Notification(id3.title,{body:id3.artist,icon:img});
+            const notify = new Notification(id3.title,{body:id3.artist,icon:img,silent:true,requireInteraction:true,tag:"music"});
+            notify.onclick = ()=>{
+                notify.close();
+            }
+            
+        navigator.mediaSession.setActionHandler("nexttrack", () => {
+              this.j += 1;
+            this.audio.src = this.queueList[this.j].data;
+            this.nativeExecute(this.queueList[this.j]);
+            this.$store.commit('currentProcess',[this.queueList[this.j],this.j]);
+            this.$store.commit('musicData',this.queueList[this.j]);
+            this.audio.play();
+        });
+        navigator.mediaSession.setActionHandler("previoustrack", () => {
+              this.j -= 1;
+          this.audio.src = this.queueList[this.j].data;
+          this.nativeExecute(this.queueList[this.j]);
+          this.$store.commit('currentProcess',[this.queueList[this.j],this.j]);
+            this.$store.commit('musicData',this.queueList[this.j]);
+            this.audio.play();
+        });
+      
+        navigator.mediaSession.setActionHandler("play", () => {
+            this.player.play();
+        });
+        navigator.mediaSession.setActionHandler("pause", () => {
+            this.player.pause();
+        });
+        navigator.mediaSession.setActionHandler("stop", () => {
+            this.player.pause();
+        });
+
+      // navaigator.
+         navigator.mediaSession.metadata = new MediaMetadata({
+            title: id3.title,
+            artist: id3.artist,
+            album: id3.album,
+            artwork: [
+                { src: img, sizes: "512x512" , type: "image/jpeg" },
+                { src: img, sizes: "256x256" , type: "image/jpeg" },
+                { src: img, sizes: "128x128" , type: "image/jpeg" },
+                { src: img, sizes: "64x64" , type: "image/jpeg" },
+                { src: img, sizes: "32x32" , type: "image/jpeg" },
+                { src: img, sizes: "16x16" , type: "image/jpeg" },
+            ]
+        });
             notify.onclose = ()=>{  }
         },
         playSong(track,id){
