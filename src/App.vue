@@ -72,14 +72,14 @@ export default {
  created() {
   ipcRenderer.on("settings",(e,args) => {
        this.paths = JSON.parse(readFileSync(args)).savedPaths;
-       console.log(`Songs paths" => ${args}`)
+      
        this.url = args;
   })
  },
  mounted() {
   this.paths = this.$store.getters.getGlobalPaths;
   ipcRenderer.on("loaded",(e,args) => {
-      console.log(`Songs " => ${args}`)
+   
     });
  },
  computed: {

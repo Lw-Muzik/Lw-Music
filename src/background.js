@@ -8,7 +8,7 @@ import { image }  from "./Core/default";
 const { musixmatch } = require('4lyrics');
 import { Axios } from 'axios';
 const cheerio = require('cheerio');
-const { streams,processed,art, appStore ,settings, favourite} = require("./Main/System/Paths.js");
+const { streams,processed,art, appStore ,settings, favourite, recentPlays} = require("./Main/System/Paths.js");
 import NodeID3 from "node-id3";
 import ZFileSystem from "./Main/Core/Filesystem";
 
@@ -54,7 +54,6 @@ ipcMain.on('updatePath', (event, data) => {
 var saveArtWork = async function(tags,track){
   console.log(`Working on ${track}`)
     try {
-      
       if((tags.image.imageBuffer) != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
             writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer);
       }
@@ -63,8 +62,6 @@ var saveArtWork = async function(tags,track){
     }
     //  Storing cover arts
 }
-
- // recursively moves through directories looking for .mp3 files
 
  /**
   * 
@@ -101,8 +98,8 @@ const icon = nativeImage.createFromDataURL(image);
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 1000,
-    height:700,
+    width: 1450,
+    height:850,
     alwaysOnTop:true,
     frame:false,
     hasShadow:true,
@@ -122,7 +119,10 @@ async function createWindow() {
   });
   //
   nativeTheme.themeSource = 'dark';
+win.webContents.on("did-create-window",(e,args)=>{
+ console.log("Window created");
 
+})
   win.webContents.on('did-start-loading',()=>{
     /**Settings path */
     if(existsSync(settings) == false){
@@ -161,9 +161,23 @@ if (existsSync(favourite) == false) {
  win.webContents.on('did-stop-loading',async()=>{
 
     win.webContents.send('settings',settings);
+
+    /* ------ loading songs --------*/
     win.webContents.send('processed',processed);
+    const loaded = JSON.parse(`${readFileSync(processed)}`);
+    win.webContents.send('loaded',loaded);
+    // ------------------------------------------
+
     win.webContents.send('streams',streams);
+
+    // ==========favurites============
     win.webContents.send('favourite',favourite);
+    const favTracks = JSON.parse(readFileSync(favourite));
+    win.webContents.send('f',favTracks);
+    // ----------------------------------
+
+    const recents = JSON.parse(readFileSync(recentPlays))
+    win.webContents.send('recents',recents);
 });
 
 
@@ -177,17 +191,13 @@ win.webContents.on('did-frame-finish-load',() => {
     // let paths = JSON.parse(readFileSync(settings));
      /* The after send unique data */
      console.log("Done loading....")
+
    win.webContents.send("sPaths",paths);
      if(paths.length == 0){
       writeFileSync(processed, JSON.stringify([]));
      }
 });
 
-win.webContents.on('dom-ready',async function(){
-    /**loading the music store */
-    console.log("Dom ready");
-  
-})
 
   // attachTitlebarToWindow(win);
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -228,15 +238,12 @@ win.webContents.on('dom-ready',async function(){
                   title:"Choose a music folder"
               }).then((response)=>{
                 if (response.filePaths[0] != null) {
-                  
                   event.sender.send('chosen',response.filePaths[0]);
                   savePath(response.filePaths[0]);
 
                   (async function(){
                     await recursiveFolders(`${response.filePaths[0]}`)
                  })();
-
-                 
                 // we save the files back to the store
                    writeFileSync(processed, JSON.stringify(store));
                    event.sender.send("donewithsongs",songs);
@@ -331,6 +338,7 @@ win.webContents.on('dom-ready',async function(){
         });
       });
 }
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

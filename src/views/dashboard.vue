@@ -1,22 +1,23 @@
 <template lang="html">
     <titlebar class="titlebar"/>
   <div class="app flex flex-col justify-center fixed h-full">
-      <div class="flex h-full flex-row row-span-2">
+      <div class="flex h-full flex-row row-span-3">
         <!-- sidebar -->
           <side-bar  class="h-full"/>
         <!-- Middle grid -->
         <div class="h-screen">
-            <div class="middle h-full">
+            <div class="middle">
               <br>
-                <div class= 'w-full router-view'>
+                <div class= 'w-screen router-view'>
                   <router-view/>
               </div>
             </div>
           </div>
+
   </div>
   
    <!-- bottom widget -->
-   <div class="vol fixed bottom-80 right-3 bg-yellow-500 w-60">
+   <div v-show="volWidget" class="vol fixed bottom-80 right-3 bg-yellow-500 w-60">
       <div class="p-3 m-3 flex flex-row justify-between items-center">
         <input class="w-full"  type="range" step="0.01" max="1" min="0" @input="updateVol(vol)" v-model="vol"/>
         <b class="label  flex flex-row justify-between items-center" >{{Math.floor(vol * 100)}}%</b>
@@ -25,7 +26,7 @@
    <!-- end of volume widget -->
 
        <div class="btW flex flex-col justify-center absolute z-10 bottom-0">
-         <mini-player />
+         <mini-player @toggleVol="toggleVolume" />
       </div>
   </div>
 </template>
@@ -33,8 +34,6 @@
 import Titlebar from "../components/TitleBar/Titlebar.vue";
 import SideBar from "../components/SideBar/SideBar.vue";
 import Top from "./widgets/Top.vue";
-import { ipcRenderer } from "electron";
-import { readFileSync } from 'fs';
 import * as mi from "material-icons";
 import MiniPlayer from "../player/MiniPlayer.vue";
 export default {
@@ -43,7 +42,7 @@ export default {
     return {
       load:[],
       vol:this.$store.getters.getVolume,
-      // volume:this.vol
+      volWidget:false
     }
   },
     computed: {
@@ -62,6 +61,9 @@ export default {
         this.load = raw;
       
     },
+    toggleVolume(){
+        this.volWidget = !this.volWidget;
+    },
     updateVol(val){
       console.log(val)
       this.$store.commit("setVolume",this.vol);
@@ -77,7 +79,7 @@ export default {
 .vol{
   transform:rotate(-90deg);
   border-radius:10px;
-    background:#23232399!important;
+    background:#232323!important;
   box-shadow:inset -2px 0px 2px 0px #ddd;
   bottom:200px;
   &::before{
@@ -87,7 +89,7 @@ export default {
     margin-left: -10px;
   box-shadow:inset 0px 0px 0.2px 0px #4444;
 
-       background:#23232399!important;
+       background:#232323!important;
   margin-top: 24px;
     content:'';
     position: absolute;
@@ -118,15 +120,15 @@ input[type="range"]{
     // height: 1000px;
   }
   .btW{
-    width: 90%;
-    height:4.5rem;
+    width: 100%;
+    height:5.5rem;
     border-radius:10px;
     color: #fff;
   }
   .router-view{
     overflow: hidden;
     // overflow-y: scroll;
-    height: calc(90vh - 80px);
+    height: calc(100vh - 20px)!important;
     // background-color: #fff;
     // height: 200vh !important;
     transition:0.3s ease-in-out;
@@ -157,7 +159,7 @@ input[type="range"]{
      background: #00000071;
      backdrop-filter: blur(80px);
      overflow:hidden;
-    height: calc(100vh - 80px);
+    height: calc(140vh - 180px);
 
   }
 </style>

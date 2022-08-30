@@ -10,10 +10,12 @@ import { readFileSync, writeFileSync } from 'fs';
 // declarations
 const audio = new Audio();
 audio.crossOrigin = "anonymous";
-var url = `${remote.app.getPath('userData')}/settings.json`,
-favUrl = `${remote.app.getPath('userData')}/favourite.json`,
-recentUrl =  `${remote.app.getPath('userData')}/recents.json`;
-const db = JSON.parse(readFileSync(url));
+let url = "", favUrl = "",recentUrl = "";
+
+   url = `${remote.app.getPath('userData')}/settings.json`,
+  favUrl = `${remote.app.getPath('userData')}/favourite.json`,
+  recentUrl =  `${remote.app.getPath('userData')}/recents.json`;
+  const db = JSON.parse(readFileSync(url));
 
 // set volume basing on the one saved in the previous session
 audio.volume = db.volume;
@@ -25,16 +27,11 @@ var musicFiles = [] ,globalPaths = [];
 
 ipcRenderer.on("donewithsongs",(e,args)=>{
     musicFiles = args;
-    console.log(`Songs done => ${args}`)
 });
 
 ipcRenderer.on("sPaths",(e,args) => {
   globalPaths = args;
 });
-
-// ipcRenderer.on("sPaths",(e,args) => {
-
-// });
 
 
 

@@ -1,12 +1,12 @@
 <template lang="html">
     <div class="overflow-scroll">
-       <grid :items="genre" @routeTo="routeT" v-show="!getBack"/>
-        <router-view v-show="getBack"/>
+       <grid :items="genre" @routeTo="routeT" :loader="`Artists`" v-show="!getBack"/>
+        
     </div>
 </template>
 <script>
-import { readFileSync } from 'fs';
-import { remote } from "electron";
+
+import { ipcRenderer } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
 export default {
     name:'Artist',
@@ -23,7 +23,7 @@ export default {
         routeT(){
             this.showRoute = !this.showRoute;
             this.$store.commit('setGenreBack',true);
-            this.$router.push('/artist/artistTracks');
+            this.$router.push('/artistTracks');
             // console.log("done")
         },
            getCoverArt(artist){
@@ -41,15 +41,17 @@ export default {
         }
     },
    mounted(){
-        let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
-       this.processed = raw;
-       raw.forEach((data) =>{
+      ipcRenderer.on("loaded",(e,rags)=>{
+        this.processed = rags;
+       rags.forEach((data) =>{
             this.unsorted = [...this.unsorted , data.artist];
         });
        const sorted = new Set(this.unsorted);
        sorted.forEach((g) => {
          this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g)}]
        });
+      })
+     
    }
 }
 </script>

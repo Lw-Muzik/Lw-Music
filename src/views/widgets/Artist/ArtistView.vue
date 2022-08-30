@@ -1,35 +1,31 @@
 <template lang="html">
     <div>
-        <!-- <div class="top flex flex-row justify-between items-center fixed z-10">
-             <div class=" flex flex-row justify-center items-center p-3  m-4  bg-black rounded-lg h-10 ">
-                 <p>{{genre}} - {{getSongs().length}} songs</p>
-            </div>
-
-            <button class="bg-black p-3 rounded-3xl flex flex-row justify-center items-center" >Play All<span class="mi mi-play-arrow"></span></button>
-
-            <div class=" cursor-pointer flex flex-row justify-center items-center p-3 m-4 bg-black rounded-lg h-10" @click="goBack">
-                <p> &lt; Back</p>
-            </div>
-        </div> -->
-         <to-widget :label="artist" :total="store.length" />
-        <layout :songs="getSongs()" :grid="true" :list="false" :circle="false" />
+         <!-- <to-widget :label="artist" :total="store.length" /> -->
+        <layout 
+        :songs="store" 
+        :grid="false"
+         :list="true" 
+         :circle="false" 
+         :title="artist"
+         :loader="`Artist`"
+         :artWork="cover"/>
     </div>
 </template>
 <script>
-import { readFileSync } from "fs";
-import { remote } from "electron";
+
+import { ipcRenderer } from "electron";
 import Layout from "../Layout.vue";
-import ToWidget from "../ToWidget.vue";
 import * as mi from "material-icons";
 export default {
     name:"ArtistTracks",
     data() {
         return {
-            store:[]
+            store:[],
+            cover:'',
         }
     },
     components:{
-        Layout,ToWidget
+        Layout
     },
     computed: {
         artist(){
@@ -39,14 +35,15 @@ export default {
             return this.$store.getters.getGenreBack;
     }
     },
+    mounted(){
+        ipcRenderer.on("loaded", (e,args)=>{
+                this.store = args.filter((song) => (song.artist == this.artist));
+                this.cover = this.store[0].artWork;
+                console.log(this.store);
+            });
+    },
       methods:{
-        getSongs(){
-             let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
-            return raw.filter((song) => (song.artist == this.artist));
-        },
-        
         goBack(){
-             this.$store.commit('setGenreBack',false);
             this.$router.back();
         }
     },

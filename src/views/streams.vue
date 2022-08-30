@@ -29,7 +29,7 @@ export default {
         return {
             streamUrl:'',
             online:true,
-            stream:readFileSync(""),
+            stream:[]
         }
     },
     mounted(){

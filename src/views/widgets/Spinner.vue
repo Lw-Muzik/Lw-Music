@@ -1,10 +1,13 @@
 <template lang="html">
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/>
     <div class="flex flex-col justify-around items-center">
          <div
          style="border-top-color:transparent"
-        class="w-16 h-16 border-4 border-blue-400 border-solid rounded-full animate-spin"></div>
-        <span>{{text}}</span>
-</div>
+        class=" w-20 h-20 border-8 border-white border-double  rounded-full animate-spin"></div>
+       <br/>
+       <br/>
+        <b class="text-2xl bold text-center w-full"> Loading {{text}}, please wait..</b>
+    </div>
 <!-- <div>
     <div style="border-top-color:transparent"
         class="w-16 h-16 border-4 border-blue-400 border-dashed rounded-full animate-spin"></div>
@@ -26,3 +29,6 @@ export default {
     }
 }
 </script>
+<style scoped>
+
+</style>

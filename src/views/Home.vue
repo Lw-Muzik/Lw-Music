@@ -1,20 +1,23 @@
 <template lang="html">
     <div class="text-white">
         <b class=" text-4xl text-white">{{userGreeting()}}</b>
-        <p>Daily Mix just for you</p>
-        <Grid :items="recents" />
+        <p>Daily Mix just for you...</p>
+        
+        <div class="text-white">
+            <spinner :text="title"/>
+        </div>
     </div>
 </template>
 <script>
 import Layout from "./widgets/Layout.vue";
-// import Grid from "./widgets/Gen/Grid.vue";
+import Spinner from "./widgets/Spinner.vue";
 import Grid from "./widgets/Gen/Grid.vue";
 export default {
     name:'Home',
     components:{
     Layout,
+    Spinner,
     Grid,
-    Grid
 },
     data() {
         return {

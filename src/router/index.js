@@ -42,7 +42,7 @@ const routes = [
    { path:'folderSongs', component:FolderView },
 
   // streams
-  { path:'stream', component:Streams },
+   { path:'stream', component:Streams },
 
       // genres
       { path:'genre', component:Genre},

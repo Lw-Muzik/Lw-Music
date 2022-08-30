@@ -1,7 +1,6 @@
 <template lang="html">
     <div class="m-5 w-3/4">
-        <grid :items="genre" @routeTo="routeT" v-show="!getBack"/>
-        <router-view/>
+        <grid :items="genre" @routeTo="routeT" v-show="!getBack" :loader="`Genres`"/>
     </div>
 </template>
 <script>

@@ -1,16 +1,21 @@
 <template lang="html">
-    <div class="listView">
+    <div class="listView lg:w-4/5">
        <p @click="playSong(list,index)"  v-bind:key="index" v-for="(list,index) in queueList">
              <!-- <b class="material-icons mi-dehaze"></b> -->
-               <img  :src="`file://${list.artwork}`" class="cover"/> &nbsp; &nbsp;
-               <!-- <img  v-if="existsSync(`${list.artwork}`) == false" src="../../assets/pAudio.png" class="cover"/> &nbsp; &nbsp; -->
-            
+            <div class="w-35 flex flex-row row-span-2 justify-center items-center">
+               <b class="w-10" >{{index+1}}</b>
+              &nbsp; &nbsp;
+              &nbsp;
+               <img  :src="`file://${list.artwork}`" class="cover"/> 
+              </div>
+              &nbsp; &nbsp;
+              &nbsp; &nbsp;
             <span>{{list.title}}</span>
             &nbsp; &nbsp;
             <span >{{list.genre}}</span> 
              &nbsp;
             <span>{{list.artist}}</span>
-  &nbsp;
+          &nbsp;
                <span>{{list.album}}</span>
           </p>
       </div>
@@ -18,7 +23,6 @@
 </template>
 <script>
 import{ image } from "../../Core/default";
-import { remote } from "electron"
 export default {
     name:"ListView",
     props:{
@@ -51,7 +55,7 @@ export default {
        nativeExecute(id3){
           var img =  `file://${id3.artwork}`;
           document.body.style.backgroundImage = `url('${img}')`;
-          remote.getCurrentWindow().setTitle(id3.title);
+
          const link = document.querySelector("link");
         link.href.replace(img,"");
         link.href = img;
@@ -117,7 +121,11 @@ export default {
    }
 </script>
 <style lang="scss" scoped>
-     .listView{ overflow-y:scroll; overflow-x: hidden; height: 600px;
+     .listView{
+       overflow-y:scroll; 
+       overflow-x: hidden;
+        height: 600px;
+        
        &::-webkit-scrollbar{
       appearance: none;
       width: 10px;

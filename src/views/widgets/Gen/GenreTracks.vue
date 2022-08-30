@@ -1,6 +1,6 @@
 <template lang="html">
     <div>
-        <div class="top flex flex-row justify-between items-center fixed z-10">
+        <!-- <div class="top flex flex-row justify-between items-center fixed z-10">
              <div class=" flex flex-row justify-center items-center p-3  m-4  bg-black rounded-lg h-10 ">
                  <p>{{genre}} - {{store.length}} songs</p>
             </div>
@@ -10,12 +10,13 @@
             <div class=" cursor-pointer flex flex-row justify-center items-center p-3 m-4 bg-black rounded-lg h-10" @click="goBack">
                 <p> &lt; Back</p>
             </div>
-        </div>
+        </div> -->
         <layout :songs="store" :grid="true" :list="false"/>
     </div>
 </template>
 <script>
 import { readFileSync } from "fs";
+import { ipcRenderer } from "electron";
 import Layout from "../Layout.vue";
 import * as mi from "material-icons";
 export default {
@@ -40,9 +41,9 @@ export default {
     },
     mounted(){
         ipcRenderer.on('processed',(event, args)=>{
-
         let raw = JSON.parse(`${readFileSync(args)}`);
          this.store = raw.filter((song) => (song.genre == this.genre));
+         console.log("genre songs "+this.store);
        
             this.player.onended = function(){
                     // console.log("ended");

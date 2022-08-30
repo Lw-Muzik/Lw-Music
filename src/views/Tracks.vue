@@ -1,17 +1,10 @@
 <template lang="html">
-    <section>
-
-       <!-- <top-widget :label="`All Songs`" :total="load.length" :cover="image"/>
-        <layout :grid="false" :list="true" :songs="load"/> -->
-
-        <layout :grid="false" :list="true" :subtitle="sub" :songs="load" :artWork="cover" :title="title" />
-
-
+    <section>      
+        <layout :grid="false" :list="true" :subtitle="sub" :songs="load" :artWork="cover" :loader="`All songs`" :title="title" />
 </section>
 </template>
 <script>
-import { remote } from "electron";
-import { readFileSync } from "fs";
+import { ipcRenderer } from "electron";
 import Layout from "./widgets/Layout.vue";
 
 import TopWidget from "./widgets/ToWidget.vue";
@@ -42,12 +35,14 @@ export default {
     }
   },
   mounted(){
-       let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
-       this.load = raw;
-       this.image = raw[Math.floor(Math.random() * (raw.length -1))].artwork;
+      ipcRenderer.on('loaded',(e,args)=>{
+        this.load = args;
+       this.image = args[Math.floor(Math.random() * (args.length -1))].artwork;
 
-       this.sub = `${raw.length} songs`;
-       this.cover = `file://${raw[0].artwork}`;
+       this.sub = `${args.length} songs`;
+       this.cover = `file://${args[0].artwork}`;
+      })
+       
   },
   
 }

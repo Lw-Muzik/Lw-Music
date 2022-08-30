@@ -1,20 +1,17 @@
 <template lang="html">
-    <!-- <top-widget v-if="!getBack"  :total="folders.length" :label="`${getBack}`"/> -->
     <div class="w-4/5">
-         <grid :items="folders" @routeTo="routeT" v-show="!getBack"/>
-        <router-view v-show="getBack"/>
+         <Grid :items="folders" :title="`Folders`" :loader="`Folders`" @routeTo="routeT"/>
     </div>
-       
-  
 </template>
 <script>
-import { readFileSync } from 'fs';
-import { remote } from "electron";
+
+import { ipcRenderer} from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
 import TopWidget from "./widgets/ToWidget.vue";
+import Layout from "./widgets/Layout.vue";
 export default {
     name:'Folder',
-    components:{ Grid, TopWidget },
+    components:{ Grid, TopWidget, Layout },
     data() {
         return {
             showRoute:false,
@@ -27,9 +24,7 @@ export default {
    
     methods: {
         routeT(){
-            this.$store.commit('setGenreBack',true);
             this.$router.push('/folderSongs');
-            // console.log("done")
         },
         getTotalSongs(folder){
             const result = this.processed.filter((d) => (d.folder == folder));
@@ -46,17 +41,19 @@ export default {
         }
     },
    mounted(){
-        let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
-        this.processed = raw;
-        raw.forEach((data) =>{
-            this.unsorted = [...this.unsorted , data.folder];
-           this.covers = [...this.covers, data.artwork];
+        ipcRenderer.on("loaded",(e,args)=>{
+            this.processed = args;
+            args.forEach((data) =>{
+                this.unsorted = [...this.unsorted , data.folder];
+            this.covers = [...this.covers, data.artwork];
+            });
+
+        const sorted = new Set(this.unsorted);
+        sorted.forEach((g) => {
+            this.folders = [...this.folders, {genre:g,total:this.getTotalSongs(g),cover:this.getCoverArt(g)}]
         });
-       const sorted = new Set(this.unsorted);
-       sorted.forEach((g) => {
-           this.folders = [...this.folders, {genre:g,total:this.getTotalSongs(g),cover:this.getCoverArt(g)}]
-       });
-       console.log(this.folders[0].cover)
+        })
+        
    }
 }
 </script>

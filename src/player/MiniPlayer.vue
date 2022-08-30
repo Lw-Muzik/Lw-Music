@@ -8,7 +8,7 @@
             <button class="btn" title="Equalizer" @click="lauchEq"><b class="mi mi-equalizer"></b></button>
             <button class="btn" title="Shuffle" @click="this.$emit('prevTrack')" ><b class="mi mi-shuffle"></b></button>
             <button class="btn" title="Add to Favourites" @click="favourite" ><b class="mi mi-thumb-up"></b></button>
-            <button class="btn" @click="toggleVolume" ><b class="mi mi-volume-up"></b></button>
+            <button class="btn" @click="this.$emit('toggleVol')" ><b class="mi mi-volume-up"></b></button>
         </div>
     
     </div>
@@ -39,11 +39,6 @@ export default {
             this.$store.commit('saveFavourite',this.track);
         }
     },
-    mounted(){
-        // document.querySelector('body').style.backgroundImage = `url(file://${this.track.artwork})`;
-        // this.$refs['player'].style.backgroundImage = 'url(file://'+this.track.artwork+')';
-    }
-
 }
 </script>
 <style lang="scss" scoped>
@@ -57,10 +52,10 @@ export default {
         height:50px;
         display:flex;
         flex-direction:column;
-        justify-content: center;
+        justify-content: space-evenly!important;
         align-items: center;
         border-radius:50%;
-        background:#000000;
+        /* background:#000000;*/
             transform:scale(1, 1);
             transition:0.3s ease-in-out;
         &:hover{
@@ -68,10 +63,10 @@ export default {
         }
     }
     .player{
-        backdrop-filter: blur(10px) !important;
+        backdrop-filter: blur(60px) !important;
         z-index: 5!important;
         position: absolute;
-        background: #000000;
+        background: #111111cb;
         // width: 100%;
         .wrapper{
             width: 100%;
@@ -87,8 +82,7 @@ export default {
 
     }
     .track-cover{
-        width: 620px;
+        width: 820px;
         white-space:nowrap;
-
     }
 </style>

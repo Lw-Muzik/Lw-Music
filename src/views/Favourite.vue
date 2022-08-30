@@ -6,8 +6,6 @@
 </template>
 <script>
 import Layout from "./widgets/Layout.vue";
-import { readFileSync } from 'fs';
-// import { remote } from "electron";
 export default {
     name:'Favourite',
     data() {
@@ -26,10 +24,8 @@ export default {
     },
     mounted() {
         this.fav = this.favourite;
-        console.log(this.favourite);
         this.sub = `${this.favourite.length} songs`;
         this.cover = `file://${this.favourite[(this.favourite.length - 1)].artwork}`
-        // this.fav = JSON.parse(readFileSync(`${remote.app.getPath('userData')}/favourite.json`));
     },
 }
 </script>
