@@ -203,7 +203,6 @@ win.webContents.on('did-frame-finish-load',() => {
     // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app');
-   win.webContents.openDevTools();
   // win.setIcon(image)
     // Load the index.html when not in development
     await win.loadURL('app://./index.html');

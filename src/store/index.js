@@ -69,6 +69,7 @@ export default createStore({
     // updateSong Id
     setSongId(state,payload){
         state.songId = parseInt(payload);
+        console.log(`Current Song ID ${payload}`);
     },
     // show side nav
     setShowSidenav(state,payload){

@@ -14,7 +14,9 @@
 ## ScreenShots( Desktop )
 
 <div style="width:900px;">
-<img title="View one" style="margin:35px"src="./src/assets/img1.png" width="230px;"/>
+<img title="View one" style="margin:35px"src="./src/assets/img1.png" width="630px;"/>
+<img title="View one" style="margin:35px"src="./src/assets/img2.png" width="630px;"/>
+</div>
 </div>
 
 ## ToDo

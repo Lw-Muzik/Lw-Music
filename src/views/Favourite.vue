@@ -1,7 +1,7 @@
 <template lang="html">
     <div>
         <center v-if="fav.length == 0" >No favourite yet</center>
-        <layout v-else :songs="fav" :grid="true" :list="false" :title="title" :subtitle="sub" :artWork="cover"/>
+        <layout v-else :songs="fav" :grid="false" :list="true" :title="title" :subtitle="sub" :artWork="cover"/>
     </div>
 </template>
 <script>
