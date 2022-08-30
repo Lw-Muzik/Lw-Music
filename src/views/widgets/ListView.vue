@@ -32,7 +32,11 @@ export default {
       return {
         image:image,
         audio:null,
-        j:0
+      }
+    },
+    computed:{
+      j(){
+        return this.$store.getters.getSongId;
       }
     },
       created(){
@@ -41,6 +45,7 @@ export default {
          this.audio.onended = ()=>{
         this.j += 1;
          this.audio.src = this.queueList[this.j].data;
+         this.$store.commit("saveRecentPlays",this.queueList[this.j]);
          this.nativeExecute(this.queueList[this.j]);
          this.$store.commit('currentProcess',[this.queueList[this.j],this.j]);
             this.$store.commit('musicData',this.queueList[this.j]);
@@ -67,6 +72,8 @@ export default {
             
         navigator.mediaSession.setActionHandler("nexttrack", () => {
               this.j += 1;
+            this.$store.commit("setSongId",this.j);
+
             this.audio.src = this.queueList[this.j].data;
             this.nativeExecute(this.queueList[this.j]);
             this.$store.commit('currentProcess',[this.queueList[this.j],this.j]);
@@ -112,6 +119,8 @@ export default {
           this.j = id;
             this.audio.src = track.data;
             this.audio.play();
+            this.$store.commit("setSongId",id);
+            this.$store.commit("saveRecentPlays",track)
             this.$store.commit('currentProcess',[this.queueList,id]);
             this.$store.commit('musicData',track);
             this.nativeExecute(track);

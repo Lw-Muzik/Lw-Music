@@ -55,7 +55,7 @@ const { remote } = window.require("electron");
 
             close() {
               // remote.Tray()
-                remote.getCurrentWindow().hide("ap");
+                remote.getCurrentWindow().close();
             },
             toggleMaximize() {
                 let win = remote.getCurrentWindow();

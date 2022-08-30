@@ -4,10 +4,10 @@
         <layout 
         :songs="store" 
         :grid="false"
+        :loader="artist"
          :list="true" 
          :circle="false" 
          :title="artist"
-         :loader="`Artist`"
          :artWork="cover"/>
     </div>
 </template>

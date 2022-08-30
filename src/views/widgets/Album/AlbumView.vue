@@ -1,6 +1,6 @@
 <template lang="html">
     <div>
-        <div class="top flex flex-row justify-between items-center fixed z-10">
+        <!-- <div class="top flex flex-row justify-between items-center fixed z-10">
              <div class=" flex flex-row justify-center items-center p-3  m-4  bg-black rounded-lg h-10 ">
                  <p>{{genre}} - {{getSongs().length}} songs</p>
             </div>
@@ -10,8 +10,8 @@
             <div class=" cursor-pointer flex flex-row justify-center items-center p-3 m-4 bg-black rounded-lg h-10" @click="goBack">
                 <p> &lt; Back</p>
             </div>
-        </div>
-        <layout :songs="getSongs()" :grid="true" :list="false" :circle="false"/>
+        </div> -->
+        <layout :songs="getSongs()" :grid="true" :list="false" :loader="genre" :circle="false"/>
     </div>
 </template>
 <script>

@@ -4,7 +4,8 @@
          :songs="store"
           :grid="false"
            :list="true"
-            :title="folder" 
+            :title="folder"
+            :loader="folder"
             :showPlay="playAll"
              :artWork="cover"
              :subtitle="subt"
@@ -13,7 +14,7 @@
 </template>
 <script>
 
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer} from "electron";
 import Layout from "../Layout.vue";
 import * as mi from "material-icons";
 import ToWidget from "../ToWidget.vue";

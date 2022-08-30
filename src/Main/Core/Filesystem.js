@@ -29,7 +29,6 @@ class ZFileSystem {
      });
      return this.store;
   }
-//   
 }
 
 module.exports = ZFileSystem;

@@ -27,14 +27,20 @@ export default {
      computed: {
         track(){
             return this.$store.getters.getMusicData;
+        },
+        current(){
+            return this.$store.getters.getCurrentSong;
         }
     },
     methods:{
         lauchEq(){
-             this.$store.commit('setShowSidenav', false);
             this.$router.push("/eq");
+            console.log(this.current);
         },
-        toggleVolume(){},
+        toggleVolume(){
+            
+        },
+
         favourite(){
             this.$store.commit('saveFavourite',this.track);
         }

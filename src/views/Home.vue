@@ -2,10 +2,6 @@
     <div class="text-white">
         <b class=" text-4xl text-white">{{userGreeting()}}</b>
         <p>Daily Mix just for you...</p>
-        
-        <div class="text-white">
-            <spinner :text="title"/>
-        </div>
     </div>
 </template>
 <script>

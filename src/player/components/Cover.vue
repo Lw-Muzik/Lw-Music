@@ -5,23 +5,19 @@
             <!-- <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/> -->
         </div>
         <!-- else if null  -->
-          <div v-else class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
-            <img :src="`file://${currentSong.artwork}`" class="w-full drop-shadow rounded-2xl"/>
-            <!-- <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/> -->
-        </div>
+          <!-- <div  class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
+            <img :src="`file://${csong.artwork}`" class="w-full drop-shadow rounded-2xl"/>
+            <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/> -->
+        <!-- </div> -->
 <!-- spacer div --> 
  <div class="p-3"></div>
 <!-- end of spacer div -->
 <!-- if track is null lets get what was played before -->
-        <div v-if="track != null" class="content max-w-3xl mx-2">
-            <b class="title">{{track.title}}</b>&nbsp;
-            <p class="artist">{{track.artist}}</p>
+        <div class="content max-w-3xl mx-2">
+            <b class="title">{{csong == null ?track.title:csong.title}}</b>&nbsp;
+            <p class="artist">{{csong == null ?track.artist:csong.artist}}</p>
          </div>
-         <!-- else -->
-          <div v-else class="content max-w-3xl mx-2">
-            <b class="title">{{currentSong.title}}</b>&nbsp;
-            <p class="artist">{{currentSong.artist}}</p>
-         </div>
+      
     </div>
   
 </template>
@@ -44,7 +40,7 @@ export default {
        current(){
            return this.$store.getters.getCurrentData;
        },
-        currentSong(){
+        csong(){
             return this.$store.getters.getCurentSong;
         },
     },
@@ -69,7 +65,7 @@ export default {
         this.defaultCover = this.$store.getters.getDefaultCover;
         // this.now = this.current[0];
         // this.nowID = this.current[1];
-
+        console.log(`Current ${this.$store.getters.getCurentSong}`)
         this.player.onpause = ()=>{
             this.show = false;
         }

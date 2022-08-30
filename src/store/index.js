@@ -10,9 +10,7 @@ import { readFileSync, writeFileSync } from 'fs';
 // declarations
 const audio = new Audio();
 audio.crossOrigin = "anonymous";
-let url = "", favUrl = "",recentUrl = "";
-
-   url = `${remote.app.getPath('userData')}/settings.json`,
+  var url = `${remote.app.getPath('userData')}/settings.json`,
   favUrl = `${remote.app.getPath('userData')}/favourite.json`,
   recentUrl =  `${remote.app.getPath('userData')}/recents.json`;
   const db = JSON.parse(readFileSync(url));
@@ -34,13 +32,12 @@ ipcRenderer.on("sPaths",(e,args) => {
 });
 
 
-
 export default createStore({
 
   state: {
     volume:db.volume,lyrics:'', playlist:musicFiles, reduceCount:0,trackPlaying:'',currentData:[],paths:globalPaths,
     player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
-    bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),
+    bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),songId:0,
     equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
     genreCategory:'',genreBack:false,muData:{},defaultCover:image,showSidenav:false,streamUrl:'',
     balance:eq.balance,compressor:eq.compressor,recentPlays:JSON.parse(readFileSync(recentUrl)),
@@ -57,9 +54,6 @@ export default createStore({
     },
     // saves the current state of player
     saveCurrentState(state,payload){
-      state.currentTime = payload[0];
-      state.currentDuration = payload[1];
-
       // for persistent storage
       db.currentTime = payload[0];
       db.currentDuration = payload[1];
@@ -71,6 +65,10 @@ export default createStore({
       db.playing = payload;
           // save to persistent storage (settings.json)
           writeFileSync(url,JSON.stringify(db));
+    },
+    // updateSong Id
+    setSongId(state,payload){
+        state.songId = parseInt(payload);
     },
     // show side nav
     setShowSidenav(state,payload){
@@ -260,6 +258,9 @@ setSpeed(state,payload){
   },
   // getters to update the system
   getters:{
+    // currentSong id playing 
+
+    getSongId:(state) => state.songId,
     // get systems paths
     getGlobalPaths:(state) => state.paths,
     // get the recent plays

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '../views/dashboard.vue';
+import App from '../App.vue';
 import Tracks from '../views/Tracks.vue';
 import Home from '../views/Home.vue';
 import Artist from '../views/Artist.vue';
@@ -20,54 +20,46 @@ import  AudioPresets from '../views/Sound/AudioPreset/AudioPreset.vue';
 import  Speakers from '../views/Sound/spKs/Speaker.vue';
 
 const routes = [ 
-  {
-    path: '/',
-    component: Dashboard,
-    children:[
       { path:'/', component:Home },
-      { path:'tracks', component:Tracks },
+      { path:'/tracks', component:Tracks },
       // artists
-      { path:'artist', component:Artist},
+      { path:'/artist', component:Artist},
 
         // artist tracks
-        { path:'artistTracks', component:ArtistTracks },
+        { path:'/artistTracks', component:ArtistTracks },
 
     // albums
-    { path:'album', component:Album },
+    { path:'/album', component:Album },
 
-    { path:'albumTracks', component:AlbumTracks },
+    { path:'/albumTracks', component:AlbumTracks },
    // folders
-   { path:'folder', component:Folder },
+   { path:'/folder', component:Folder },
 
-   { path:'folderSongs', component:FolderView },
+   { path:'/folderSongs', component:FolderView },
 
   // streams
-   { path:'stream', component:Streams },
+   { path:'/stream', component:Streams },
 
       // genres
-      { path:'genre', component:Genre},
-      { path:'genres', component:GenreTracks },
+      { path:'/genre', component:Genre},
+      { path:'/genres', component:GenreTracks },
     
     // favourties
-      { path:'favourite', component:Favourite },
+      { path:'/favourite', component:Favourite },
 
       // soundQ
-      {path:"soundQ", component:SoundQ },
+      {path:"/soundQ", component:SoundQ },
       // EQ
-      {path:"eq", component:Eq },
+      {path:"/eq", component:Eq },
       // Speakers
-      {path:"sps", component:Speakers },
+      {path:"/sps", component:Speakers },
       // audio presets
-      {path:"aps", component:AudioPresets },
+      {path:"/aps", component:AudioPresets },
       // room effects
-      {path:"rms", component:Room },
+      {path:"/rms", component:Room },
 
       // settings
-      {path:"settings", component:Settings },
-
-      
-    ]
-    },
+      {path:"/settings", component:Settings },
 ];
 
 const router = createRouter({

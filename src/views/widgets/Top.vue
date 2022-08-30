@@ -31,7 +31,10 @@ export default {
         showPlay:Boolean,
         artWork:String,
         songData: Array,
-        title:String,
+        title:{
+            type:String,
+            default:""
+        },
         subtitle:String,
 
     },

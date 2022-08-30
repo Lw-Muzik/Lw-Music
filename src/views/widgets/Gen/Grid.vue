@@ -1,8 +1,9 @@
 <template lang="html">
  <br/>
    <spinner v-if="items.length == 0" :text="loader" />
- <div v-else class="gridView m-8">
+  <!-- <top-widget v-else /> -->
 
+ <div v-else class="gridView m-8">
     <div class="lg:w-full sm:w-8/12 grid md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-5">
         <tile 
                 @routeGenre="this.$emit('routeTo')"

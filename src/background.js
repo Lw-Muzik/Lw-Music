@@ -19,12 +19,9 @@ protocol.registerSchemesAsPrivileged([
 // songs store
 var store = JSON.parse(readFileSync(processed));
 /**
- * 
  * @param {NodeID3.Tags} tags
  */
-
-/***
- * 
+/*
  * @param { String } urls 
  */
  var savePath = function(urls){
@@ -40,14 +37,15 @@ var updatePaths = function(data){
     writeFileSync(settings,JSON.stringify(paths));
 }
 
+
 ipcMain.on('updatePath', (event, data) => {
   console.log(`Up coming changes => ${data}`)
     updatePaths(data);
   let paths = JSON.parse(readFileSync(settings));
     event.sender.send('savedPath', paths.savedPaths);
 } );
-/**
- * 
+/*
+ *
  * @param { NodeID3.Tags } tags 
  * @param {*} track 
  */
@@ -62,9 +60,8 @@ var saveArtWork = async function(tags,track){
     }
     //  Storing cover arts
 }
-
- /**
-  * 
+ /*
+  *
   * @param {String } dir 
   */
  var recursiveFolders =  async function(dir){
@@ -93,7 +90,6 @@ var saveArtWork = async function(tags,track){
                          console.log(`> ${meta}`);
                });
    }
-
 const icon = nativeImage.createFromDataURL(image);
 async function createWindow() {
   // Create the browser window.
@@ -121,8 +117,8 @@ async function createWindow() {
   nativeTheme.themeSource = 'dark';
 win.webContents.on("did-create-window",(e,args)=>{
  console.log("Window created");
+});
 
-})
   win.webContents.on('did-start-loading',()=>{
     /**Settings path */
     if(existsSync(settings) == false){
@@ -140,7 +136,7 @@ win.webContents.on("did-create-window",(e,args)=>{
           duration:0,
           bassQ:2.67,
           eqPreset:"normal",
-          bassFreq:65,
+          bassFreq:60,
           tFreq:12000,
           gain:1,
           room:{
@@ -151,6 +147,7 @@ win.webContents.on("did-create-window",(e,args)=>{
       writeFileSync(settings,JSON.stringify(set));
       /**Send all necessary data to renderer*/
 }
+
 
 if (existsSync(favourite) == false) {
   writeFileSync(favourite,JSON.stringify([]));

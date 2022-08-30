@@ -47,6 +47,7 @@ export default {
         },
     },
     mounted(){
+        console.log(`Current time ${this.$store.getters.getCurentSong}`)
         setInterval(()=>{
            this.update = this.audio.currentTime;
           this.progMax = this.audio.duration;

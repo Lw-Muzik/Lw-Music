@@ -1,7 +1,5 @@
 <template lang="html">
   <div v-show="dash" class="body">
-<!-- <titlebar/> -->
-
     <div class="wrap">
   <div class="logo">
     <svg xmlns="http://www.w3.org/2000/svg" width="175.859" height="47.344" viewBox="14.904 4.22 175.859 47.344" enable-background="new 14.904 4.22 175.859 47.344">
@@ -47,9 +45,8 @@
 </div>
 
   </div>
-  <div v-show="!dash">
-      <router-view/>
-  </div>
+
+  <dashboard v-show="!dash"/>
 
 </template>
 <script>
@@ -57,9 +54,9 @@ import * as mi from "material-icons";
 import { ipcRenderer } from 'electron';
 import Titlebar from "@/components/TitleBar/Titlebar.vue";
 import { readFileSync } from 'fs';
-
+import Dashboard from "./views/dashboard.vue"
 export default {
-  name:'Initial',
+  name:'App',
   data() {
     return {
       dash:true,
@@ -68,19 +65,15 @@ export default {
       paths:[]
     }
   },
-    components:{Titlebar},
+    components:{Titlebar, Dashboard},
  created() {
   ipcRenderer.on("settings",(e,args) => {
        this.paths = JSON.parse(readFileSync(args)).savedPaths;
-      
        this.url = args;
   })
  },
  mounted() {
   this.paths = this.$store.getters.getGlobalPaths;
-  ipcRenderer.on("loaded",(e,args) => {
-   
-    });
  },
  computed: {
     //this.paths = 
@@ -96,7 +89,6 @@ export default {
       var local = [];
         this.paths.splice(id,1);
         local = this.paths;
-
         ipcRenderer.sendSync("updatePath",local);
         console.log(`Updated paths" => ${local}`);
         // console.log(`Songs paths" => ${update.savedPaths}`);
@@ -108,7 +100,7 @@ export default {
     },
     goToHome(){
       this.dash = false;
-      // ipcRenderer.sendSync("fullscreen");
+      console.log("Clicked");
     }
    
   },
