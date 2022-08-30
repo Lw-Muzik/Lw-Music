@@ -15,6 +15,9 @@
           </div>
 
   </div>
+  <Lyrics
+       @closeL="closeLyrics"
+        :class="[showLyrics?'active':'','lyrics']" :content=" lyricsSong"/>
   
    <!-- bottom widget -->
    <div v-show="volWidget" class="vol fixed bottom-80 right-3 bg-yellow-500 w-60">
@@ -23,10 +26,17 @@
         <b class="label  flex flex-row justify-between items-center" >{{Math.floor(vol * 100)}}%</b>
       </div>
    </div>
+
+   <BottomSheet
+          :class="[showNext ? 'active' :'', 'bottom']"
+          :playlist="nextTrack"
+          @closeB="closeB"
+          />
+
    <!-- end of volume widget -->
 
        <div class="btW flex flex-col justify-center absolute z-10 bottom-0">
-         <mini-player @toggleVol="toggleVolume" />
+         <mini-player @toggleVol="toggleVolume" @lyrics="launchLyrics"/>
       </div>
   </div>
 </template>
@@ -34,32 +44,46 @@
 import Titlebar from "../components/TitleBar/Titlebar.vue";
 import SideBar from "../components/SideBar/SideBar.vue";
 import Top from "./widgets/Top.vue";
+import Lyrics from "@/components/Lyrics/Lyrics.vue";
+import BottomSheet from "@/components/model/BottomSheet.vue";
 import * as mi from "material-icons";
 import MiniPlayer from "../player/MiniPlayer.vue";
+import { ipcRenderer } from "electron";
 export default {
   name:"Dashboard",
   data() {
     return {
       load:[],
+      showNext:false,nextTrack:{title:"",artist:"",image:""},
       vol:this.$store.getters.getVolume,
-      volWidget:false
+      volWidget:false,lyrics:'',showLyrics:false,
     }
   },
     computed: {
       player(){
         return this.$store.getters.getPlayer;
       },
-     
+     lyricsSong(){
+      return this.$store.getters.getLyrics;
+     },
       showSidenav(){
         return this.$store.getters.showSidenav;
       }
     },
-  components:{ Titlebar, SideBar, Top , MiniPlayer },
+  components:{ Titlebar, SideBar, Top , MiniPlayer,Lyrics , BottomSheet},
   methods:{ 
     showTrack(){
         let raw = this.$store.getters.getPlaylist;
         this.load = raw;
       
+    },
+    closeLyrics(){
+    this.showLyrics = !this.showLyrics;
+  },
+  closeB(){this.showNext = false; },
+    launchLyrics(){
+      this.showLyrics = !this.showLyrics;
+      console.log("lyrics..............")
     },
     toggleVolume(){
         this.volWidget = !this.volWidget;
@@ -69,8 +93,26 @@ export default {
       this.$store.commit("setVolume",this.vol);
     },
     mounted() {
+      ipcRenderer.on('lyrics',(e,args)=>{
+        this.lyrics = args;
+      })
+      var id = this.$store.getters.getNowPlaying;
+          this.nextTrack.artist = id.artist;
+          this.nextTrack.title = id.title;
+          this.nextTrack.image = id.image;
+          this.player.ontimeupdate = ()=>{
+       /**Logic for next track */
+     const monitor = Math.floor((this.player.duration) -this.player.currentTime);
+            if(monitor == 60){
+              this.showNext = true;
+            //    const notify = new Notification(this.title,{body:this.artist,icon:this.playlist[this.trackId]});
+            } else if(monitor == 30){
+               this.showNext = false;
+            }else if(monitor < 30 || monitor > 60){
+               this.showNext = false;
+            }
+          }
       this.vol = this.$store.getters.getVolume;
-      console.log(this.vol);
     },
   }
 }
@@ -96,6 +138,22 @@ export default {
     background: #fff;
   }
 }
+
+.lyrics{
+         width: fit-content;
+         height: max-content;
+         z-index: 30!important;
+         right:-400px;
+         visibility: hidden;
+         top:20%!important;
+         transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         position:absolute!important;
+       }
+        .lyrics.active{
+          animation: 2s 2s linear forwards;
+         visibility: visible;
+          right:290px!important;
+        }
 .label{
   transform:rotate(90deg);
 }
@@ -160,6 +218,20 @@ input[type="range"]{
      backdrop-filter: blur(80px);
      overflow:hidden;
     height: calc(140vh - 180px);
-
   }
+  .bottom{
+          width: 500px;
+           position: absolute;
+           bottom:100px;
+           z-index: 30!important;
+           right: 10px;
+           visibility: hidden;
+           opacity: 0;
+           transition: 0.3s cubic-bezier(0.045, 0.05, 0.55, 0.95);
+     }
+     .bottom.active{
+        right: 500px;
+         visibility: visible;
+           opacity: 1;
+     }
 </style>

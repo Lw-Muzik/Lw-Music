@@ -3,7 +3,7 @@
        <p @click="playSong(list,index)"  v-bind:key="index" v-for="(list,index) in queueList">
              <!-- <b class="material-icons mi-dehaze"></b> -->
             <div class="w-35 flex flex-row row-span-2 justify-center items-center">
-               <b class="w-10" >{{index+1}}</b>
+               <b class="w-10" >{{index+1}}</b> 
               &nbsp; &nbsp;
               &nbsp;
                <img  :src="`file://${list.artwork}`" class="cover"/> 
@@ -22,11 +22,15 @@
           <!-- <button @click="this.$emit('closeQueue')"><b class="material-icons mi-close"></b></button> -->
 </template>
 <script>
+import Mviso from "@/components/widget/mviso.vue";
 import{ image } from "../../Core/default";
 export default {
     name:"ListView",
     props:{
         queueList:Array,
+    },
+    components:{
+      Mviso
     },
     data() {
       return {
@@ -40,11 +44,13 @@ export default {
     },
       created(){
          this.audio = this.$store.getters.getPlayer;
+            // this.$store.commit("fetchLyrics",[track.title,track.artist,track.trackPath]);
 
          this.audio.onended = ()=>{
         this.j += 1;
         this.$store.commit("setSongId",this.j);
-
+        this.$store.commit("fetchLyrics",[this.queueList[this.j].title,this.queueList[this.j].artist,this.queueList[this.j].trackPath]);
+        
          this.audio.src = this.queueList[this.j].data;
          this.$store.commit("saveRecentPlays",this.queueList[this.j]);
          this.nativeExecute(this.queueList[this.j]);
@@ -122,6 +128,7 @@ export default {
             this.$store.commit("setSongId",id);
             this.$store.commit("saveRecentPlays",track)
             this.$store.commit('currentProcess',[this.queueList,id]);
+            this.$store.commit("fetchLyrics",[track.title,track.artist,track.trackPath]);
             this.$store.commit('musicData',track);
             this.nativeExecute(track);
         },

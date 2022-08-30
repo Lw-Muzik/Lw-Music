@@ -6,6 +6,7 @@
         <actions/>
         <div class=" w-40 mx-28 flex flex-row justify-between m-5 items-center">
             <button class="btn" title="Equalizer" @click="lauchEq"><b class="mi mi-equalizer"></b></button>
+            <button class="btn" title="Lyrics" @click="this.$emit('lyrics')"><b class="mi mi-lyrics"></b></button>
             <button class="btn" title="Shuffle" @click="this.$emit('prevTrack')" ><b class="mi mi-shuffle"></b></button>
             <button class="btn" title="Add to Favourites" @click="favourite" ><b class="mi mi-thumb-up"></b></button>
             <button class="btn" @click="this.$emit('toggleVol')" ><b class="mi mi-volume-up"></b></button>
@@ -37,7 +38,7 @@ export default {
             this.$router.push("/eq");
             console.log(this.current);
         },
-        toggleVolume(){
+        lauchLyrics(){
             
         },
 

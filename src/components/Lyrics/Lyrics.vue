@@ -1,6 +1,8 @@
 <template>
     <div class="container">
         <center ref="center">
+            <br>
+            <br>
             <pre>{{content== ""?"Please wait as we load your lyrics...":content}}</pre>
         </center>
         <button class="count" @click="increaseCount">+</button>
@@ -22,12 +24,12 @@ export default {
             count:0
         }
     },
-     created() {
+     mounted() {
        const player = this.$store.getters.getPlayer;
        player.ontimeupdate = ()=>{
            let val = Math.floor((player.duration) * player.currenTime);
            console.log(val);
-           this.$refs['center'].scroll({behavior:'smooth',top:val/40});
+        //    this.$refs['center'].scroll({behavior:'smooth',top:val/5});
        }
    },
     methods:{
@@ -46,8 +48,8 @@ export default {
 </script>
 <style lang="scss" scoped>
     .container{
-        width: 400px!important;
-        height: 500px!important;
+        width: 500px!important;
+        height: 800px!important;
         padding: 10px;
         box-shadow:inset 0px 0px 5px 0px #eee;
         background-color: rgba(20, 20, 20, 0.514);
@@ -60,7 +62,7 @@ export default {
         align-items: center!important;
         // border: 0.3px solid #eeeeee67;
         center{
-            margin: 5px;
+            margin: 15px;
         padding: 10px;
 
             width:inherit !important;
@@ -97,7 +99,7 @@ export default {
                 flex-direction: column!important;
                 justify-content:center!important;
                 align-items: center!important;
-                flex-wrap: nowrap;
+                // flex-wrap: nowrap;
                 width: inherit!important;
                 height: inherit !important;
                 word-break: break-all;
@@ -105,11 +107,11 @@ export default {
                 break-inside: auto!important;
                 text-justify: inter-word!important;
                 text-align: center !important;;
-                margin-top: 40px;
-                white-space:pre-wrap!important;
-                padding:10px;
+                margin-top: 160px!important;
+                // white-space:pre-wrap!important;
+                padding:3px;
                 color:#eee;
-                font: 100 15px Arial!important;
+                font: 300 18px Arial,Ubuntu!important;
                 word-spacing:2px;
 
             }

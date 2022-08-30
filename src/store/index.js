@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 import { Equalizer } from '../Core/Equalizer';
 import { ipcRenderer, remote } from 'electron';
 const { image } = require("../Core/default");
+const { musixmatch } = require('4lyrics');
 import * as id3 from "music-metadata-browser";
 import { readFileSync, writeFileSync } from 'fs';
 
@@ -141,7 +142,14 @@ export default createStore({
     },
     // fetch lyrics from internet using musixmatch as the source
     fetchLyrics(state , payload){
-      ipcRenderer.send("fetchLyrics",payload);
+      // ipcRenderer.send("fetchLyrics",payload);
+      musixmatch.getURL(`${payload[0]} ${payload[1]}`).then((url)=>{
+        musixmatch.getLyrics(url).then((lyrics)=>{
+          state.lyrics = lyrics;
+          console.log(lyrics);
+        }).catch((error) => console.dir("Lyrics Error",`${error}`))
+    });
+      // console.log(`Lyric request ${payload}`)
     },
     // updates the current equalizer array
     updateCurrentEq(state,payload){
@@ -314,6 +322,8 @@ setSpeed(state,payload){
     getCurrentTime: state => state.currentTime,
     getCurrentDuration: state => state.currentDuration,
     getCurrentSong: state => state.currentSong,
-    getCurrentPlayingState: state => state.currentPlayingState
+    getCurrentPlayingState: state => state.currentPlayingState,
+    // fetching lyrics from musixmatch l
+    getLyrics:(state) => state.lyrics
   }
 })

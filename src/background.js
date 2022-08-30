@@ -5,7 +5,6 @@ import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { extname, join } from 'path';
 import { image }  from "./Core/default";
-const { musixmatch } = require('4lyrics');
 import { Axios } from 'axios';
 const cheerio = require('cheerio');
 const { streams,processed,art, appStore ,settings, favourite, recentPlays} = require("./Main/System/Paths.js");
@@ -45,12 +44,11 @@ ipcMain.on('updatePath', (event, data) => {
     event.sender.send('savedPath', paths.savedPaths);
 } );
 /*
- *
  * @param { NodeID3.Tags } tags 
  * @param {*} track 
  */
 var saveArtWork = async function(tags,track){
-  console.log(`Working on ${track}`)
+  console.log(`Working on => ${track}`)
     try {
       if((tags.image.imageBuffer) != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
             writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer);
@@ -326,12 +324,10 @@ win.webContents.on('did-frame-finish-load',() => {
    * fetch lyrics
    */
    ipcMain.on('fetchLyrics',(e,args)=>{
-        musixmatch.getURL(`${args[0]} ${args[1]}`).then((url)=>{
-            musixmatch.getLyrics(url).then((lyrics)=>{
-              console.log(lyrics);
-            e.sender.send('lyrics',lyrics);
-            }).catch((error) => dialog.showErrorBox("Lyrics Error",`${error}`))
-        });
+    // var lyrics = NodeID3.read(`${args[2]}`);
+   
+      console.log("Fetching online lyrics...")
+       
       });
 }
 
