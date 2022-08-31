@@ -9,7 +9,7 @@ module.exports = {
                 appId: 'com.bmusic.blabsmusic',
                 productName: 'B-labs Music',
                 linux: {
-                    target:['AppImage','deb']
+                    target:['AppImage','deb','snap']
                 }
 
             },
