@@ -42,8 +42,8 @@ export default {
         }
     },
    mounted(){
-        ipcRenderer.on("processed",(e,args)=>{
-            const s = JSON.parse(readFileSync(args));
+        // ipcRenderer.on("processed",(e,args)=>{
+            const s = JSON.parse(readFileSync(`${remote.app.getPath("userData")}/processed.json`));
             this.processed = s;
             s.forEach((data) =>{
                 this.unsorted = [...this.unsorted , data.folder];
@@ -54,7 +54,7 @@ export default {
         sorted.forEach((g) => {
             this.folders = [...this.folders, {genre:g,total:this.getTotalSongs(g),cover:this.getCoverArt(g)}]
         });
-        })
+        // })
         
    }
 }
