@@ -6,7 +6,7 @@
         class=" w-20 h-20 border-8 border-white border-double  rounded-full animate-spin"></div>
        <br/>
        <br/>
-        <b class="text-2xl bold text-center w-full"> Loading {{text.replace(/(.*)[\/\\]/,"").split('.')[0]}}, please wait..</b>
+        <b class="text-xl text-center w-full"> Loading {{text.replace(/(.*)[\/\\]/,"").split('.')[0]}}, please wait..</b>
     </div>
 <!-- <div>
     <div style="border-top-color:transparent"

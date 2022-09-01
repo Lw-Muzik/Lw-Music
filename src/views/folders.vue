@@ -5,10 +5,11 @@
 </template>
 <script>
 
-import { ipcRenderer} from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
+import { readFileSync } from "fs";
 import TopWidget from "./widgets/ToWidget.vue";
 import Layout from "./widgets/Layout.vue";
+import { remote } from "electron";
 export default {
     name:'Folder',
     components:{ Grid, TopWidget, Layout },
@@ -41,9 +42,10 @@ export default {
         }
     },
    mounted(){
-        ipcRenderer.on("loaded",(e,args)=>{
-            this.processed = args;
-            args.forEach((data) =>{
+        ipcRenderer.on("processed",(e,args)=>{
+            const s = JSON.parse(readFileSync(args));
+            this.processed = s;
+            s.forEach((data) =>{
                 this.unsorted = [...this.unsorted , data.folder];
             this.covers = [...this.covers, data.artwork];
             });

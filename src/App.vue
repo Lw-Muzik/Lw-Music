@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-show="dash" class="body">
+  <div v-show="dash" v-if="showLoader" class="body">
     <div class="wrap">
   <div class="logo">
     <svg xmlns="http://www.w3.org/2000/svg" width="175.859" height="47.344" viewBox="14.904 4.22 175.859 47.344" enable-background="new 14.904 4.22 175.859 47.344">
@@ -45,15 +45,27 @@
 </div>
 
   </div>
+  <div v-if="!showLoader" class="loader fixed w-full h-full top-0 left-0 flex flex-col justify-center items-center backdrop-blur-3xl">
+  
+        <br>
+        <br>
+        <br> 
+          <spinner :text="text" />
 
-  <dashboard v-show="!dash"/>
+  </div>
+  <dashboard v-if="showLoader" v-show="!dash"/>
 
 </template>
 <script>
 import * as mi from "material-icons";
+import { image } from "@/Core/default";
 import { ipcRenderer } from 'electron';
 import Titlebar from "@/components/TitleBar/Titlebar.vue";
 import { readFileSync } from 'fs';
+
+
+
+import Spinner from "./views/widgets/Spinner.vue"
 import Dashboard from "./views/dashboard.vue"
 export default {
   name:'App',
@@ -62,10 +74,12 @@ export default {
       dash:true,
       url:"",
       store:'',
+      showLoader:true,
+      text:"",
       paths:[]
     }
   },
-    components:{Titlebar, Dashboard},
+    components:{Titlebar, Dashboard, Spinner},
  created() {
   ipcRenderer.on("settings",(e,args) => {
        this.paths = JSON.parse(readFileSync(args)).savedPaths;
@@ -73,6 +87,8 @@ export default {
   })
  },
  mounted() {
+    document.querySelector("body").style.backgroundImage = "url("+image+")";
+
   this.paths = this.$store.getters.getGlobalPaths;
  },
  computed: {
@@ -80,10 +96,24 @@ export default {
  },
   methods: {
        chooseFolder(){
+        console.log("clicked");
+        this.showLoader = !this.showLoader;
+
         ipcRenderer.sendSync("loadFolder");
-        ipcRenderer.on('chosen',(event, args)=>{
-            this.paths = [...this.paths , args];
-        });
+        ipcRenderer.on("loadingSongs",(e,args) => {
+            
+            this.text = args;
+        })
+
+        
+        ipcRenderer.on("donewithsongs",(e,args) => {
+            this.shoLoader = false;
+
+        })
+        // ipcRenderer.on('chosen',(event, args)=>{
+        //     this.paths = [...this.paths , args];
+        // });
+
     },
     remove(id){
       var local = [];
@@ -108,6 +138,10 @@ export default {
 </script>
 <style lang="scss" scoped>
   @import "@/Design/Welcome.scss";
+  .loader{
+    backdrop-filter:blur(100px);
+    background:#00000079;
+  }
   .titlebar{
   position:fixed;
   top: 0;

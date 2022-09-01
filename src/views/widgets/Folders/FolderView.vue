@@ -17,6 +17,7 @@
 import { ipcRenderer} from "electron";
 import Layout from "../Layout.vue";
 import * as mi from "material-icons";
+import { readFileSync } from "fs";
 import ToWidget from "../ToWidget.vue";
 export default {
     name:"FolderView",
@@ -48,8 +49,9 @@ export default {
     },
     mounted(){
         /**load all tracks */
-         ipcRenderer.on("loaded",(e,args)=>{
-            this.store = args.filter((song) => (song.folder == this.folder));
+         ipcRenderer.on("processed",(e,args)=>{
+            const songs = JSON.parse(`${readFileSync(args)}`);
+            this.store = songs.filter((song) => (song.folder == this.folder));
             this.title = `${this.folder}`
             this.cover = `file://${this.store[0].artwork}`;
             this.subt = `${this.store.length} songs`

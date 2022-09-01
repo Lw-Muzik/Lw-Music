@@ -37,8 +37,8 @@ export default createStore({
 
   state: {
     volume:db.volume,lyrics:'', playlist:musicFiles, reduceCount:0,trackPlaying:'',currentData:[],paths:globalPaths,
-    player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),
-    bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),songId:0,
+    player:audio, delays:eq.getDelayBands(), feedback:eq.getFeedBack(),songData:[],
+    bands:eq.getBands(),bass:eq.getBass(),treble:eq.getTreble(),songId:0,visual:true,mplayer:false,
     equalizer:eq, Id3:id3, counter:0,now:{ title:"title", artist:"", album:"", artwork:image,},
     genreCategory:'',genreBack:false,muData:{},defaultCover:image,showSidenav:false,streamUrl:'',
     balance:eq.balance,compressor:eq.compressor,recentPlays:JSON.parse(readFileSync(recentUrl)),
@@ -52,6 +52,17 @@ export default createStore({
       ipcRenderer.on('streams',(e,args) => {
         streamUrl = args;
       });
+    },
+    setSongData(state,payload){
+      state.songData = payload;
+    },
+    // sets visual effects
+    setVisual(state,payload){
+      state.visual = payload;
+    },
+     // sets visual effects
+     setPlayer(state,payload){
+      state.mplayer = payload;
     },
     // saves the current state of player
     saveCurrentState(state,payload){
@@ -267,8 +278,11 @@ setSpeed(state,payload){
   },
   // getters to update the system
   getters:{
+    // get currently playing playlist 
+    getSongData:(state) => state.songData,
+    getVisual:(state) => state.visual,
+    getMPlayer:(state) => state.mplayer,
     // currentSong id playing 
-
     getSongId:(state) => state.songId,
     // get systems paths
     getGlobalPaths:(state) => state.paths,

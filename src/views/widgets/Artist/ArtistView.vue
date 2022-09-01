@@ -16,6 +16,7 @@
 import { ipcRenderer } from "electron";
 import Layout from "../Layout.vue";
 import * as mi from "material-icons";
+import { readFileSync } from "fs";
 export default {
     name:"ArtistTracks",
     data() {
@@ -36,10 +37,10 @@ export default {
     }
     },
     mounted(){
-        ipcRenderer.on("loaded", (e,args)=>{
-                this.store = args.filter((song) => (song.artist == this.artist));
+        ipcRenderer.on("processed", (e,args)=>{
+                const sngs = JSON.parse(`${readFileSync(args)}`);
+                this.store = sngs.filter((song) => (song.artist == this.artist));
                 this.cover = this.store[0].artWork;
-                console.log(this.store);
             });
     },
       methods:{

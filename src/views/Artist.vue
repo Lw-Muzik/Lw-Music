@@ -8,6 +8,7 @@
 
 import { ipcRenderer } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
+import { readFileSync } from "fs";
 export default {
     name:'Artist',
      components:{ Grid },
@@ -22,7 +23,7 @@ export default {
      methods: {
         routeT(){
             this.showRoute = !this.showRoute;
-            this.$store.commit('setGenreBack',true);
+            // this.$store.commit('setGenreBack',true);
             this.$router.push('/artistTracks');
             // console.log("done")
         },
@@ -41,9 +42,9 @@ export default {
         }
     },
    mounted(){
-      ipcRenderer.on("loaded",(e,rags)=>{
-        this.processed = rags;
-       rags.forEach((data) =>{
+      ipcRenderer.on("processed",(e,rags)=>{
+        this.processed = JSON.parse(`${readFileSync(rags)}`);
+       this.processed.forEach((data) =>{
             this.unsorted = [...this.unsorted , data.artist];
         });
        const sorted = new Set(this.unsorted);

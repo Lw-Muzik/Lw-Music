@@ -1,6 +1,6 @@
 <template lang="html">
     <div class="ui flex flex-row justify-between items-center">
-        <div v-if="track != null" class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
+        <div v-if="track != null" @click="this.$emit('onTap')" class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
             <img :src="`file://${track.artwork}`" class="w-full drop-shadow rounded-2xl"/>
             <!-- <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/> -->
         </div>

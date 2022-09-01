@@ -1,35 +1,37 @@
 <template lang="html">
     <div class="form w-64 m-4 px-2">
        <center class="title">Saved folders</center>
-    <div class="path-panel">
-       <p v-if="paths.length == 0" class="no-path-tile ">
-          No path selected
-       </p>
-        <p v-else v-for="(path,index) in paths" :key="path" class="path-tile">
-           <span class="icon mi mi-folder"></span> <span class="path">{{path}}</span> <span class="close" @click="remove(index)">&times;</span>
-       </p>
-    </div>
+          <div class="path-panel">
+            <p v-if="paths.length == 0" class="no-path-tile ">
+                No path selected
+            </p>
+              <p v-else v-for="(path,index) in paths" :key="path" class="path-tile">
+                <span class="icon mi mi-folder"></span> <span class="path">{{path}}</span> <span class="close" @click="remove(index)">&times;</span>
+            </p>
+          </div>
      <br>
-    <div class="">
-         <button class="file-open" @click="chooseFolder"> Add Folder</button>
-     <button class="file-open" @click="refreshList">Refresh </button>
-     </div>
+          <div class="">
+              <button class="file-open" @click="chooseFolder"> Add Folder</button>
+          <button class="file-open" @click="this.$emit('tapp')">Refresh </button>
+          </div>
     </div>
 </template>
 <script>
 import * as mi from "material-icons";
 import { ipcRenderer, remote } from 'electron';
+import Spinner from "./Spinner.vue";
 import { readFileSync, writeFileSync } from 'fs';
 export default {
     name:'AddPath',
     data() {
        return {
-          dash:true,
+          loader:true,
          store:'',
+         msg:"",
           url:`${remote.app.getPath('userData')}/settings.json`,
          paths:[]
        }
-    },
+    },components:{ Spinner },
 
  created() {
        this.paths = JSON.parse(readFileSync(this.url)).savedPaths;
@@ -40,14 +42,11 @@ export default {
 
  },
     methods: {
-       refreshList(){
-            ipcRenderer.send("refresh");
-       },
+      
         chooseFolder(){
         ipcRenderer.sendSync("loadFolder");
         ipcRenderer.on("chosenFolder",(event,args)=>{
-            event.preventDefault();
-            event.stopPropagation();
+  
                 let s = JSON.parse(readFileSync(this.url));
                 this.paths = [...this.paths,args];
                 s.savedPaths = this.paths;

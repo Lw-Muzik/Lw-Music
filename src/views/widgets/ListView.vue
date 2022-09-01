@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="listView lg:w-4/5">
+    <div ref="listV" class="listView lg:w-4/5">
        <p @click="playSong(list,index)"  v-bind:key="index" v-for="(list,index) in queueList">
              <!-- <b class="material-icons mi-dehaze"></b> -->
             <div class="w-35 flex flex-row row-span-2 justify-center items-center">
@@ -22,15 +22,16 @@
           <!-- <button @click="this.$emit('closeQueue')"><b class="material-icons mi-close"></b></button> -->
 </template>
 <script>
-import Mviso from "@/components/widget/mviso.vue";
-import{ image } from "../../Core/default";
+// import { Visualizer } from "@/Core/Visualizer";
+import { image } from "@/Core/default";
+// import{ image } from "../../Core/default";
 export default {
     name:"ListView",
     props:{
         queueList:Array,
     },
     components:{
-      Mviso
+      // Mviso
     },
     data() {
       return {
@@ -39,9 +40,7 @@ export default {
         j:0
       }
     },
-    computed:{
-    
-    },
+    computed:{  },
       created(){
          this.audio = this.$store.getters.getPlayer;
             // this.$store.commit("fetchLyrics",[track.title,track.artist,track.trackPath]);
@@ -60,7 +59,10 @@ export default {
       }
     },
     mounted() {
+      this.$store.commit("setSongData",this.queueList);
       this.j = this.$store.getters.getSongId;
+      this.$refs['listV'].scrollTo({behavior:"smooth",top:100});
+      // 
     },
     methods:{
       
@@ -96,13 +98,13 @@ export default {
         });
       
         navigator.mediaSession.setActionHandler("play", () => {
-            this.player.play();
+            this.audio.play();
         });
         navigator.mediaSession.setActionHandler("pause", () => {
-            this.player.pause();
+            this.audio.pause();
         });
         navigator.mediaSession.setActionHandler("stop", () => {
-            this.player.pause();
+            this.audio.pause();
         });
 
       // navaigator.

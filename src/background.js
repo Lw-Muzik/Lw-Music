@@ -10,6 +10,7 @@ const cheerio = require('cheerio');
 const { streams,processed,art, appStore ,settings, favourite, recentPlays} = require("./Main/System/Paths.js");
 import NodeID3 from "node-id3";
 import ZFileSystem from "./Main/Core/Filesystem";
+import { fstatSync } from "fs";
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -47,8 +48,9 @@ ipcMain.on('updatePath', (event, data) => {
  * @param { NodeID3.Tags } tags 
  * @param {*} track 
  */
-var saveArtWork = async function(tags,track){
+var saveArtWork = async function(tags,track,event){
   console.log(`Working on => ${track}`)
+  event.sender.send("loadingSongs",track);
     try {
       if((tags.image.imageBuffer) != undefined && existsSync(join(art,track.replace(".mp3",".jpeg"))) == false){
             writeFileSync(`${join(art,track.replace(".mp3",".jpeg"))}`,tags.image.imageBuffer);
@@ -62,7 +64,7 @@ var saveArtWork = async function(tags,track){
   *
   * @param {String } dir 
   */
- var recursiveFolders =  async function(dir){
+ var recursiveFolders =  async function(dir,event){
    /** Reads only mp3 files from directory */
         var zFiles = new ZFileSystem();
         var dataStore = zFiles.recursiveFolders(dir);
@@ -81,12 +83,15 @@ var saveArtWork = async function(tags,track){
                            artwork:`${join(art, data.t.replace(".mp3", ".jpeg"))}`,
                            n_track:data.t,
                            trackPath: data.n,
+                           size:statSync(`${data.n}`).size,
                            folder:data.f,
                            data: `file://${data.n}`,
                          };
                          store = [...store, meta];
-                         console.log(`> ${meta}`);
+                         console.log(`> ${meta.n_track}`);
+                         event.sender.send("loadingSongs",meta.title);
                });
+               
    }
 const icon = nativeImage.createFromDataURL(image);
 async function createWindow() {
@@ -113,9 +118,7 @@ async function createWindow() {
   });
   //
   nativeTheme.themeSource = 'dark';
-win.webContents.on("did-create-window",(e,args)=>{
- console.log("Window created");
-});
+
 
   win.webContents.on('did-start-loading',()=>{
     /**Settings path */
@@ -175,7 +178,6 @@ if (existsSync(favourite) == false) {
     win.webContents.send('recents',recents);
 });
 
-
 win.webContents.on('did-frame-finish-load',() => {
     const paths = JSON.parse(readFileSync(settings)).savedPaths;
       /** to avoid repeating urls lets use a set*/
@@ -183,10 +185,8 @@ win.webContents.on('did-frame-finish-load',() => {
     win.webContents.send('processed',processed);
     win.webContents.send('streams',streams);
     win.webContents.send('favourite',favourite);
-    // let paths = JSON.parse(readFileSync(settings));
      /* The after send unique data */
-     console.log("Done loading....")
-
+     console.log("Done loading....");
    win.webContents.send("sPaths",paths);
      if(paths.length == 0){
       writeFileSync(processed, JSON.stringify([]));
@@ -219,7 +219,6 @@ win.webContents.on('did-frame-finish-load',() => {
    *On response from the rendererer then load save persistent data 
    */
 
-
 /**
  * load tracks from selected directory
  */
@@ -232,22 +231,24 @@ win.webContents.on('did-frame-finish-load',() => {
                   title:"Choose a music folder"
               }).then((response)=>{
                 if (response.filePaths[0] != null) {
-                  event.sender.send('chosen',response.filePaths[0]);
+                  win.webContents.send('chosen',response.filePaths[0]);
                   savePath(response.filePaths[0]);
 
                   (async function(){
-                    await recursiveFolders(`${response.filePaths[0]}`)
+                    await recursiveFolders(`${response.filePaths[0]}`,event);
                  })();
                 // we save the files back to the store
                    writeFileSync(processed, JSON.stringify(store));
-                   event.sender.send("donewithsongs",songs);
+                   win.webContents.send("donewithsongs",store)
+                  //  event.sender.send();
+                   event.sender.send("loadingSongs","Done saving songs");
                    console.log('Done saving songs');
-
                    // then after load the response
                    if(store.length != 0){
                      store.forEach(async function(element,index){
                        const tags = await NodeID3.Promise.read(`${element.trackPath}`);
-                       await saveArtWork(tags,`${element.n_track}`);
+                       await saveArtWork(tags,`${element.n_track}`,event);
+                   event.sender.send("loadingSongs","Done saving images");
                      
                    });
                  }
@@ -258,8 +259,10 @@ win.webContents.on('did-frame-finish-load',() => {
               });
        });
     /*
+    
        Get hot 100
     */
+
             let stream = [];
        ipcMain.on('hot100',(e,url)=>{
            Axios.get(url).then((response)=>{
@@ -280,7 +283,6 @@ win.webContents.on('did-frame-finish-load',() => {
             });
          });
     });
-
     
     ipcMain.on('refresh',(e,args)=>{
       console.log(`Songs saved => ${store}`);
@@ -294,22 +296,27 @@ win.webContents.on('did-frame-finish-load',() => {
 
         (async function(){
           paths.forEach(async (url)=> {
-            console.log(`refreshing url => ${url}`)
-            await recursiveFolders(url);
+            console.log(`refreshing url => ${url}`,e);
+            e.sender.send("loadingSongs",url);
+
+            await recursiveFolders(url,e);
+
           });
         })();
 
         writeFileSync(processed, JSON.stringify(store));
+        e.sender.send("loadingSongs","Done saving images");
+
+        e.sender.send("donerefreshing","Done refreshing songs");
         console.log('Done saving songs');
 
         // refresh the artwork as well
         if(store.length != 0){
           store.forEach(async function(element,index){
             const tags = await NodeID3.Promise.read(`${element.trackPath}`);
-            await saveArtWork(tags,`${element.n_track}`);
+            await saveArtWork(tags,`${element.n_track}`,e);
 
             if(store.length == index+1){
-              console.log('Done saving artworks');
                 win.webContents.send('loaded',store);
              }
         });

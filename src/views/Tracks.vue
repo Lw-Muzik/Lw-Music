@@ -6,7 +6,8 @@
 <script>
 import { ipcRenderer } from "electron";
 import Layout from "./widgets/Layout.vue";
-
+import { readFileSync } from "fs";
+import { remote } from "electron";
 import TopWidget from "./widgets/ToWidget.vue";
 export default {
     name:'Tracks',
@@ -35,13 +36,17 @@ export default {
     }
   },
   mounted(){
-      ipcRenderer.on('loaded',(e,args)=>{
-        this.load = args;
-       this.image = args[Math.floor(Math.random() * (args.length -1))].artwork;
+      // ipcRenderer.on('processed',(e,args)=>{
+        
+        var songs  = JSON.parse(readFileSync(`${remote.app.getPath("userData")}/processed.json`));
+        this.load = songs;
 
-       this.sub = `${args.length} songs`;
-       this.cover = `file://${args[0].artwork}`;
-      })
+        console.log(songs);
+       this.image = this.load[Math.floor(Math.random() * (this.load.length -1))].artwork;
+
+       this.sub = `${this.load.length} songs`;
+       this.cover = `file://${songs[0].artwork}`;
+      // })
        
   },
   

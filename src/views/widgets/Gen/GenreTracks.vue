@@ -64,7 +64,7 @@ export default {
                 this.player.play();
           },
         goBack(){
-             this.$store.commit('setGenreBack',false);
+            //  this.$store.commit('setGenreBack',false);
             this.$router.back();
         }
     },

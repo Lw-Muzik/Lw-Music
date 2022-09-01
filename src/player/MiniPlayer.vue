@@ -2,14 +2,17 @@
  
     <div ref="player" class="player flex flex-row justify-between w-screen items-center overflow-hidden">
       
-        <track-cover class="track-cover overflow-hidden px-2"/>
+        <track-cover class="track-cover overflow-hidden px-2"  @onTap="this.$emit('onClick')" />
         <actions/>
-        <div class=" w-40 mx-28 flex flex-row justify-between m-5 items-center">
+        <div class=" w-72 mx-28 flex flex-row justify-between m-5 items-center">
             <button class="btn" title="Equalizer" @click="lauchEq"><b class="mi mi-equalizer"></b></button>
             <button class="btn" title="Lyrics" @click="this.$emit('lyrics')"><b class="mi mi-lyrics"></b></button>
             <button class="btn" title="Shuffle" @click="this.$emit('prevTrack')" ><b class="mi mi-shuffle"></b></button>
             <button class="btn" title="Add to Favourites" @click="favourite" ><b class="mi mi-thumb-up"></b></button>
             <button class="btn" @click="this.$emit('toggleVol')" ><b class="mi mi-volume-up"></b></button>
+            <button id="player" @click="this.$emit('showRoom')"> <b class="material-icons mi-meeting-room mi-rounded" title="show Room Effects"></b> </button>
+            <button id="vis" @click="this.$emit('showVisual')"> <b class="material-icons mi-graphic-eq mi-rounded" title="Visual effects control"></b> </button>
+
         </div>
     
     </div>

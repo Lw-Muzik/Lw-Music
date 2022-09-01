@@ -1,6 +1,8 @@
 <template lang="html">
   <center>Settings</center>
-    <div class="p-5 m-6 grid grid-flow-col grid-cols-2">
+  <spinner :text="msg" v-if="!loader"/>
+  
+    <div class="p-5 m-6 grid grid-flow-col grid-cols-2"  v-if="loader">
         <div class="m-5 p-5">
           <fieldset class="border-2 rounded-md">
             <legend class="p-2 text-lg">Equalizer Settings</legend>
@@ -19,30 +21,49 @@
      </div>
        
        <div class="m-5 p-5 w-60">
+
         <fieldset  class="border-2 rounded-md">
             <legend  class="p-2 text-lg">Add music folder</legend>
-            <add-folder/>
+            <add-folder @tapp="refresh"/>
         </fieldset>
        </div>
     
     </div>
 </template>
 <script>
+    import { ipcRenderer, remote } from 'electron';
+import Spinner from "@/views/widgets/Spinner.vue";
 import AddFolder from "../widgets/addFolder.vue";
 import Slider from '../../components/slider/slider.vue';
 export default {
     name: "Settings",
-    components: { Slider, AddFolder },
+    components: { Slider, AddFolder, Spinner },
     data() {
         return {
             bQ:0,
+            loader:true,
             bFreq:10,
             gain:0,
             speed:0,
             tQ:0,
+            msg:""
         }
     },
     methods:{
+        refresh(){
+            this.loader = false;
+
+            ipcRenderer.send("refresh");
+
+            ipcRenderer.on("loadingSongs",(e,args)=>{
+                this.msg = args;
+            });
+
+            ipcRenderer.on("donerefreshing",(e,q)=>{
+            this.loader = true;
+
+            })
+        },
         modifyBassFreq(){
             this.$store.commit('setBassQ',this.bFreq);
         },

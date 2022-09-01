@@ -21,7 +21,7 @@ export default {
      methods: {
         routeT(){
             this.showRoute = !this.showRoute;
-            this.$store.commit('setGenreBack',true);
+            // this.$store.commit('setGenreBack',true);
             this.$router.push('/albumTracks');
             // console.log("done")
         },

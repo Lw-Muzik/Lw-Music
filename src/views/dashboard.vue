@@ -1,7 +1,7 @@
 <template lang="html">
     <titlebar class="titlebar"/>
-  <div class="app flex flex-col justify-center fixed h-full">
-      <div class="flex h-full flex-row row-span-3">
+  <div class="app flex flex-col justify-center fixed h-full" v-if="!player">
+      <div class="flex h-full flex-row row-span-3" v-show="visual">
         <!-- sidebar -->
           <side-bar  class="h-full"/>
         <!-- Middle grid -->
@@ -15,6 +15,8 @@
           </div>
 
   </div>
+  <!-- visualisers -->
+  <Visuals v-show="!visual" />
   <Lyrics
        @closeL="closeLyrics"
         :class="[showLyrics?'active':'','lyrics']" :content=" lyricsSong"/>
@@ -36,9 +38,15 @@
    <!-- end of volume widget -->
 
        <div class="btW flex flex-col justify-center absolute z-10 bottom-0">
-         <mini-player @toggleVol="toggleVolume" @lyrics="launchLyrics"/>
+         <mini-player 
+          @toggleVol="toggleVolume"
+           @lyrics="launchLyrics" 
+           @showVisual="showVisual"
+           @onClick="showPlayer" />
       </div>
   </div>
+  <player v-if="player" />
+
 </template>
 <script>
 import Titlebar from "../components/TitleBar/Titlebar.vue";
@@ -49,6 +57,8 @@ import BottomSheet from "@/components/model/BottomSheet.vue";
 import * as mi from "material-icons";
 import MiniPlayer from "../player/MiniPlayer.vue";
 import { ipcRenderer } from "electron";
+import Visuals from "./Visuals.vue";
+import Player from "./player.vue";
 export default {
   name:"Dashboard",
   data() {
@@ -60,22 +70,37 @@ export default {
     }
   },
     computed: {
+      visual(){
+        return this.$store.getters.getVisual;
+      },
       player(){
         return this.$store.getters.getPlayer;
       },
      lyricsSong(){
       return this.$store.getters.getLyrics;
      },
+     trackId(){
+      return this.$store.getters.getSongId;
+     },
       showSidenav(){
         return this.$store.getters.showSidenav;
+      },
+      player(){
+        return this.$store.getters.getMPlayer
       }
     },
-  components:{ Titlebar, SideBar, Top , MiniPlayer,Lyrics , BottomSheet},
+  components:{ Titlebar, SideBar,Player, Top, MiniPlayer, Lyrics, BottomSheet, Visuals },
   methods:{ 
     showTrack(){
         let raw = this.$store.getters.getPlaylist;
         this.load = raw;
-      
+    },
+    showVisual(){
+        this.$store.commit("setVisual",!true);
+    },
+    showRoom(){},
+    showPlayer(){
+        this.$store.commit("setPlayer",true);
     },
     closeLyrics(){
     this.showLyrics = !this.showLyrics;
@@ -93,6 +118,7 @@ export default {
       this.$store.commit("setVolume",this.vol);
     },
     mounted() {
+      console.log(`Player show ${this.player}`);
       ipcRenderer.on('lyrics',(e,args)=>{
         this.lyrics = args;
       })
