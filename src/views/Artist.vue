@@ -8,7 +8,7 @@
 
 import { ipcRenderer } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
-import { readFileSync } from "fs";
+import { readFileSync,existsSync } from "fs";
 export default {
     name:'Artist',
      components:{ Grid },
@@ -49,7 +49,7 @@ export default {
         });
        const sorted = new Set(this.unsorted);
        sorted.forEach((g) => {
-         this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g)}]
+         this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g),hasCover: existsSync(this.getCoverArt(g))}]
        });
       })
      

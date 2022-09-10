@@ -6,7 +6,7 @@
 <script>
 import { ipcRenderer } from "electron";
 import Layout from "./widgets/Layout.vue";
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { remote } from "electron";
 import TopWidget from "./widgets/ToWidget.vue";
 export default {
@@ -18,16 +18,15 @@ export default {
       title:"All Tracks",
       sub:'',
       load:[],
-      audio:new Audio(),
+      // audio:new Audio(),
       cover:''
     }
   },
   components:{ Layout , TopWidget },
   methods:{
-      qPlay(song){
-       this.audio.src = song;
-       this.audio.play();
-      },
+      getCover(){
+
+      }
 
   },
   computed: {
@@ -39,9 +38,10 @@ export default {
       // ipcRenderer.on('processed',(e,args)=>{
         
         var songs  = JSON.parse(readFileSync(`${remote.app.getPath("userData")}/processed.json`));
-        this.load = songs;
+        songs.forEach(async (value,index)=>{
+            this.load = [...this.load,{data:value,hasCover:existsSync(value.artwork)}];
+        });
 
-        console.log(songs);
        this.image = this.load[Math.floor(Math.random() * (this.load.length -1))].artwork;
 
        this.sub = `${this.load.length} songs`;

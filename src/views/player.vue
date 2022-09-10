@@ -19,12 +19,7 @@
         @queuePlay="playL"
         :queueList="playlist"/>
 
-         <GridView 
-          :class="[queueView?'active':'','gView']"
-            :listTrack="playlist"
-            @gridPlay="playQueue"
-            @closeQueue="closeQueue"
-            />
+       
   
   </div>
 
@@ -41,9 +36,10 @@
 
        <div  class="b">
       
-         <button v-show="!showEQ" @click="viewLib">Library</button>
+         <button v-show="!showEQ" @click="viewLib">Back</button>
          <button v-show="!showEQ" @click="viewOpt">View</button>
          <button v-show="!showEQ" @click="loadLyrics">Lyrics</button>
+         <button v-show="!showEQ" @click="loadLyrics">Room Effects</button>
        </div>
        <div :class="[showOpt?'active':'','options']">
          <p @click="listShow">ListView</p>
@@ -64,8 +60,6 @@
             :output="progress"
             :duration="durlTime"
         />
-
-
 
 
       <Control
@@ -117,7 +111,7 @@ export default {
   name: 'Player',
   data(){
     return {
-       displayVisual:false, bufferArray:[],current:[],playlist:[],
+       displayVisual:false, bufferArray:[],current:[],playlist:[],audio:null,
        delayArr:[],feedBackArr:[], title:"",artist:"",album:"", nPlay:{title:"title", artist:"",album:"",artwork:image},
        nextTrack:{title:"",artist:"",image:image }, showEQ:false,showCover:true, showLyrics:false,
        listView:false, ptr1:true,ptr2:true, showNext:false,
@@ -241,20 +235,12 @@ export default {
        },
   },
   computed: {
-     audio(){
-        return this.$store.getters.getPlayer;
-     },
+   
      eq(){
       return this.$store.getters.getEqualiser;
      },
-    // playlist(){
-    //   return this.$store.getters.getSongData;
-    // },
     current(){
            return this.$store.getters.getCurrentData;
-       },
-       songD(){
-           return this.$store.getters.getSongData;
        },
         track(){
             return this.$store.getters.getMusicData;
@@ -262,15 +248,15 @@ export default {
   },
   mounted(){
 // console.log(new MediaStream().getTracks())
-
-    // this.playlist = this.$store.getters.getPlaylist;
-    
+    this.countPlay = this.$store.getters.getSongId;
+    // this.playlist = this.$store.getters.getSongData;
+    this.audio = this.$store.getters.getPlayer;
     // document.querySelector("body").style.backgroundImage = "url("+this.nPlay.artwork+")";
-  
-    this.audio.volume = this.$store.getters.getVolume;
-      this.eqBands = this.eq.getBands();
-      this.delayArr = this.eq.getDelayBands();
-      this.feedBackArr = this.eq.getFeedBack();
+    console.log(`Songs ${this.$store.getters.getSongData}`);
+        this.audio.volume = this.$store.getters.getVolume;
+      // this.eqBands = this.eq.getBands();
+      // this.delayArr = this.eq.getDelayBands();
+      // this.feedBackArr = this.eq.getFeedBack();
 
     // console.log(localStorage);
   setInterval(()=>{
@@ -309,9 +295,10 @@ export default {
     this.showLyrics = false;
            if(this.shuffle == true){
             this.countPlay = Math.floor(Math.random() * this.playlist.length);
-          
+          this.$store.commit("setSongId",this.countPlay);
         }else{
            this.countPlay +=1;
+           this.$store.commit("setSongId",this.countPlay);
          
         }
          
@@ -334,7 +321,14 @@ export default {
         @loadSingle="loadSingle"
         @showRoom="roomEffectsComponent"
         @showVisual="toggleVisualWidget"
-      /> */
+      /> 
+       //  <GridView 
+        //   :class="[queueView?'active':'','gView']"
+        //     :listTrack="playlist"
+        //     @gridPlay="playQueue"
+        //     @closeQueue="closeQueue"
+        //     />
+      */
 
 }
 </script>

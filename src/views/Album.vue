@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import { readFileSync } from 'fs';
+import { readFileSync,existsSync } from 'fs';
 import { remote } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
 export default {
@@ -47,7 +47,7 @@ export default {
         });
        const sorted = new Set(this.unsorted);
        sorted.forEach((g) => {
-           this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g)}];
+           this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g),hasCover: existsSync(this.getCoverArt(g))}];
        });
    }
 }

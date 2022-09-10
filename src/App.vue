@@ -98,21 +98,21 @@ export default {
        chooseFolder(){
         console.log("clicked");
         this.showLoader = !this.showLoader;
-
-        ipcRenderer.sendSync("loadFolder");
+        ipcRenderer.send("loadFolder")
+        // ipcRenderer.sendSync("loadFolder");
         ipcRenderer.on("loadingSongs",(e,args) => {
             
             this.text = args;
         })
 
         
-        ipcRenderer.on("donewithsongs",(e,args) => {
-            this.shoLoader = false;
+        ipcRenderer.on("doneSaving",(e,args) => {
+            this.showLoader = !this.showLoader;
 
         })
-        // ipcRenderer.on('chosen',(event, args)=>{
-        //     this.paths = [...this.paths , args];
-        // });
+        ipcRenderer.on('chosen',(event, args)=>{
+            this.paths = [...this.paths , args];
+        });
 
     },
     remove(id){

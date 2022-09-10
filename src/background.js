@@ -20,8 +20,6 @@ protocol.registerSchemesAsPrivileged([
 var store = JSON.parse(readFileSync(processed));
 /**
  * @param {NodeID3.Tags} tags
- */
-/*
  * @param { String } urls 
  */
  var savePath = function(urls){
@@ -91,7 +89,7 @@ var saveArtWork = async function(tags,track,event){
                          console.log(`> ${meta.n_track}`);
                          event.sender.send("loadingSongs",meta.title);
                });
-               
+            
    }
 const icon = nativeImage.createFromDataURL(image);
 async function createWindow() {
@@ -112,7 +110,7 @@ async function createWindow() {
             nodeIntegrationInSubFrames:process.env.ELECTRON_NODE_INTEGRATION,
             nodeIntegrationInWorker:process.env.ELECTRON_NODE_INTEGRATION,
             webSecurity:false,
-            webgl:false,
+            webgl:true,
             webviewTag:true 
     }
   });
@@ -241,7 +239,7 @@ win.webContents.on('did-frame-finish-load',() => {
                    writeFileSync(processed, JSON.stringify(store));
                    win.webContents.send("donewithsongs",store)
                   //  event.sender.send();
-                   event.sender.send("loadingSongs","Done saving songs");
+                   event.sender.send("doneSaving","Done saving songs");
                    console.log('Done saving songs');
                    // then after load the response
                    if(store.length != 0){
@@ -249,7 +247,6 @@ win.webContents.on('did-frame-finish-load',() => {
                        const tags = await NodeID3.Promise.read(`${element.trackPath}`);
                        await saveArtWork(tags,`${element.n_track}`,event);
                    event.sender.send("loadingSongs","Done saving images");
-                     
                    });
                  }
                 }else{
@@ -259,10 +256,8 @@ win.webContents.on('did-frame-finish-load',() => {
               });
        });
     /*
-    
        Get hot 100
     */
-
             let stream = [];
        ipcMain.on('hot100',(e,url)=>{
            Axios.get(url).then((response)=>{
@@ -284,6 +279,7 @@ win.webContents.on('did-frame-finish-load',() => {
          });
     });
     
+  
     ipcMain.on('refresh',(e,args)=>{
       console.log(`Songs saved => ${store}`);
       store = [];
@@ -338,7 +334,6 @@ win.webContents.on('did-frame-finish-load',() => {
       });
 }
 
-
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
@@ -378,9 +373,10 @@ app.on('ready', async () => {
             {"label":"UI Tools",
             "submenu":[
               {label:"Devtools",role:"toggleDevTools",accelerator:"F12"},
+              {label:"FullScreen",role:"togglefullscreen",accelerator:"F11"},
               {"label":"Hot relaod",role:"reload",accelerator:"F6"},
               {label:"Settings",submenu:[
-                {label:"App UI Theme",click:()=>{ alert("App UI setting")}}
+                {label:"App UI Theme",click:(b)=>{ console.log(`App UI setting  ${b.visible}`)}}
               ]}
             ]
           },

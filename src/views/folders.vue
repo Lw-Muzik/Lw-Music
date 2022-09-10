@@ -6,10 +6,11 @@
 <script>
 
 import Grid from "./widgets/Gen/Grid.vue";
-import { readFileSync } from "fs";
+import { readFileSync,existsSync } from "fs";
 import TopWidget from "./widgets/ToWidget.vue";
 import Layout from "./widgets/Layout.vue";
-import { remote } from "electron";
+import { ipcRenderer,remote } from "electron";
+// import Cover from "@/src/"
 export default {
     name:'Folder',
     components:{ Grid, TopWidget, Layout },
@@ -33,6 +34,7 @@ export default {
         },
         getCoverArt(folder){
             const result = this.processed.filter((d) => (d.folder == folder));
+            //
            return result[(result.length -1)].artwork;
         }
     },
@@ -49,12 +51,13 @@ export default {
                 this.unsorted = [...this.unsorted , data.folder];
             this.covers = [...this.covers, data.artwork];
             });
+            // e.preventDefault();
 
         const sorted = new Set(this.unsorted);
         sorted.forEach((g) => {
-            this.folders = [...this.folders, {genre:g,total:this.getTotalSongs(g),cover:this.getCoverArt(g)}]
+            this.folders = [...this.folders, {genre:g,total:this.getTotalSongs(g),cover:this.getCoverArt(g),hasCover: existsSync(this.getCoverArt(g))}]
         });
-        // })
+    // })
         
    }
 }

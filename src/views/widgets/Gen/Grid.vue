@@ -12,6 +12,7 @@
                 :title="item.genre"
                 :cover="item.cover"
                 :total="item.total"
+                :has="item.hasCover"
                  />
     </div>
     </div>

@@ -1,6 +1,7 @@
 <template lang="html">
     <div class="tile flex flex-col items-center" @click="gotoTrack(title)">
-        <img :src="`file://${cover}`" alt=""/>
+        <img v-if="has" :src="`file://${cover}`" alt=""/>
+        <img v-else :src="[image]" alt=""/>
         <div class="details flex flex-row justify-between">
             <!-- <details class="details"> -->
                 <span class="title capitalize flex p-2 flex-row justify-around">{{title.replace(/(.*)[\/\\]/,"")}}</span> 
@@ -9,9 +10,15 @@
     </div>
 </template>
 <script>
+    import IMG from "@/assets/pAudio.png"
 export default {
     name:"Tile",
-    props:{  title:String , total:Number, cover:String, round: Boolean },
+    data() {
+        return {
+             image:IMG
+        }
+    },
+    props:{  title:String , total:Number, cover:String, round: Boolean , has:Boolean},
     methods:{
         gotoTrack(route){
             this.$store.commit('setGenreCat',route);

@@ -1,29 +1,31 @@
 <template lang="html">
     <div ref="listV" class="listView lg:w-4/5">
-       <p @click="playSong(list,index)"  v-bind:key="index" v-for="(list,index) in queueList">
+       <p @click="playSong(list,index)" v-bind:key="index" v-for="(list,index) in queueList" :class="[index == activeTile?'active':'','']" >
              <!-- <b class="material-icons mi-dehaze"></b> -->
             <div class="w-35 flex flex-row row-span-2 justify-center items-center">
                <b class="w-10" >{{index+1}}</b> 
               &nbsp; &nbsp;
               &nbsp;
-               <img  :src="`file://${list.artwork}`" class="cover"/> 
+               <img v-if="list.hasCover" :src="`file://${list.data.artwork}`" class="cover"/> 
+               <img v-else :src="[image]" class="cover"/> 
               </div>
               &nbsp; &nbsp;
               &nbsp; &nbsp;
-            <span>{{list.title}}</span>
+            <span>{{list.data.title}}</span>
             &nbsp; &nbsp;
-            <span >{{list.genre}}</span> 
+            <span >{{list.data.genre}}</span> 
              &nbsp;
-            <span>{{list.artist}}</span>
+            <span>{{list.data.artist}}</span>
           &nbsp;
-               <span>{{list.album}}</span>
+               <span>{{list.data.album}}</span>
           </p>
       </div>
           <!-- <button @click="this.$emit('closeQueue')"><b class="material-icons mi-close"></b></button> -->
 </template>
 <script>
 // import { Visualizer } from "@/Core/Visualizer";
-import { image } from "@/Core/default";
+import image from "@/assets/pAudio.png";
+import { remote } from 'electron';
 // import{ image } from "../../Core/default";
 export default {
     name:"ListView",
@@ -37,6 +39,7 @@ export default {
       return {
         image:image,
         audio:null,
+        activeTile:parseInt(localStorage.getItem("indexTile")),
         j:0
       }
     },
@@ -44,31 +47,32 @@ export default {
       created(){
          this.audio = this.$store.getters.getPlayer;
             // this.$store.commit("fetchLyrics",[track.title,track.artist,track.trackPath]);
+      this.$store.commit("setSongData",this.queueList);
 
          this.audio.onended = ()=>{
         this.j += 1;
-        this.$store.commit("setSongId",this.j);
-        this.$store.commit("fetchLyrics",[this.queueList[this.j].title,this.queueList[this.j].artist,this.queueList[this.j].trackPath]);
-        
-         this.audio.src = this.queueList[this.j].data;
-         this.$store.commit("saveRecentPlays",this.queueList[this.j]);
-         this.nativeExecute(this.queueList[this.j]);
-         this.$store.commit('currentProcess',[this.queueList[this.j],this.j]);
-            this.$store.commit('musicData',this.queueList[this.j]);
+        this.audio.src = this.queueList[this.j].data.data;
+         this.nativeChannel(this.j);
             this.audio.play();
       }
     },
     mounted() {
       this.$store.commit("setSongData",this.queueList);
       this.j = this.$store.getters.getSongId;
-      this.$refs['listV'].scrollTo({behavior:"smooth",top:100});
-      // 
+      this.$refs['listV'].scrollTo({behavior:"smooth",top:1});
+      // checking if the initial index is set
+      if (localStorage.getItem("indexTile") == null) {
+          localStorage.setItem("indexTile",0);
+      }
     },
     methods:{
       
        nativeExecute(id3){
           var img =  `file://${id3.artwork}`;
           document.body.style.backgroundImage = `url('${img}')`;
+          document.body.style.backgroundRepeat = `no-repeat`;
+          document.body.style.backgroundSize = `cover`;
+          document.body.style.backgroundPosition = `center`;
 
          const link = document.querySelector("link");
         link.href.replace(img,"");
@@ -76,24 +80,21 @@ export default {
       
             const notify = new Notification(id3.title,{body:id3.artist,icon:img,silent:true,requireInteraction:true,tag:"music"});
             notify.onclick = ()=>{
-                notify.close();
+                remote.getCurrentWindow().focus();
             }
             
         navigator.mediaSession.setActionHandler("nexttrack", () => {
               this.j += 1;
+            //  this.$refs['listV'].scrollTo({behavior:"smooth",top:this.j});
 
-            this.audio.src = this.queueList[this.j].data;
-            this.nativeExecute(this.queueList[this.j]);
-            this.$store.commit('currentProcess',[this.queueList[this.j],this.j]);
-            this.$store.commit('musicData',this.queueList[this.j]);
+            this.audio.src = this.queueList[this.j].data.data;
+            this.nativeChannel(this.j);
             this.audio.play();
         });
         navigator.mediaSession.setActionHandler("previoustrack", () => {
               this.j -= 1;
-          this.audio.src = this.queueList[this.j].data;
-          this.nativeExecute(this.queueList[this.j]);
-          this.$store.commit('currentProcess',[this.queueList[this.j],this.j]);
-            this.$store.commit('musicData',this.queueList[this.j]);
+          this.audio.src = this.queueList[this.j].data.data;
+          this.nativeChannel(this.j);
             this.audio.play();
         });
       
@@ -121,18 +122,40 @@ export default {
                 { src: img, sizes: "16x16" , type: "image/jpeg" },
             ]
         });
-            notify.onclose = ()=>{  }
+        },
+        nativeChannel(id){
+          // update the active tile
+          this.activeTile = id;
+
+          // saving the current tile state
+          localStorage.setItem("indexTile",id);
+
+          // loading audio file
+          this.nativeExecute(this.queueList[id].data);
+          this.$store.commit('currentProcess',[this.queueList[id],id]);
+            this.$store.commit('musicData',this.queueList[id]);
+            this.$store.commit("setSongId",id);
+            // auto scrolling
+          // this.$refs['listV'].scrollTo({behavior:"smooth",top:id});
+          // obtaining lyrics
+          this.$store.commit("fetchLyrics",[this.queueList[id].title,this.queueList[id].artist,this.queueList[id].trackPath]);
+          // sving recent plays
+          this.$store.commit("saveRecentPlays",this.queueList[id]);
         },
         playSong(track,id){
+          console.log(track);
+          this.activeTile = id;
+          localStorage.setItem("indexTile",id);
           this.j = id;
-            this.audio.src = track.data;
+          // this.$refs['listV'].scrollTo({behavior:"smooth",top:id});
+            this.audio.src = `${track.data.data}`
             this.audio.play();
             this.$store.commit("setSongId",id);
-            this.$store.commit("saveRecentPlays",track)
+            this.$store.commit("saveRecentPlays",track.data.data)
             this.$store.commit('currentProcess',[this.queueList,id]);
-            this.$store.commit("fetchLyrics",[track.title,track.artist,track.trackPath]);
-            this.$store.commit('musicData',track);
-            this.nativeExecute(track);
+            this.$store.commit("fetchLyrics",[track.data.title,track.data.artist,track.data.trackPath]);
+            this.$store.commit('musicData',track.data);
+            this.nativeExecute(track.data);
         },
        
     },
@@ -180,7 +203,7 @@ export default {
       transform:scale(1,1);
       justify-content: space-around!important;
       align-items: center;
-     &:hover{
+     &.active{
        box-shadow: -4px 0px 0px 0px #eeee,
                    4px 0px 0px 0px #eeee;
                           // transform:scale(1.01,1.01);

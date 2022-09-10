@@ -28,7 +28,7 @@ export default {
             volIcon:false,
             nowID:0,
             now:[],
-            player:null,
+            
         }
     },
         components:{ PlayerSlider },
@@ -42,6 +42,15 @@ export default {
         currentSong(){
             return this.$store.getters.getCurentSong;
         },
+        array(){
+            return this.$store.getters.getSongData;
+        },
+        songID(){
+            return this.$store.getters.getSongId;
+        },
+        player(){
+            return this.$store.getters.getPlayer;
+        }
     },
     methods:{
         updateVol(){
@@ -58,9 +67,28 @@ export default {
         },
         seektrack(){
             this.nowID += 1;
+            this.$store.commit("setSongId",this.nowID);
+            this.player.src = this.array[this.nowID].data;
+        //   this.nativeExecute(this.queueList[this.j]);
+        this.$store.commit('musicData',this.array[this.nowID]);
+            this.$store.commit("setSongId",this.nowID);
+            this.$store.commit("saveRecentPlays",this.array[this.nowID])
+            this.$store.commit('currentProcess',[this.array,this.nowID]);
+            this.$store.commit("fetchLyrics",[this.array[this.nowID].title,this.array[this.nowID].artist,this.array[this.nowID].trackPath]);
+            this.player.play();
         },
         prevTrack(){
            this.nowID -= 1;
+           this.$store.commit("setSongId",this.nowID);
+            this.player.src = this.array[this.nowID].data;
+        //   this.nativeExecute(this.queueList[this.j]);
+            this.$store.commit('musicData',this.array[this.nowID]);
+            this.$store.commit("setSongId",this.nowID);
+            this.$store.commit("saveRecentPlays",this.array[this.nowID])
+            this.$store.commit('currentProcess',[this.array,this.nowID]);
+            this.$store.commit("fetchLyrics",[this.array[this.nowID].title,this.array[this.nowID].artist,this.array[this.nowID].trackPath]);
+            this.player.play();
+
         },
         togglePause(){
              this.show = !this.show;
@@ -68,22 +96,31 @@ export default {
         }
     },
       mounted() {
-        this.player =  this.$store.getters.getPlayer;
         this.defaultCover = this.$store.getters.getDefaultCover;
+        this.nowID = this.$store.getters.getSongId;
         // this.now = this.current[0];
         // this.nowID = this.current[1];
 
         this.player.onpause = ()=>{
             this.show = false;
+            // this.player.pause();
+
         }
 
         this.player.onplay = ()=>{
             this.show = true;
+
         }
 
         this.player.onended = ()=>{
             this.nowID += 1;
-            this.player.src = this.now[this.nowID].data;
+            this.player.src = this.array[this.nowID].data;
+            this.$store.commit('musicData',this.array[this.nowID]);
+            this.$store.commit("setSongId",this.nowID);
+            this.$store.commit("saveRecentPlays",this.array[this.nowID])
+            this.$store.commit('currentProcess',[this.array,this.nowID]);
+            this.$store.commit("fetchLyrics",[this.array[this.nowID].title,this.array[this.nowID].artist,this.array[this.nowID].trackPath]);
+            // this.$store.commit('musicData',track);
             this.player.play();
         }
       

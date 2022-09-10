@@ -1,6 +1,6 @@
 <template lang="html">
     <div>
-        <layout :songs="getSongs()" :grid="true" :list="false" :loader="genre" :circle="false"/>
+        <layout :songs="getSongs()" :grid="false" :list="true" :loader="genre" :circle="false"/>
     </div>
 </template>
 <script>

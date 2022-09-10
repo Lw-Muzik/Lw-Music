@@ -1,14 +1,9 @@
 <template lang="html">
     <div class="ui flex flex-row justify-between items-center">
-        <div v-if="track != null" @click="this.$emit('onTap')" class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
-            <img :src="`file://${track.artwork}`" class="w-full drop-shadow rounded-2xl"/>
-            <!-- <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/> -->
+        <div v-if="track != null" @click="this.$emit('onTap')" class="box flex flex-col justify-center items-center rounded-2xl">
+            <img v-if="track != null" :src="`file://${track.artwork}`" class="drop-shadow rounded-2xl"/>
+            <img v-else :src="[defaultCover]" class="p-4 rounded-2xl object-cover"/>
         </div>
-        <!-- else if null  -->
-          <!-- <div  class="w-36 h-13 flex flex-col justify-center items-center rounded-2xl">
-            <img :src="`file://${csong.artwork}`" class="w-full drop-shadow rounded-2xl"/>
-            <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/> -->
-        <!-- </div> -->
 <!-- spacer div --> 
  <div class="p-3"></div>
 <!-- end of spacer div -->
@@ -22,13 +17,14 @@
   
 </template>
 <script>
+import Cover from "@/assets/pAudio.png"
 export default {
     name:'TrackCover',
     data() {
         return {
             show:false,
             player:null,
-            defaultCover:'',
+            defaultCover:Cover,
             nowID:0,
             now:[]
         }
@@ -70,7 +66,7 @@ export default {
             this.show = false;
         }
 
-        this.player.onplay = ()=>{
+        this.player.onplaying = ()=>{
             this.show = true;
         }
 
@@ -122,6 +118,6 @@ export default {
     }
      }
 
-    
+    img{ width: 120px !important; height: 80px !important; }
     .ui{   overflow: hidden;}
 </style>

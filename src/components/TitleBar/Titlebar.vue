@@ -84,6 +84,7 @@ const { remote } = window.require("electron");
         align-self: center;
       }
 .customTitleBar {
+  user-select: none;
   width: 100%;
   height:30px;
   display: flex;

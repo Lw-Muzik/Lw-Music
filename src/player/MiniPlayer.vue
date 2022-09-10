@@ -34,17 +34,15 @@ export default {
         },
         current(){
             return this.$store.getters.getCurrentSong;
-        }
+        },
+    
     },
     methods:{
         lauchEq(){
             this.$router.push("/eq");
-            console.log(this.current);
+            // console.log(this.current);
         },
-        lauchLyrics(){
-            
-        },
-
+       
         favourite(){
             this.$store.commit('saveFavourite',this.track);
         }
