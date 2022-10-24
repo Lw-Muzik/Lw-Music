@@ -6,9 +6,7 @@
          <div class="section flex flex-col justify-evenly items-center" >
             <br>
                     <p class="text-lg"> {{subtitle}}</p>
-                    
-                    <p class="title capitalize p-2">{{title.replace(/(.*)[\/\\]/,"").split('.')[0]}}</p>
-    
+                    <p class="title capitalize wp-2">{{title.replace(/(.*)[\/\\]/,"").split('.')[0]}}</p>
                      <p v-show="showPlay">
                     <button @click="playAll" class="mi mi-play-arrow"></button> &nbsp;
                     Play All
@@ -21,7 +19,6 @@
             <br>
             <button @click="back" class="mi mi-arrow-left text-6xl"></button>
             &nbsp; &nbsp;
-            <!-- <button  @click="forward" class="mi mi-arrow-right"></button> -->
         </div>
         </div>
     </div>
@@ -34,7 +31,10 @@ export default {
         showPlay:Boolean,
         artWork:String,
         songData: Array,
-        title:String,
+        title:{
+            type:String,
+            default:""
+        },
         subtitle:String,
 
     },
@@ -49,10 +49,6 @@ export default {
         playAll(){
             this.$store.commit('audioPlayer',this.songData);
         },
-        forward(){
-            this.$router.go(1);
-            // this.$store.commit('setGenreBack',false);
-        }
     }
 }
 </script>

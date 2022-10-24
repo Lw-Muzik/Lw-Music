@@ -1,13 +1,22 @@
 <template lang="html">
-    <div>
-        <center v-if="fav.length == 0" >No favourite yet</center>
-        <layout v-else :songs="fav" :grid="true" :list="false" :title="title" :subtitle="sub" :artWork="cover"/>
+    <div class=" w-4/5 flex  flex-col justify-center items-center">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>  <br>
+        
+        <br>
+        <br>
+        <center class=" w-96 border-gray-100 border-4 border-dashed p-4 text-2xl m-10" v-if="fav.length == 0" >No favourites yet</center>
+        <layout v-else :songs="fav" :grid="false" :list="true" :title="title" :subtitle="sub" :artWork="cover"/>
     </div>
 </template>
 <script>
 import Layout from "./widgets/Layout.vue";
-import { readFileSync } from 'fs';
-// import { remote } from "electron";
+import { remote } from  "electron";
+import { readFileSync } from "fs";
 export default {
     name:'Favourite',
     data() {
@@ -25,11 +34,10 @@ export default {
         }
     },
     mounted() {
-        this.fav = this.favourite;
-        console.log(this.favourite);
-        this.sub = `${this.favourite.length} songs`;
-        this.cover = `file://${this.favourite[(this.favourite.length - 1)].artwork}`
-        // this.fav = JSON.parse(readFileSync(`${remote.app.getPath('userData')}/favourite.json`));
+        const favourites = JSON.parse(readFileSync(`${remote.app.getPath('userData')}/favourite.json`));
+        this.fav = favourites;
+        this.sub = `${this.fav.length} songs`;
+        this.cover = `file://${this.fav[(this.fav.length - 1)].artwork}`
     },
 }
 </script>

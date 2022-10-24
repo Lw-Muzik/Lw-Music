@@ -1,17 +1,6 @@
 <template lang="html">
     <div>
-        <div class="top flex flex-row justify-between items-center fixed z-10">
-             <div class=" flex flex-row justify-center items-center p-3  m-4  bg-black rounded-lg h-10 ">
-                 <p>{{genre}} - {{getSongs().length}} songs</p>
-            </div>
-
-            <button class="bg-black p-3 rounded-3xl flex flex-row justify-center items-center" >Play All<span class="mi mi-play-arrow"></span></button>
-
-            <div class=" cursor-pointer flex flex-row justify-center items-center p-3 m-4 bg-black rounded-lg h-10" @click="goBack">
-                <p> &lt; Back</p>
-            </div>
-        </div>
-        <layout :songs="getSongs()" :grid="true" :list="false" :circle="false"/>
+        <layout :songs="getSongs()" :grid="false" :list="true" :loader="genre" :circle="false"/>
     </div>
 </template>
 <script>
@@ -43,7 +32,7 @@ export default {
             return raw.filter((song) => (song.album == this.genre));
         },
         goBack(){
-             this.$store.commit('setGenreBack',false);
+            //  this.$store.commit('setGenreBack',false);
             this.$router.back();
         }
     },

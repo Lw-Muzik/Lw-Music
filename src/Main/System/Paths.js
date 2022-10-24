@@ -17,6 +17,7 @@ const favourite = join(appStore,'favourite.json');
 if(existsSync(recentPlays) == false){
     writeFileSync(recentPlays , JSON.stringify([]));
   }
+  
 
 // check if file for streams.json exists.
 if (existsSync(streams) == false) {

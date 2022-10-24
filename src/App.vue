@@ -1,7 +1,5 @@
 <template lang="html">
-  <div v-show="dash" class="body">
-<!-- <titlebar/> -->
-
+  <div v-show="dash" v-if="showLoader" class="body">
     <div class="wrap">
   <div class="logo">
     <svg xmlns="http://www.w3.org/2000/svg" width="175.859" height="47.344" viewBox="14.904 4.22 175.859 47.344" enable-background="new 14.904 4.22 175.859 47.344">
@@ -34,8 +32,9 @@
        <p v-if="paths.length == 0" class="no-path-tile ">
           No path selected
        </p>
+
         <p v-else v-for="(path,index) in paths" :key="path" class="path-tile">
-           <span class="icon mi mi-folder"></span> <span class="path">{{path}}</span> <span class="close" @click="remove(index)">&times;</span>
+           <span class="icon mi mi-folder"></span> <span class="path">{{path}}</span> <span class="close" @click="remove(index)">&nbsp;&times;&nbsp;</span>
        </p>
     </div>
      <br>
@@ -46,50 +45,92 @@
 </div>
 
   </div>
-  <div v-show="!dash">
-      <router-view/>
+  <div v-if="!showLoader" class="loader fixed w-full h-full top-0 left-0 flex flex-col justify-center items-center backdrop-blur-3xl">
+  
+        <br>
+        <br>
+        <br> 
+          <spinner :text="text" />
+
   </div>
+  <dashboard v-if="showLoader" v-show="!dash"/>
+
 </template>
 <script>
 import * as mi from "material-icons";
-import { ipcRenderer, remote } from 'electron';
+import { image } from "@/Core/default";
+import { ipcRenderer } from 'electron';
 import Titlebar from "@/components/TitleBar/Titlebar.vue";
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 
+
+
+import Spinner from "./views/widgets/Spinner.vue"
+import Dashboard from "./views/dashboard.vue"
 export default {
-  name:'Initial',
+  name:'App',
   data() {
     return {
       dash:true,
-      url:`${remote.app.getPath('userData')}/settings.json`,
+      url:"",
       store:'',
+      showLoader:true,
+      text:"",
       paths:[]
     }
   },
-    components:{Titlebar},
+    components:{Titlebar, Dashboard, Spinner},
+ created() {
+  ipcRenderer.on("settings",(e,args) => {
+       this.paths = JSON.parse(readFileSync(args)).savedPaths;
+       this.url = args;
+  })
+ },
  mounted() {
-       this.paths = JSON.parse(readFileSync(this.url)).savedPaths;
+    document.querySelector("body").style.backgroundImage = "url("+image+")";
+
+  this.paths = this.$store.getters.getGlobalPaths;
  },
  computed: {
     //this.paths = 
  },
   methods: {
        chooseFolder(){
-        ipcRenderer.sendSync("loadFolder");
+        console.log("clicked");
+        this.showLoader = !this.showLoader;
+        ipcRenderer.send("loadFolder")
+        // ipcRenderer.sendSync("loadFolder");
+        ipcRenderer.on("loadingSongs",(e,args) => {
+            
+            this.text = args;
+        })
+
+        
+        ipcRenderer.on("doneSaving",(e,args) => {
+            this.showLoader = !this.showLoader;
+
+        })
         ipcRenderer.on('chosen',(event, args)=>{
-            this.paths = [this.paths , args];
+            this.paths = [...this.paths , args];
         });
+
     },
     remove(id){
-      let update = JSON.parse(readFileSync(this.url));
+      var local = [];
         this.paths.splice(id,1);
-        update.savedPaths = this.paths;
-        writeFileSync(this.url,JSON.stringify(update));
+        local = this.paths;
+        ipcRenderer.sendSync("updatePath",local);
+        console.log(`Updated paths" => ${local}`);
+        // console.log(`Songs paths" => ${update.savedPaths}`);
+    ipcRenderer.on("savedPath",(e,args) => {
+      //  this.paths = JSON.parse(readFileSync(args)).savedPaths;
+       console.log(`Songs paths => ${args}`)
+      //  this.url = args;
+    })
     },
     goToHome(){
-      // this.$router.push('/');
       this.dash = false;
-      remote.getCurrentWindow().maximize();
+      console.log("Clicked");
     }
    
   },
@@ -97,6 +138,10 @@ export default {
 </script>
 <style lang="scss" scoped>
   @import "@/Design/Welcome.scss";
+  .loader{
+    backdrop-filter:blur(100px);
+    background:#00000079;
+  }
   .titlebar{
   position:fixed;
   top: 0;

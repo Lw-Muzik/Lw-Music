@@ -2,9 +2,10 @@
     <div>
         <layout
          :songs="store"
-          :grid="true"
-           :list="false"
-            :title="title" 
+          :grid="false"
+           :list="true"
+            :title="folder"
+            :loader="folder"
             :showPlay="playAll"
              :artWork="cover"
              :subtitle="subt"
@@ -12,41 +13,50 @@
     </div>
 </template>
 <script>
-import { readFileSync } from "fs";
-import { remote } from "electron";
+
+import { ipcRenderer} from "electron";
 import Layout from "../Layout.vue";
 import * as mi from "material-icons";
+import { readFileSync } from "fs";
+import ToWidget from "../ToWidget.vue";
 export default {
     name:"FolderView",
     data() {
         return {
             store:[],
             playAll:true,
-            title:"",
             subt:"",
         }
     },
     components:{
-        Layout
-    },
+    Layout,
+    ToWidget
+},
     computed: {
         folder(){
             return this.$store.getters.getGenreCategory;
         },
         getBack(){
             return this.$store.getters.getGenreBack;
+    },
+    getList(){
+        return this.$store.getters.getPlaylist;
     }
+
 },
     created(){
          this.player = this.$store.getters.getPlayer;
     },
     mounted(){
         /**load all tracks */
-          let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
-         this.store = raw.filter((song) => (song.folder == this.folder));
-         this.title = `${this.folder}`
-         this.cover = `file://${this.store[0].artwork}`;
-         this.subt = `${this.store.length} songs`
+         ipcRenderer.on("processed",(e,args)=>{
+            const songs = JSON.parse(`${readFileSync(args)}`);
+            this.store = songs.filter((song) => (song.folder == this.folder));
+            this.title = `${this.folder}`
+            this.cover = `file://${this.store[0].artwork}`;
+            this.subt = `${this.store.length} songs`
+         })
+      
     },
       methods:{
            playAll(){

@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="lg:w-full sm:w-8/12 grid md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
+    <div class="gridView lg:w-screen sm:w-8/12 grid md:grid-cols-4 sm:grid-cols-3 overflow-hidden">
         <grid-tile 
                 @click="playSong(item)"
                 :circle="cir"
@@ -41,5 +41,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+        .gridView{ overflow-y:scroll; overflow-x: hidden; height: 460px;
+       &::-webkit-scrollbar{
+      appearance: none;
+      width: 10px;
+    }
     
+      &::-webkit-scrollbar-thumb{
+      appearance: none;
+      width: 5px;
+      background: #c7c5be;
+      border-radius: 10px;
+    }
+     }
 </style>

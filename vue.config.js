@@ -6,10 +6,10 @@ module.exports = {
             builderOptions: {
                 publish: ['github'],
                 // asar: true,
-                appId: 'com.lwzikizmp.blabsmusic',
+                appId: 'com.bmusic.blabsmusic',
                 productName: 'B-labs Music',
                 linux: {
-                    target:['AppImage','deb']
+                    target:['AppImage','deb','snap']
                 }
 
             },

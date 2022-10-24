@@ -1,61 +1,79 @@
 <template lang="html">
-    <div class="ui flex flex-row justify-evenly items-center">
-        <div class=" w-24 h-10 flex flex-col justify-center items-center rounded-2xl">
-            <img v-if="track.artwork != null" :src="`file://${track.artwork}`" class="p-2 w-full drop-shadow rounded-2xl object-cover"/>
-            <img v-else :src="defaultCover" class="p-4 rounded-2xl object-cover"/>
+    <div class="ui flex flex-row justify-between items-center">
+        <div v-if="track != null" @click="this.$emit('onTap')" class="box flex flex-col justify-center items-center rounded-2xl">
+            <img v-if="track != null" :src="`file://${track.artwork}`" class="drop-shadow rounded-2xl"/>
+            <img v-else :src="[defaultCover]" class="p-4 rounded-2xl object-cover"/>
         </div>
-        <div class="flex p-5 flex-row justify-between items-center ">
-            <button class="p-2 btn" @click="this.$emit('prevTrack')" ><b class="mi mi-fast-rewind"></b></button>
-    
-                <button class="p-2 play" v-show="!show" @click="togglePlay"><b class="mi mi-play-arrow"></b></button>
-           
-                <button  class="p-2 pause" v-show="show"  @click="togglePause"><b class="mi mi-pause"></b></button>
-
-            <button class="p-2 btn" @click="this.$emit('seektrack')"><b class="mi mi-fast-forward"></b></button>
-        </div>
-
-        <div class="content">
-            <b class="title">{{track.title}}</b>&nbsp;
-            <p class="artist">{{track.artist}}</p>
+<!-- spacer div --> 
+ <div class="p-3"></div>
+<!-- end of spacer div -->
+<!-- if track is null lets get what was played before -->
+        <div class="content max-w-3xl mx-2">
+            <b class="title">{{csong == null ?track.title:csong.title}}</b>&nbsp;
+            <p class="artist">{{csong == null ?track.artist:csong.artist}}</p>
          </div>
+      
     </div>
   
 </template>
 <script>
+import Cover from "@/assets/pAudio.png"
 export default {
     name:'TrackCover',
     data() {
         return {
             show:false,
             player:null,
-            defaultCover:''
+            defaultCover:Cover,
+            nowID:0,
+            now:[]
         }
     },
     computed: {
         track(){
             return this.$store.getters.getMusicData;
-        }
+        },
+       current(){
+           return this.$store.getters.getCurrentData;
+       },
+        csong(){
+            return this.$store.getters.getCurentSong;
+        },
     },
     methods: {
         togglePlay(){
             this.show = !this.show;
             this.player.play();
         },
+        seektrack(){
+            this.nowID += 1;
+        },
+        prevTrack(){
+           this.nowID -= 1;
+        },
         togglePause(){
              this.show = !this.show;
-             this.player.pause()
+             this.player.pause();
         }
     },
     mounted() {
-        console.log(this.track);
         this.player =  this.$store.getters.getPlayer;
-        this.defaultCover = this.$store.getters.getDefaultCover
+        this.defaultCover = this.$store.getters.getDefaultCover;
+        // this.now = this.current[0];
+        // this.nowID = this.current[1];
+        console.log(`Current ${this.$store.getters.getCurentSong}`)
         this.player.onpause = ()=>{
             this.show = false;
         }
 
-        this.player.onplay = ()=>{
+        this.player.onplaying = ()=>{
             this.show = true;
+        }
+
+        this.player.onended = ()=>{
+            this.nowID += 1;
+            this.player.src = this.now[this.nowID].data;
+            this.player.play();
         }
     },
 }
@@ -78,15 +96,28 @@ export default {
             font-size: 35px;
         }
     }
-
+    .content{
+        width: 350px!important;
+        // background: teal;
     .title{
-        font: 500 15px Ubuntu,Arial;
-        padding:5px;
+        font: 500 17px Ubuntu,Arial;
+        white-space: nowrap!important;
+        //  background: green;
+          text-overflow: ellipsis;
+        overflow:hidden;
+         position: relative;
+        width: 100px!important;
+       
+
     }
     .artist{
-        font: 300 14px Ubuntu,Arial;
+        font: 300 15px Ubuntu,Arial;
         font-style: oblique;
         padding:5px;
         text-decoration-style: wavy;
     }
+     }
+
+    img{ width: 120px !important; height: 80px !important; }
+    .ui{   overflow: hidden;}
 </style>

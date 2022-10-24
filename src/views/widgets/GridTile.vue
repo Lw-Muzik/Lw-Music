@@ -1,6 +1,6 @@
 <template lang="html">
     <div class="tile flex flex-col items-center">
-        <img :class="[circle == true?'':'active']" :src="`file://${art}`" alt=""/>
+        <img class="active" :src="`file://${art}`" alt=""/>
         <div class="details">
             <!-- <details class="details"> -->
                 <span class="title">{{title}}</span><br>
@@ -51,11 +51,11 @@ export default {
         width: 170px;
         padding:3px;
         margin-bottom: 15px;
-        background: #ddd;
+        // background: #ddd;
         border-radius: 10px;
     }
         img{
-            border-radius: 50%!important;
+            border-radius: 10%;
             object-fit:cover;
             width: 200px;
             height:200px;

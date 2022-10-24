@@ -1,9 +1,25 @@
 <template lang="html">
-    <div class="flex justify-center items-center">
-        <div class="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-         <span class="visually-hidden">{{text}}</span>
-  </div>
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    <div class="flex flex-col justify-around items-center">
+         <div
+         style="border-top-color:transparent"
+        class=" w-20 h-20 border-8 border-white border-double  rounded-full animate-spin"></div>
+       <br/>
+       <br/>
+        <b class="text-xl text-center w-full"> Loading {{text.replace(/(.*)[\/\\]/,"").split('.')[0]}}, please wait..</b>
+    </div>
+<!-- <div>
+    <div style="border-top-color:transparent"
+        class="w-16 h-16 border-4 border-blue-400 border-dashed rounded-full animate-spin"></div>
 </div>
+<div>
+    <div style="border-top-color:transparent"
+        class="w-16 h-16 border-4 border-blue-400 border-dotted rounded-full animate-spin"></div>
+</div>
+<div>
+    <div style="border-top-color:transparent"
+        class="w-16 h-16 border-4 border-blue-400 border-double rounded-full animate-spin"></div>
+</div> -->
 </template>
 <script>
 export default {
@@ -13,3 +29,6 @@ export default {
     }
 }
 </script>
+<style scoped>
+
+</style>

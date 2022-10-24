@@ -4,7 +4,7 @@
      <div :class="[playing == true?'active':'','container']">
         <img 
         ref="images" 
-        :src="[source]"
+        :src="`file://${source}`"
          alt="coverArt" 
          srcset="" 
          @wheel="wheelUpdate" 
@@ -198,7 +198,6 @@ $dur : 50s;
         border-radius: 50%;
         animation: spin $dur infinite linear;
          animation-play-state: paused;
-
          overflow:hidden;
         img{ 
         
@@ -214,8 +213,8 @@ $dur : 50s;
    }
     .container.active{
         box-shadow: 7px 0px 0px 0px gray,-7px 0px 0px 0px #ddd;
-       width:400px;
-        height:400px;
+       width:600px;
+        height:600px;
        animation-delay: 5s;
         animation-play-state: running;
     }

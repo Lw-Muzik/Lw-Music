@@ -1,11 +1,10 @@
 <template lang="html">
     <div>
-       <grid :items="genre" @routeTo="routeT" v-show="!getBack"/>
-        <router-view v-show="getBack"/>
+       <grid :items="genre" @routeTo="routeT" :loader="`Albums`" v-show="!getBack"/>
     </div>
 </template>
 <script>
-import { readFileSync } from 'fs';
+import { readFileSync,existsSync } from 'fs';
 import { remote } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
 export default {
@@ -22,8 +21,8 @@ export default {
      methods: {
         routeT(){
             this.showRoute = !this.showRoute;
-            this.$store.commit('setGenreBack',true);
-            this.$router.push('/album/albumTracks');
+            // this.$store.commit('setGenreBack',true);
+            this.$router.push('/albumTracks');
             // console.log("done")
         },
         getTotal(genre){
@@ -48,7 +47,7 @@ export default {
         });
        const sorted = new Set(this.unsorted);
        sorted.forEach((g) => {
-           this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g)}];
+           this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g),hasCover: existsSync(this.getCoverArt(g))}];
        });
    }
 }

@@ -1,12 +1,11 @@
 <template lang="html">
-    <div>
-        <grid :items="genre" @routeTo="routeT" v-show="!getBack"/>
-        <router-view v-show="getBack"/>
+    <div class="m-5 w-3/4">
+        <grid :items="genre" @routeTo="routeT" v-show="!getBack" :loader="`Genres`"/>
     </div>
 </template>
 <script>
-import { readFileSync } from 'fs';
-import { remote } from "electron";
+import { readFileSync,existsSync } from 'fs';
+import { ipcRenderer } from "electron";
 import Grid from "./widgets/Gen/Grid.vue";
 
 export default {
@@ -25,8 +24,8 @@ export default {
     methods: {
         routeT(){
             this.showRoute = !this.showRoute;
-            this.$store.commit('setGenreBack',true);
-            this.$router.push('/genre/genres');
+            // this.$store.commit('setGenreBack',true);
+            this.$router.push('/genres');
             // console.log("done")
         },
         getTotal(genre){
@@ -44,7 +43,8 @@ export default {
         }
     },
    mounted(){
-        let raw = JSON.parse(`${readFileSync(remote.app.getPath('userData')+'/processed.json')}`);
+    ipcRenderer.on('processed',(event, args) => {
+         let raw = JSON.parse(`${readFileSync(args)}`);
         this.processed = raw;
         raw.forEach((data) =>{
             this.unsorted = [...this.unsorted , data.genre];
@@ -52,8 +52,10 @@ export default {
         });
        const sorted = new Set(this.unsorted);
        sorted.forEach((g) => {
-           this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g)}]
+           this.genre = [...this.genre, {genre:g,total:this.getTotal(g),cover:this.getCoverArt(g),hasCover: existsSync(this.getCoverArt(g))}]
        });
+    })
+       
    }
 }
 </script>

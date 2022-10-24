@@ -1,13 +1,16 @@
 <template lang="html">
- <div class="lg:w-full sm:w-8/12 grid md:grid-cols-3 m-10 sm:grid-cols-2 lg:grid-cols-3 overflow-hidden">
+ <div class="lg:w-96 sm:w-8/12 grid md:grid-cols-3 m-10 sm:grid-cols-2 lg:grid-cols-2 overflow-hidden">
     <cards v-for="c in cards" :name="c.name" :route="c.route" :icon="c.icon"/>
-    </div>
+   <!-- <tab-view/> -->
+   </div>
+
 </template>
 <script>
+import TabView from "@/components/Tabs/TabView.vue";
 import Cards from "./widgets/Cards.vue";
 export default {
     name:"SoundQ",
-    components:{ Cards },
+    components:{ Cards, TabView },
     data() {
         return {
             cards:[
@@ -21,6 +24,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    div{
+        width:900px;
+    }
     .card{
         display: flex;
         flex-direction: column;

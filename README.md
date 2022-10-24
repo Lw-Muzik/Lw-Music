@@ -1,7 +1,7 @@
 #  B-labs Musix 
 
 ### Current Features
-- Loads multiple files in one microsecond
+- Loads songs from selected folders
 - 10 Band Equalizer
 - Next track widget
 - Online lyrics
@@ -11,11 +11,15 @@
 
 * More features are coming......
 
-## ScreenShots( Mobile View )
+## ScreenShots( Desktop )
 
-<div style="display:flex;flex-direction:row;width:400px;">
-<img title="View one" style="margin:35px"src="./src/assets/shot1.png" width="230px;"/>
-<img style="margin:35px" src="./src/assets/shot2.png"width="230px;"/>
+<div style="width:900px;">
+<img title="View one" style="margin:35px"src="./src/assets/img1.png" width="630px;"/>
+<img title="View one" style="margin:35px"src="./src/assets/img2.png" width="630px;"/>
+<br>
+<br>
+<img title="View one" style="margin:35px"src="./src/assets/img3.png" width="630px;"/>
+</div>
 </div>
 
 ## ToDo

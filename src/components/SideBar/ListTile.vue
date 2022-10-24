@@ -34,7 +34,7 @@ export default {
     .tile{
         user-select: none;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 17px;
         display: flex !important;
         flex-direction: row !important;
         justify-content:space-evenly!important;

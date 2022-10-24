@@ -1,23 +1,24 @@
 <template lang="html">
- <player-slider class="slider"/>
-    <div ref="player" class="player flex flex-row justify-between items-center overflow-hidden">
-        <div class="wrapper">
-             <img :src="`file://${track.artwork}`" />
-        </div>
+ 
+    <div ref="player" class="player flex flex-row justify-between w-screen items-center overflow-hidden">
       
-        <track-cover class="track-cover overflow-hidden"/>
+        <track-cover class="track-cover overflow-hidden px-2"  @onTap="this.$emit('onClick')" />
         <actions/>
-        <div class=" w-40 mx-28 flex flex-row justify-around m-5">
-            <button class="btn" @click="lauchEq"><b class="mi mi-equalizer"></b></button>
-            <button class="btn" @click="this.$emit('prevTrack')" ><b class="mi mi-shuffle"></b></button>
-            <button class="btn" @click="favourite" ><b class="mi mi-thumb-up"></b></button>
+        <div class=" w-72 mx-28 flex flex-row justify-between m-5 items-center">
+            <button class="btn" title="Equalizer" @click="lauchEq"><b class="mi mi-equalizer"></b></button>
+            <button class="btn" title="Lyrics" @click="this.$emit('lyrics')"><b class="mi mi-lyrics"></b></button>
+            <button class="btn" title="Shuffle" @click="this.$emit('prevTrack')" ><b class="mi mi-shuffle"></b></button>
+            <button class="btn" title="Add to Favourites" @click="favourite" ><b class="mi mi-thumb-up"></b></button>
+            <button class="btn" @click="this.$emit('toggleVol')" ><b class="mi mi-volume-up"></b></button>
+            <button id="player" @click="this.$emit('showRoom')"> <b class="material-icons mi-meeting-room mi-rounded" title="show Room Effects"></b> </button>
+            <button id="vis" @click="this.$emit('showVisual')"> <b class="material-icons mi-graphic-eq mi-rounded" title="Visual effects control"></b> </button>
+
         </div>
     
     </div>
 </template>
 <script>
 import TrackCover from "./components/Cover.vue";
-import PlayerSlider from "./components/slider.vue";
 import Actions from "./components/actions.vue";
 export default {
     name:'MiniPlayer',
@@ -26,27 +27,26 @@ export default {
             cover:''
         }
     },
-    components:{ TrackCover, Actions, PlayerSlider },
+    components:{ TrackCover, Actions },
      computed: {
         track(){
             return this.$store.getters.getMusicData;
-        }
+        },
+        current(){
+            return this.$store.getters.getCurrentSong;
+        },
+    
     },
     methods:{
         lauchEq(){
-             this.$store.commit('setShowSidenav', false);
             this.$router.push("/eq");
+            // console.log(this.current);
         },
+       
         favourite(){
             this.$store.commit('saveFavourite',this.track);
-            console.log(this.track);
         }
     },
-    mounted(){
-        document.querySelector('.player').style.backgroundImage = `url(file://${this.track.artwork})`;
-        this.$refs['player'].style.backgroundImage = 'url(file://'+this.track.artwork+')';
-    }
-
 }
 </script>
 <style lang="scss" scoped>
@@ -60,10 +60,10 @@ export default {
         height:50px;
         display:flex;
         flex-direction:column;
-        justify-content: center;
+        justify-content: space-evenly!important;
         align-items: center;
         border-radius:50%;
-        background:#000000;
+        /* background:#000000;*/
             transform:scale(1, 1);
             transition:0.3s ease-in-out;
         &:hover{
@@ -71,11 +71,11 @@ export default {
         }
     }
     .player{
-        backdrop-filter: blur(10px) !important;
+        backdrop-filter: blur(60px) !important;
         z-index: 5!important;
         position: absolute;
-        background: #000000;
-        width: 100%;
+        background: #111111cb;
+        // width: 100%;
         .wrapper{
             width: 100%;
             backdrop-filter: blur(20px);
@@ -90,8 +90,7 @@ export default {
 
     }
     .track-cover{
-        width: 500px;
+        width: 820px;
         white-space:nowrap;
-
     }
 </style>

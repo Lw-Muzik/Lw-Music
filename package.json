@@ -1,6 +1,6 @@
 {
-  "name": "b-Music",
-  "version": "0.0.6",
+  "name": "lw-ziki-amp",
+  "version": "1.0.2",
   "private": true,
   "author": "Mugamba Bruno <brunohectre@gmail.com>",
   "scripts": {
@@ -12,15 +12,13 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@tailwindcss/postcss7-compat": "^2.2.17",
     "4lyrics": "^1.1.61",
-    "autoprefixer": "^9.8.8",
     "axios": "^0.24.0",
     "cheerio": "^1.0.0-rc.10",
     "core-js": "^3.6.5",
-    "postcss": "^7.0.39",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
+    "is-online": "^10.0.0",
     "vue": "^3.2.31",
+    "vue-class-component": "^7.2.6",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },
@@ -30,14 +28,18 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
+    "autoprefixer": "^9.8.8",
     "electron": "^13.0.0",
     "electron-devtools-installer": "^3.1.0",
     "material-icons": "^1.10.3",
     "media-library": "^1.2.4",
     "music-metadata-browser": "^2.5.0",
     "node-id3": "^0.2.3",
+    "postcss": "^7.0.39",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
+    "vite": "^2.9.12",
     "vue-cli-plugin-electron-builder": "~2.1.1"
   }
 }

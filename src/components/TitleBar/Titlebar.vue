@@ -2,7 +2,9 @@
   <div class="customTitleBar bg1">
     <div class="leftSide">
       <!-- <img id="logo" src="@/RendererProcess/assets/images/Logo.png" /> -->
-      <p>{{appName}}</p>
+      <p>
+        <span class="mi mi-music-note"></span>
+        {{appName}}</p>
     </div>
     <div class="ctrls">
       <div class="ctrl" @click="minimize">
@@ -53,7 +55,7 @@ const { remote } = window.require("electron");
 
             close() {
               // remote.Tray()
-                remote.getCurrentWindow().hide("ap");
+                remote.getCurrentWindow().close();
             },
             toggleMaximize() {
                 let win = remote.getCurrentWindow();
@@ -82,6 +84,7 @@ const { remote } = window.require("electron");
         align-self: center;
       }
 .customTitleBar {
+  user-select: none;
   width: 100%;
   height:30px;
   display: flex;
