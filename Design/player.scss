@@ -1,0 +1,269 @@
+*{
+    user-select: none;
+  }
+    .visual{
+           width: 100%;
+           height: 100%;
+            backdrop-filter: blur(94px)!important;
+           z-index: -1!important;
+           position: fixed;
+           top: 0;
+           left: 0;
+           pointer-events:none;
+           background: rgba(0,0,0,0.3);
+           canvas{
+             z-index: 2!important;
+           width:100%;
+           height: 100%;
+ 
+         }
+     }
+    .home {
+       top: 0;
+       left: 0;
+        background: rgba(0, 0, 0, 0.63);
+         width: 100%;
+         height: 100%;
+         overflow: hidden !important;
+         z-index:2!important;
+         position: fixed;
+          display: flex!important;
+         flex-direction:row!important;
+         justify-content: space-around!important;
+         align-items: center!important;
+         color:#ddd;
+       .prt2,.part1{
+           margin: 15px;
+           opacity:0;
+           display: flex;
+           flex-direction: column!important;
+           justify-content: center!important;
+           z-index: 3!important;
+           align-items: center!important;
+           visibility: hidden!important;
+           transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         }
+         .prt2.active , .part1.active{
+             opacity:1;
+             visibility: visible !important;
+         }
+       }
+       .EQ{
+         opacity:0;
+         visibility: hidden;
+         transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         position: absolute;
+       }
+       .EQ.active{
+          opacity:1;
+         visibility: visible;
+       }
+       @keyframes tapEffect {
+         0%{
+           transform:scale(0);
+         }
+         50%{
+           transform:scale(1.2,1.2);
+         }
+         100%{
+           transform:scale(1,1);
+ 
+         }
+       }
+       .lyrics{
+         width: fit-content;
+         height: max-content;
+         z-index: 30!important;
+         right:-400px;
+         visibility: hidden;
+         top:20px;
+         transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         position:absolute!important;
+       }
+        .lyrics.active{
+          animation: 2s 2s linear forwards;
+         visibility: visible;
+          right:30px;
+        }
+       .gView{
+         width: 100%;
+         height: 100%;
+         position:absolute;
+         visibility: hidden;
+         left:-5000px;
+         z-index:120px!important;
+         transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         // opacity:0;
+       }
+       .gView.active{
+           width: 100%;
+           left:0px;
+              visibility:visible;
+         // opacity:1;
+       }
+        .listView{
+          width: fit-content;
+          height: max-content;
+         position:absolute;
+         visibility: hidden;
+         bottom:-5000px;
+         z-index:120px!important;
+         transition: 0.83s ease-in-out;
+         // opacity:0;
+       }
+         .listView.active{
+         bottom:150px;
+           // width: 100%;
+           left:50px;
+              visibility:visible;
+         // opacity:1;
+       }
+      
+     .options{
+       border: 1px solid #eeeeee77;
+       padding:10px;
+       width:140px;
+       height:100px;
+       border-radius:10px;
+       position: absolute;
+       top: 100px;
+       z-index: 6!important;
+       background: rgba(206, 198, 198, 0.356);
+       backdrop-filter: blur(94px);
+        opacity:0;
+         visibility: hidden;
+         transition: 0.3s ease-in-out;
+       p{
+         margin:10px;
+         padding:5px;
+         transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         &:hover{
+           background:#eeeeee50;
+           border-radius:10px;
+           padding:5.3px;
+         }
+       }
+     }
+     .options.active{
+         opacity:1;
+         visibility: visible;
+     }
+     .b{
+       display: flex;
+       flex-direction: row!important;
+       justify-content: space-evenly;
+       button{
+         width: 90px;
+         height: 40px;
+         border: 1px solid #dddddd4f;
+         background: rgba(0,0,0,0.1);
+         color: #eeeeee50;
+         cursor: pointer;
+         font: 400 16px Ubuntu,Arial;
+         transition: 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         &:hover{
+              border: 1px solid #dddddd;
+         color: #eee;
+ 
+         }
+       }
+     }
+       .volume{
+         left: 0px;
+         transition:0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         position: absolute;
+         visibility: hidden;
+         opacity: 0;
+       }
+       .volume.active{
+         visibility: visible;
+ 
+         left: 90px;
+         opacity: 1;
+ 
+       }
+       .room{
+         transition:0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+         opacity:0;
+         position: absolute;
+         bottom:0px;
+         visibility: hidden;
+       }
+       .room.active{
+         bottom: 120px;
+          visibility: visible;
+         opacity: 1;
+       }
+ @media (max-width:901px) {
+    .home{
+         backdrop-filter: blur(94px);
+         width: 100%;
+         height: 100%;
+         position: fixed;
+         background: rgba(0,0,0,0.5);
+         top: 0;
+         left: 0;
+         display: flex!important;
+         flex-direction: column  !important;
+         justify-content: center!important;
+         align-items: center!important;
+         color:#ddd;
+         .visual{
+           width: 100%;
+           height: 100%;
+           z-index: 3!important;
+           position: fixed;
+           canvas{
+           width:100%;
+           height: 100%;
+         }
+       }
+         
+        .prt2,.part1{
+            display: flex;
+           flex-direction: column!important;
+           justify-content: center!important;
+           align-items: center!important;
+        }
+    }
+ }
+     
+ @media (max-width:480px) {
+    .home{
+         backdrop-filter: blur(94px);
+         width: 100%;
+         height: 100%;
+         position: fixed;
+         background: rgba(0,0,0,0.5);
+         top: 0;
+         left: 0;
+         display: flex!important;
+         flex-direction: column  !important;
+         justify-content: center!important;
+         align-items: center!important;
+         color:#ddd;
+         
+        .prt2,.part1{
+           
+            display: flex;
+           flex-direction: column!important;
+           justify-content: center!important;
+           align-items: center!important;
+         }
+       }
+ }
+      .bottom{
+          width: 500px;
+           position: absolute;
+           bottom:100px;
+           z-index: 30!important;
+           right: 10px;
+           visibility: hidden;
+           opacity: 0;
+           transition: 0.3s cubic-bezier(0.045, 0.05, 0.55, 0.95);
+     }
+     .bottom.active{
+        right: 500px;
+         visibility: visible;
+           opacity: 1;
+     }

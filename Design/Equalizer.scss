@@ -1,0 +1,39 @@
+.widget{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    color: #fff;
+.more{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-evenly!important;
+    // align-items:center !important;
+    padding: 10px;
+    z-index: 5!important;
+    p{
+        b{
+            font: 300 16px Ubuntu,Arial;
+            margin: 10px;
+        }
+    }
+    input{
+        cursor: pointer;
+        appearance: none;
+        width: 300px;
+        height: 3px;
+    }
+}
+.equalizer {
+    margin: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:800px;
+    height: 250px;
+    z-index: 1;
+    transform:rotate(-90deg);
+    // pointer-events: ;
+}
+}
